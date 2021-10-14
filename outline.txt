@@ -1,0 +1,6 @@
+
+- Player needs indexes
+	- Happiness
+	- health
+	- Money
+
