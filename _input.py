@@ -141,10 +141,10 @@ class userInputObject():
 
     def drawInputBox(self):
         gui       = self.gui
-        boxX      = self.boxDims[0] * self.gui.WIDTH
-        boxY      = self.boxDims[1] * self.gui.HEIGHT
-        boxWidth  = self.boxDims[2] * self.gui.WIDTH
-        boxHeight = self.boxDims[3] * self.gui.HEIGHT
+        boxX      = self.boxDims[0] * self.gui.width
+        boxY      = self.boxDims[1] * self.gui.height
+        boxWidth  = self.boxDims[2] * self.gui.width
+        boxHeight = self.boxDims[3] * self.gui.height
 
         textX         = boxX + (0.1*boxWidth)
         textY         = boxY + (0.44*boxHeight)

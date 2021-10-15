@@ -1,6 +1,37 @@
 
+- Name player
+- gameObject class
+	- contains everything so game can be loaded
+- shenzhen i/0 magnus opum
 - Player needs indexes
-	- Happiness
-	- health
 	- Money
+	- Mental Health
+	- Hunger
+	- Happiness
+	- hp
+- Dobber
 
+Features
+
+- Do Screen fade effect
+- Create forced Prompt dialogue 
+- Create red hurt effect
+- Create drug fog effect
+- Varying background Good background(shenzhen i/0)
+- Scripted events list (win scatch card...), store in gameobject
+- TODO box, if you don't do, keeps ticking down
+SCenes
+(Pic on top, black below)
+- Police 'penis inspection' - agree = mental health -10, run, talk your way out
+- Old lady asks you for time...
+- its dole day - collect?
+- Show lovely apartment, then shitey lochee you wot m8 opening
+- You must pay your gas bill (other bills...get the boys round)
+- 'Open up cunt' dialogue choice to save your bacon
+- 'take advantage of the blind girl' Stacey..turns out she is undercover cop
+- MakeMoney Tab
+	medical test
+	Minigames to make money, lock picking..
+- make it through the wellgate game...
+
+- later AI takeover...
