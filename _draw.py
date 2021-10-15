@@ -28,18 +28,36 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
     return(hovered)
 
 
-def iterateImages(screen,introSlides,p,f,s,blitPos):
-    end = len(introSlides)
+class imageAnimate():
+    def __init__(self,p,f,s):
+        self.p           = 0
+        self.f           = 0
+        self.s           = 0 
+        self.initialised = False
+        self.state       = None
     
-    f -=1
-    if(f<1):
-        f=s
-        p +=1 
-        if(p>=end): p = 0
+    def animate(self,gui,gamestate,introSlides,pfs,blitPos):
+        
+        # ------Initialise
 
-    screen.blit(introSlides[p],blitPos)
+        if(self.state!=gamestate): self.initialised=False
+        if(self.initialised==False):
+            self.p           = pfs[0]
+            self.f           = pfs[1]
+            self.s           = pfs[2]
+            self.state       = gamestate
+            self.initialised =True
 
-    return(p,f)
+        # last frame
+        end = len(introSlides)
+        self.f -=1
+        if(self.f<1):
+            self.f=self.s
+            self.p +=1 
+            if(self.p>=end): self.p = 0
+
+        gui.screen.blit(introSlides[self.p],blitPos)
+
 
 def drawImage(screen,image,pos):
 	screen.blit(image,pos)

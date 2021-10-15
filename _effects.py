@@ -2,13 +2,14 @@ import pygame
 
 class sfx():
 	def __init__(self,gui):
-		self.gui      = gui
-		self.black    = (0,0,0)
-		self.red      = (230,0,0)
-		self.surf     = pygame.Surface((self.gui.width,self.gui.height))
-		self.alphaI   = 100
-		self.ftbInit  = False
-		self.fiInit   = False
+		self.gui          = gui
+		self.black        = (0,0,0)
+		self.red          = (230,0,0)
+		self.surf         = pygame.Surface((self.gui.width,self.gui.height))
+		self.alphaI       = 100
+		self.ftbInit      = False
+		self.fiInit       = False
+		self.gameState    = None
 
 	def fadeToBlack(self,gameState,inc=5):
 		""" increments an index related to alpha"""
@@ -42,7 +43,7 @@ class sfx():
 			self.fiInit=True
 
 		#------increment Alpha down
-		
+
 		self.surf.set_alpha(self.alphaI)
 		self.surf.fill((0,0,0))
 		self.gui.screen.blit(self.surf,(0,0))

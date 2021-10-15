@@ -9,58 +9,50 @@ import pandas as pd
 import statistics
 import os, sys
 
-from _input    import *
-from _draw     import *
-from _effects  import *
-
-# ---------------classes
-
-class gui():
-    def __init__(self,white, screen, width, height,font):
-        self.white  = white
-        self.screen = screen
-        self.width  = width
-        self.height = height
-        self.font   = font
-        self.mx     = 0
-        self.my     = 0
+from _input      import *
+from _draw       import *
+from _effects    import *
+from _gui        import *
+from _gameState  import *
 
 
-# ---------------setup
+# -----------VARIABLES & FLAGS
+
+white      = (255,255,255)
+green      = (0,255,0)
+blue       = (176,224,230)
+FPS            = 60
+width, height  = 1500 ,850
+
+time = 0
+running = True
+gs = gameState('intro')
+
+# ---------------PYGAME
+
 pygame.init()
 pygame.display.set_caption("Bumdonian")
 clock          = pygame.time.Clock()
 nextFrame      = pygame.time.get_ticks()
-FPS            = 60
-width, height  = 1500 ,850
 screen   = pygame.display.set_mode((width,height), pygame.DOUBLEBUF)
 pygame.time.set_timer(pygame.USEREVENT, 20)
-white      = (255,255,255)
-green      = (0,255,0)
-blue       = (176,224,230)
-
-
-
-
 font        = pygame.font.Font(None, 25)
 font        = pygame.font.Font(None, 26)
 bigFont     = pygame.font.Font(None, 32)
 font        = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/Orbitron/static/Orbitron-Regular.ttf', 25)
 
+# ---------------CLASS OBJECTS
+
 gui = gui(white,screen,width,height,font)
 fx  = sfx(gui)
-
 introSlides = [pygame.image.load('pics/intro1.png'),pygame.image.load('pics/intro2.png')]
 menuBG      = pygame.image.load('pics/intro3.png')
-p,f,s = 0,10,10
 user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
+animateImgs  = imageAnimate(0,10,10)
 
 
-# Flags 
-time = 0
-running = True
-gameState = 'intro'
+
 
 
 
@@ -78,30 +70,26 @@ while running:
         pos            = pygame.mouse.get_pos()
         if event.type == pygame.QUIT: running = False
         if event.type == pygame.MOUSEBUTTONDOWN: clicked  = True
-        user_input = modifyInput.manageButtons(event,user_input,gameState)
+        user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
         
     gui.mx, gui.my = pygame.mouse.get_pos()
-
-    #pygame.draw.rect(screen, blue, (20, 20, width - 20, height - 20),7,border_radius=1, border_top_left_radius=-1, border_top_right_radius=-1, border_bottom_left_radius=-1, border_bottom_right_radius=-1)
-    
-
 
 
 
     #---------------Title Screen
 
-    if(gameState == 'intro'):
-        p,f = iterateImages(screen,introSlides,p,f,s,(0,0))
+    if(gs.state == 'intro'):
+        animateImgs.animate(gui,gs.state,introSlides,(0,10,10),(0,0))
 
         if(user_input.returnedKey == 'return'):
             user_input.returnedKey = ""
-            gameState = 'menu'
+            gs.state = 'menu'
 
 
     #---------------Menu
 
-    if(gameState == 'menu'):
+    if(gs.state == 'menu'):
         drawImage(screen,menuBG,(0,0))
         choices = ['Start Game', 'Continue', 'Options','debug','Exit']
 
@@ -109,11 +97,11 @@ while running:
 
         if(hovered and clicked):
             if(hovered=='Exit'): running = False
-            if(hovered=='debug'): gameState = 'debug'
+            if(hovered=='debug'): gs.state = 'debug'
     
-    if(gameState == 'debug'):
+    if(gs.state == 'debug'):
         drawImage(screen,menuBG,(0,0))
-        fx.fadeToBlack(gameState)
+        fx.fadeIn(gs.state)
 
 
 
@@ -123,12 +111,8 @@ while running:
 
 
     #if(mouseInRec(mx, my, x, y, w, h) ): colColour = (255,255,255)
-
-
+    #pygame.draw.rect(screen, blue, (20, 20, width - 20, height - 20),7,border_radius=1, border_top_left_radius=-1, border_top_right_radius=-1, border_bottom_left_radius=-1, border_bottom_right_radius=-1)
     
-    
-
-
 
 
     # Flip the display

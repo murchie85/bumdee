@@ -13,7 +13,9 @@
 
 Features
 
-- Do Screen fade effect
+DONE Do Screen fade effect
+- Player Object
+- User Input
 - Create forced Prompt dialogue 
 - Create red hurt effect
 - Create drug fog effect
@@ -27,6 +29,8 @@ SCenes
 - its dole day - collect?
 - Show lovely apartment, then shitey lochee you wot m8 opening
 - You must pay your gas bill (other bills...get the boys round)
+- get fags for kids
+- steal beer
 - 'Open up cunt' dialogue choice to save your bacon
 - 'take advantage of the blind girl' Stacey..turns out she is undercover cop
 - MakeMoney Tab
