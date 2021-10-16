@@ -1,3 +1,22 @@
+High level
+
+- Daily Dashboard
+1. Central notifications
+2. Address them in the retrospective box
+
+Start with simple gui, number drop downs...then improve
+
+
+
+	- Date time
+	- Player Stats box
+	- Items box
+	- Notifications/email/letters box
+	- Job Center (look for a job)
+	- Drug Dealing Box
+	- Box template (gamble, invest(paperclip), myJob)
+
+
 
 - Name player
 - gameObject class
@@ -33,6 +52,8 @@ SCenes
 - steal beer
 - 'Open up cunt' dialogue choice to save your bacon
 - 'take advantage of the blind girl' Stacey..turns out she is undercover cop
+- "Your dealer, 'Big Malky', just put your door in and stole your stash AND your cash.  Now he is texting twice a day saying you better pay for your tick.  What's you next move?"
+
 - MakeMoney Tab
 	medical test
 	Minigames to make money, lock picking..

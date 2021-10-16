@@ -1,11 +1,14 @@
+from _draw       import *
+from _effects    import *
 
-def manageStartMenu(gs,gui,introSlides):
-	"""runs function based on gamestate"""
+def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked):
+    """runs function based on gamestate"""
 
     #---------------Title Screen
 
     if(gs.state == 'intro'):
-        p,f = iterateImages(gui.screen,introSlides,p,f,s,(0,0))
+        
+        animateImgs.animate(gui,gs.state,introSlides,(0,10,10),(0,0))
 
         if(user_input.returnedKey == 'return'):
             user_input.returnedKey = ""
@@ -15,17 +18,21 @@ def manageStartMenu(gs,gui,introSlides):
     #---------------Menu
 
     if(gs.state == 'menu'):
-        drawImage(screen,menuBG,(0,0))
+        #drawImage(gui.screen,gui.menuBG,(0,0))
+        gui.border(gui.themeColour)
+        ext = gui.exitButton.display(gui,tx=3,ty=-2)
+
         choices = ['Start Game', 'Continue', 'Options','debug','Exit']
 
-        hovered = drawVerticleList(choices,font,0.4*width,0.35*height,gui,(255, 255, 255))
+        hovered = drawVerticleList(choices,gui.font,0.45*gui.width,0.35*gui.height,gui,(255, 255, 255))
 
         if(hovered and clicked):
-            if(hovered=='Exit'): running = False
+            if(hovered=='Start Game'): gs.state = 'begin'
+            if(hovered=='Exit'): gs.running = False
             if(hovered=='debug'): gs.state = 'debug'
+        if(ext and clicked): gs.running = False
     
     if(gs.state == 'debug'):
-        drawImage(screen,menuBG,(0,0))
-        fx.fadeIn(gs.state)
-
+        drawImage(gui.screen,gui.menuBG,(0,0))
+        fx.hurt(gs.state,gui)
 
