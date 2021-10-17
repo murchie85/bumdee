@@ -27,6 +27,20 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
     SCREEN.blit(textsurface,(x,y))
     return(hovered)
 
+
+def approachColour(baseColour,targetColour,inc=2):
+    complete = False
+    if(baseColour[0]<targetColour[0]):
+        baseColour = ((baseColour[0]+inc),(baseColour[1]),(baseColour[2]))
+    if(baseColour[1]<targetColour[1]):
+        baseColour = ((baseColour[0]),(baseColour[1]+inc),(baseColour[2]))
+    if(baseColour[2]<targetColour[2]):
+        baseColour = ((baseColour[0]),(baseColour[1]),(baseColour[2]+inc))
+
+    if(baseColour==targetColour): complete=True
+
+    return(complete,baseColour)
+
 class dialogue():
     def __init__(self):
         self.initialised = False
@@ -39,8 +53,13 @@ class dialogue():
         self.y           = 0
         self.y2          = 0
 
-    def drawDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True):
-        sx,sy      = gui.bx + 100,gui.by+70
+    def drawDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,pos=(-1,-1),fade=True,skip=False):
+        #(0, 128, 126)
+        if(pos==(-1,-1)):
+            sx,sy      = gui.bx + 100,gui.by+70
+        else:
+            sx,sy = pos[0],pos[1]
+        
         x,y        = sx,sy
         maxWidth   = gui.bw - 200
         maxHeight  = sy + gui.bh - 200
@@ -85,24 +104,50 @@ class dialogue():
                 break
 
         # fade in
-        if(self.colour[0]<colour[0]):
-            self.colour = ((self.colour[0]+2),(self.colour[1]+2),(self.colour[1]+2)   )
+        if(fade):
+            complete,self.colour = approachColour(self.colour,colour,inc=2)
+            if(skip):
+                complete  = True
+                self.colour = colour
         else:
-            complete=True
-
+            complete  = True
+            self.colour = colour
 
         return(complete)
 
-    def drawScrollingDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,delay=0):
-        sx,sy      = gui.bx + 100,gui.by+70
+
+class scrollingDialogue():
+    def __init__(self):
+        self.initialised = False
+        self.origText    = ''
+        self.textArray   = []
+        self.taP         = 0
+        self.senPos      = 0
+        self.timer       = 5
+        self.colour      = (0,0,0)
+        self.y           = 0
+        self.y2          = 0
+
+    def drawScrollingDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,delay=0,pos=(-1,-1),skip=False):
+        if(pos==(-1,-1)):
+            sx,sy      = gui.bx + 100,gui.by+70
+        else:
+            sx,sy = pos[0],pos[1]
         x,y        = sx,sy
         maxWidth   = gui.bw - 200
         maxHeight  = sy + gui.bh - 200
         tRemaining = ""
+        self.finished = False
 
         if(self.initialised== False):
+            print('initialising for ')
+            print(text)
             # format paragraph into array of fitted sentences
-            self.y     = sy
+            self.textArray  = []
+            self.y          = sy
+            self.senPos     =0
+            self.taP        =0
+
             dAr,para = [], ""
             for word in text.split(' '):
                 pre   = para
@@ -117,7 +162,6 @@ class dialogue():
             self.textArray = dAr
             self.initialised = True
 
-        
 
         # Print fully preceeding row
         self.y2 = sy
@@ -139,8 +183,11 @@ class dialogue():
         x=sx
 
 
-
-
+        # Skip if needbe
+        if(skip and self.taP<(len(self.textArray)-1)): 
+            self.taP = len(self.textArray)-1
+            self.senPos=0
+            self.y=self.y+2*(len(self.textArray)-1)*h
 
         self.timer-=1
         if(self.timer<1):
@@ -152,7 +199,10 @@ class dialogue():
                     self.taP +=1
                     self.y=self.y+2*h
                     self.senPos=0
+                else:
+                    self.finished    = True
 
+        return(self.finished)
 
 
 

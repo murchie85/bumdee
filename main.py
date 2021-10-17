@@ -16,6 +16,7 @@ from _gui        import *
 from _gameState  import *
 from _startMenu  import *
 from _button     import *
+from _music      import *
 
 
 # -----------VARIABLES & FLAGS
@@ -27,7 +28,8 @@ FPS            = 60
 width, height  = 1500 ,850
 themeColour    = (128,0,0)
 time = 0
-gs = gameState('start')
+gs = gameState('intro')
+#gs.tempState='startGame'
 
 # ---------------PYGAME
 
@@ -51,14 +53,18 @@ smallFont   = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/O
 exitButton   = button(0.975*width,20,'x',themeColour,smallFont,textColour=themeColour)
 nextButton   = button(0.475*width,0.8*height,'next',themeColour,smallFont,textColour=themeColour)
 
-gui = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton)
+dialogue     = dialogue()
+sDialogue    = scrollingDialogue()
+music        = music()
+
+gui = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music)
 fx  = sfx(gui)
 introSlides  = [pygame.image.load('pics/intro1.png'),pygame.image.load('pics/intro2.png')]
 gui.menuBG   = pygame.image.load('pics/intro3.png')
 user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
-dialogue     = dialogue()
+
 
 
 
@@ -72,13 +78,15 @@ dialogue     = dialogue()
 while gs.running:
 
     screen.fill((0, 0, 0))
-    clicked = False
+    gui.clicked = False
+    # Reset the key each round
+    user_input.returnedKey=''
 
     # Did the user click the window close button?
     for event in pygame.event.get():
         pos            = pygame.mouse.get_pos()
         if event.type == pygame.QUIT: gs.running = False
-        if event.type == pygame.MOUSEBUTTONDOWN: clicked  = True
+        if event.type == pygame.MOUSEBUTTONDOWN: gui.clicked  = True
         user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
         
@@ -86,15 +94,10 @@ while gs.running:
 
 
     # Manage Start Intro Loop
-    manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogue)
+    manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input)
 
 
 
-
-
-    #if(mouseInRec(mx, my, x, y, w, h) ): colColour = (255,255,255)
-    #pygame.draw.rect(screen, blue, (20, 20, width - 20, height - 20),7,border_radius=1, border_top_left_radius=-1, border_top_right_radius=-1, border_bottom_left_radius=-1, border_bottom_right_radius=-1)
-    
 
 
     # Flip the display

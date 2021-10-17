@@ -37,7 +37,7 @@ class sfx():
 
 
 
-	def fadeIn(self,gameState,inc=5):
+	def fadeIn(self,gameState,inc=5,skip=False):
 		""" increments an index related to alpha"""
 		
 		#--------Init
@@ -57,6 +57,8 @@ class sfx():
 		self.alphaI -=inc
 		if(self.alphaI<1):self.alphaI = 0
 		if(self.alphaI<1): complete = True
+
+		if(skip): self.alphaI = 0
 
 		return(complete)
 

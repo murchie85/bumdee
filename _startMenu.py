@@ -1,7 +1,10 @@
-from _draw       import *
-from _effects    import *
+from _draw           import *
+from _effects        import *
+from _scriptTools    import *
 
-def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogue):
+
+
+def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input):
     """runs function based on gamestate"""
 
     #---------------Title Screen
@@ -21,12 +24,12 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogu
         #drawImage(gui.screen,gui.menuBG,(0,0))
         gui.border(gui.themeColour)
         ext = gui.exitButton.display(gui)
-        if(ext and clicked): gs.running = False
+        if(ext and gui.clicked): gs.running = False
 
         choices = ['Start Game', 'Continue', 'Options','debug','Exit']
         hovered = drawVerticleList(choices,gui.font,0.45*gui.width,0.35*gui.height,gui,(255, 255, 255))
 
-        if(hovered and clicked):
+        if(hovered and gui.clicked):
             if(hovered=='Start Game'): gs.tempState = 'startGame'
             if(hovered=='Exit'): gs.running = False
             if(hovered=='debug'): gs.state = 'debug'
@@ -41,7 +44,10 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogu
 
     if(gs.state == 'debug'):
         drawImage(gui.screen,gui.menuBG,(0,0))
-        fx.hurt(gs.state,gui)
+        gui.music.play("/Users/adammcmurchie/2021/Bumdonian/music/solitude.mp3",pos=54)
+
+        #fx.hurt(gs.state,gui)
+
 
 
 
@@ -51,74 +57,53 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogu
         
         gui.border(gui.themeColour)
         ext = gui.exitButton.display(gui)
-        if(ext and clicked): gs.running = False
+        if(ext and gui.clicked): gs.running = False
 
-        fi = fx.fadeIn(gui)
+        if(gs.tempState=='name'): gs.userName = askQuestion("What is your name?",gs, gui,fx,user_input,returnValue='nameResponse',fade=True)
+        if(gs.tempState=='nameResponse'): questionResponse(("Your name is " + str(gs.userName)),gs,gui,user_input,returnValue='gay',setCounterTime=20,setInputVal='Yes')
+        if(gs.tempState=='gay'): askQuestion("Are you gay?",gs, gui,fx,user_input,'gayAnswered',True)
+        
+        if(gs.tempState=='gayAnswered'):
+            if(gs.counter==None): gs.counter = 100
+            gui.dialogue.drawDialogue(gui,gui.font,'Really?',gui.clicked, colour=(180, 180, 180),fade=False)
+            gs.counter -=1
+            user_input.enteredString = 'Yes'
+            user_input.drawTextInput(user_input.enteredString,0.42*gui.width,0.35*gui.height)
+            if(gs.counter<1):
+                gs.counter = 50
+                gs.tempState='gayresponse'
 
-        if(fi):
-            text = "What is your name?"
-            text = text.upper()
-            
-            if(gs.tempState=='name'):
-                r = dialogue.drawDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
-                if(r):
-                    user_input.processInput()
-                    user_input.drawTextInput(user_input.enteredString,0.42*gui.width,0.35*gui.height)
-                    if(user_input.returnedKey=='complete'):
-                        gs.tempState ='nameComplete'
-                        gs.userName  = user_input.enteredString
-
-            if(gs.tempState=='nameComplete'):
-                text = "Your name is " + str(gs.userName)
-                nc = dialogue.drawDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
-                if(nc):
-                    gs.counter -=1
-                    if(gs.counter<1):
-                        gs.counter = gs.initCounter
-                        gs.tempState='gay'
-                        user_input.enteredString = "Yes"
-
-            if(gs.tempState=='gay'):
-                gi = fx.fadeIn(gui)
-                if(gi):
-                    g = dialogue.drawDialogue(gui,gui.font,'Are you gay?',clicked, colour=(180, 180, 180))
-                    if(g):
-                        user_input.processInput()
-                        user_input.drawTextInput(user_input.enteredString,0.42*gui.width,0.35*gui.height)
-                        if(user_input.returnedKey=='complete'):
-                            gs.tempState='gayAnswered'
-                            gs.counter = 60
-                        
-            if(gs.tempState=='gayAnswered'):
-                dialogue.drawDialogue(gui,gui.font,'Are you gay?',clicked, colour=(180, 180, 180))
-                gs.counter -=1
-                user_input.enteredString = 'Yes'
-                user_input.drawTextInput(user_input.enteredString,0.42*gui.width,0.35*gui.height)
-                if(gs.counter<1):
-                    gs.counter = 50
-                    gs.tempState='gayresponse'
-
-            
-            if(gs.tempState=='gayresponse'):
-                text = "Thanks for coming out of the closet."
-                ag = dialogue.drawDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
-                if(ag):
-                    gs.counter -=1
-                    if(gs.counter<1):
-                        gs.counter   = gs.initCounter
-                        gs.state     ='start'
-                        gs.tempState = ""
-
-
+        if(gs.tempState=='gayresponse'): questionResponse( ('Thanks for coming out of the closet'),gs,gui,user_input,returnValue='startGame',setCounterTime=40,setInputVal='')
+        if(gs.tempState=='startGame'): gs.state = 'start'
 
 
     if(gs.state == 'start'):
+        #init
         gui.border(gui.themeColour)
         ext = gui.exitButton.display(gui)
-        if(ext and clicked): gs.running = False
-        fi = fx.fadeIn(gui)
+        if(ext and gui.clicked): gs.running = False
+        s = scrollingResponse((' '),("Starting Game...."),gs,gui,user_input,setCounterTime=40, sPos=(0.4*gui.width, 0.4*gui.height),delay=4)
+        if(s):
+            gs.state,gs.tempState = 'starts','sgs'
 
-        text = "Three billion human lives ended on August 29, 1997. The survivors of the nuclear fire called the war Judgment Day. They lived only to face a new nightmare: the war against the Machines. The computer which controlled the machines, Skynet, sent two Terminators back through time. Their mission: to destroy the leader of the human Resistance, John Connor, my son. The first Terminator was programmed to strike at me, in the year 1984, before John was born. It failed. The second was sent to strike at John himself, when he was still a child. As before, the Resistance was able to send a lone warrior, a protector for John. It was just a question of which one of them would reach him first."
-        text = 'Gaming, game hacking, geeking, memes.. cartoons, board games, streaming.. anything too dorky for your regular feed.'
-        st = dialogue.drawScrollingDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
+
+
+
+
+
+
+
+
+    if(gs.state == 'wake'):
+        #init
+        gui.border(gui.themeColour)
+        ext = gui.exitButton.display(gui)
+        if(ext and gui.clicked): gs.running = False
+
+        if(gs.tempState=='sgs'):
+            finished = scrollingResponse(('Unknown Person'),("Wake up cunt"),gs,gui,user_input,setCounterTime=40, titlePos=(gui.bx + 100,gui.by+70),delay=2)
+            if(finished): gs.tempState = 'changecolour'
+        if(gs.tempState=='changecolour'):
+            gui.themeColour = (0,128,0)
+
 

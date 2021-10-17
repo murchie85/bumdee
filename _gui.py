@@ -1,6 +1,6 @@
 import pygame
 class gui():
-    def __init__(self,white, screen, width, height,font,bigFont,smallFont,themeColour,exitButton,nextButton):
+    def __init__(self,white, screen, width, height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music,clicked=False):
         self.white         = white
         self.screen        = screen
         self.width         = width
@@ -11,6 +11,10 @@ class gui():
         self.themeColour   = themeColour
         self.exitButton    = exitButton
         self.nextButton    = nextButton
+        self.dialogue      = dialogue
+        self.sDialogue     = sDialogue
+        self.music         = music
+        self.clicked       = clicked
 
 
         self.mx     = 0
