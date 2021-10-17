@@ -27,6 +27,125 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
     SCREEN.blit(textsurface,(x,y))
     return(hovered)
 
+class dialogue():
+    def __init__(self):
+        self.initialised = False
+        self.origText    = ''
+        self.textArray   = []
+        self.taP         = 0
+        self.senPos      = 0
+        self.timer       = 5
+        self.colour      = (0,0,0)
+
+    def drawDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True):
+        sx,sy      = gui.bx + 100,gui.by+70
+        x,y        = sx,sy
+        maxWidth   = gui.bw - 200
+        maxHeight  = sy + gui.bh - 200
+        tRemaining = ""
+        complete   = False
+
+        # reset if called by new function
+        if(self.origText!= text): 
+            self.initialised=False
+            self.origText = text
+
+        if(self.initialised== False):
+            # format paragraph into array of fitted sentences
+            self.colour      = (0,0,0)
+            self.origText    = text
+            dAr,para = [], ""
+            for word in text.split(' '):
+                para += word + " "
+                textsurface = myfont.render(para, True, self.colour)
+                w = textsurface.get_rect().width
+                if(w>= maxWidth):
+                    dAr.append(para)
+                    para = ""
+            dAr.append(para)
+
+            self.textArray = dAr
+            self.initialised = True
+
+
+        for sentence in range(0,len(self.textArray)):
+            textsurface = myfont.render(self.textArray[sentence], True, self.colour)
+            h = textsurface.get_rect().height
+            gui.screen.blit(textsurface,(x,y))
+            y = y + 2*h
+
+            if(y + h >= maxHeight):
+                tRemaining = self.textArray[sentence+1:]
+                nextP = gui.nextButton.display(gui,noBorder=False)
+                if(clicked and nextP): 
+                    self.textArray = tRemaining
+                break
+
+        # fade in
+        if(self.colour[0]<colour[0]):
+            self.colour = ((self.colour[0]+2),(self.colour[1]+2),(self.colour[1]+2)   )
+        else:
+            complete=True
+
+
+        return(complete)
+
+    def drawScrollingDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,delay=2):
+        sx,sy      = gui.bx + 100,gui.by+70
+        x,y        = sx,sy
+        maxWidth   = gui.bw - 200
+        maxHeight  = sy + gui.bh - 200
+        tRemaining = ""
+
+        if(self.initialised== False):
+            # format paragraph into array of fitted sentences
+            dAr,para = [], ""
+            for word in text.split(' '):
+                para += word + " "
+                textsurface = myfont.render(para, True, colour)
+                w = textsurface.get_rect().width
+                if(w>= maxWidth):
+                    dAr.append(para)
+                    para = ""
+            dAr.append(para)
+
+            self.textArray = dAr
+            self.initialised = True
+
+        currentSentence = self.textArray[self.taP]
+        
+        for word in (range(0,len(currentSentence[self.senPos]) )):
+            printSentence = currentSentence[:self.senPos]
+            ts = myfont.render(printSentence, True, colour)
+        gui.screen.blit(ts,(x,y))
+
+        self.timer-=1
+        if(self.timer<1):
+            self.timer=delay
+            if(len(currentSentence)-2 >=self.senPos):
+                self.senPos+=1
+
+
+        """
+        for sentence in range(0,len(self.textArray)):
+            textsurface = myfont.render(self.textArray[sentence], True, self.colour)
+            h = textsurface.get_rect().height
+            gui.screen.blit(textsurface,(x,y))
+            y = y + 2*h
+
+            if(y + h >= maxHeight):
+                tRemaining = self.textArray[sentence+1:]
+                nextP = gui.nextButton.display(gui,noBorder=False)
+                if(clicked and nextP): 
+                    self.textArray = tRemaining
+                break
+        """
+
+
+
+
+
+
 
 class imageAnimate():
     def __init__(self,p,f,s):

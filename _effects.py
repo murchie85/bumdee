@@ -12,12 +12,12 @@ class sfx():
 		self.fiInit       = False
 		self.gameState    = None
 
-	def fadeToBlack(self,gameState,inc=5):
+	def fadeOut(self,gameState,inc=5):
 		""" increments an index related to alpha"""
 		
 
 		#--------Init
-
+		complete = False
 		if(self.gameState!=gameState):self.ftbInit=False
 		if(self.ftbInit==False):
 			self.alphaI = 0
@@ -31,11 +31,17 @@ class sfx():
 		self.gui.screen.blit(self.surf,(0,0))
 		self.alphaI +=inc
 		if(self.alphaI>254):self.alphaI = 255
+		if(self.alphaI>254): complete = True
+
+		return(complete)
+
+
 
 	def fadeIn(self,gameState,inc=5):
 		""" increments an index related to alpha"""
 		
 		#--------Init
+		complete = False
 
 		if(self.gameState!=gameState):self.ftbInit=False
 		if(self.fiInit==False):
@@ -50,6 +56,11 @@ class sfx():
 		self.gui.screen.blit(self.surf,(0,0))
 		self.alphaI -=inc
 		if(self.alphaI<1):self.alphaI = 0
+		if(self.alphaI<1): complete = True
+
+		return(complete)
+
+
 
 	def hurt(self,gameState,gui,inc=10):
 		""" increments an index related to alpha"""

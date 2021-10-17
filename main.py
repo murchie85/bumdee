@@ -48,16 +48,17 @@ smallFont   = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/O
 
 # ---------------CLASS OBJECTS
 
-exitButton   = button(0.975*width,20,22,23, 'x',themeColour,smallFont,textColour=themeColour)
+exitButton   = button(0.975*width,20,'x',themeColour,smallFont,textColour=themeColour)
+nextButton   = button(0.475*width,0.8*height,'next',themeColour,smallFont,textColour=themeColour)
 
-gui = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton)
+gui = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton)
 fx  = sfx(gui)
 introSlides  = [pygame.image.load('pics/intro1.png'),pygame.image.load('pics/intro2.png')]
 gui.menuBG   = pygame.image.load('pics/intro3.png')
 user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
-
+dialogue     = dialogue()
 
 
 
@@ -85,7 +86,7 @@ while gs.running:
 
 
     # Manage Start Intro Loop
-    manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked)
+    manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogue)
 
 
 
