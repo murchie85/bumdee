@@ -32,7 +32,7 @@ class dialogue():
         self.initialised = False
         self.origText    = ''
         self.textArray   = []
-        self.taP         = 1
+        self.taP         = 0
         self.senPos      = 0
         self.timer       = 5
         self.colour      = (0,0,0)
@@ -93,7 +93,7 @@ class dialogue():
 
         return(complete)
 
-    def drawScrollingDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,delay=1):
+    def drawScrollingDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,delay=0):
         sx,sy      = gui.bx + 100,gui.by+70
         x,y        = sx,sy
         maxWidth   = gui.bw - 200
@@ -105,39 +105,38 @@ class dialogue():
             self.y     = sy
             dAr,para = [], ""
             for word in text.split(' '):
+                pre   = para
                 para += word + " "
                 textsurface = myfont.render(para, True, colour)
                 w = textsurface.get_rect().width
                 if(w>= maxWidth):
-                    dAr.append(para)
-                    para = ""
+                    dAr.append(pre)
+                    para = word + " "
             dAr.append(para)
 
             self.textArray = dAr
             self.initialised = True
 
         
-        currentSentence = self.textArray[0]
-        
+
         # Print fully preceeding row
         self.y2 = sy
-        for row in range(0,self.taP-1):
+        for row in range(0,self.taP):
             currentSentence = self.textArray[row]
             ts = myfont.render(currentSentence, True, colour)
             h = ts.get_rect().height
             gui.screen.blit(ts,(x,self.y2))
             self.y2=self.y2+2*h
 
-        # scroll out this row
-        for row in range(self.taP-1,self.taP):
-            currentSentence = self.textArray[row]
 
-            for word in (range(0,len(currentSentence[self.senPos]) )):
-                printSentence = currentSentence[:self.senPos]
-                ts = myfont.render(printSentence, True, colour)
-                h = ts.get_rect().height
-            gui.screen.blit(ts,(x,self.y))
-            x=sx
+        # scroll out this row
+        currentSentence = self.textArray[self.taP]
+        for word in (range(0,len(currentSentence[self.senPos]) )):
+            printSentence = currentSentence[:self.senPos]
+            ts = myfont.render(printSentence, True, colour)
+            h = ts.get_rect().height
+        gui.screen.blit(ts,(x,self.y))
+        x=sx
 
 
 
@@ -149,27 +148,10 @@ class dialogue():
             if(len(currentSentence)-2 >=self.senPos):
                 self.senPos+=1
             else:
-                self.senPos=0
-                self.taP +=1
-                self.y=self.y+2*h
-
-
-        """
-        for sentence in range(0,len(self.textArray)):
-            textsurface = myfont.render(self.textArray[sentence], True, self.colour)
-            h = textsurface.get_rect().height
-            gui.screen.blit(textsurface,(x,y))
-            y = y + 2*h
-
-            if(y + h >= maxHeight):
-                tRemaining = self.textArray[sentence+1:]
-                nextP = gui.nextButton.display(gui,noBorder=False)
-                if(clicked and nextP): 
-                    self.textArray = tRemaining
-                break
-        """
-
-
+                if(len(self.textArray)-2>=self.taP):
+                    self.taP +=1
+                    self.y=self.y+2*h
+                    self.senPos=0
 
 
 

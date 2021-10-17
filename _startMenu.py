@@ -119,5 +119,6 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input,clicked,dialogu
         fi = fx.fadeIn(gui)
 
         text = "Three billion human lives ended on August 29, 1997. The survivors of the nuclear fire called the war Judgment Day. They lived only to face a new nightmare: the war against the Machines. The computer which controlled the machines, Skynet, sent two Terminators back through time. Their mission: to destroy the leader of the human Resistance, John Connor, my son. The first Terminator was programmed to strike at me, in the year 1984, before John was born. It failed. The second was sent to strike at John himself, when he was still a child. As before, the Resistance was able to send a lone warrior, a protector for John. It was just a question of which one of them would reach him first."
-        st = dialogue.drawDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
+        text = 'Gaming, game hacking, geeking, memes.. cartoons, board games, streaming.. anything too dorky for your regular feed.'
+        st = dialogue.drawScrollingDialogue(gui,gui.font, text,clicked, colour=(180, 180, 180))
 
