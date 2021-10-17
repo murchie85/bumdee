@@ -27,7 +27,7 @@ FPS            = 60
 width, height  = 1500 ,850
 themeColour    = (128,0,0)
 time = 0
-gs = gameState('intro')
+gs = gameState('start')
 
 # ---------------PYGAME
 
