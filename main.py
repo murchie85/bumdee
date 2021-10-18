@@ -58,10 +58,12 @@ dialogue     = dialogue()
 sDialogue    = scrollingDialogue()
 music        = music()
 
-gui = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music)
-fx  = sfx(gui)
-introSlides  = [pygame.image.load('pics/intro1.png'),pygame.image.load('pics/intro2.png')]
-gui.menuBG   = pygame.image.load('pics/intro3.png')
+gui          = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music)
+phone        = phone(gui.width,gui.height)
+desktop      = desktop()
+fx           = sfx(gui)
+introSlides  = [pygame.image.load('pics/intro/intro1.png'),pygame.image.load('pics/intro/intro2.png')]
+gui.menuBG   = pygame.image.load('pics/intro/intro3.png')
 user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
@@ -96,7 +98,7 @@ while gs.running:
 
     # Manage Start Intro Loop
     manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input)
-    gameLoop(gui,gs,animateImgs,fx,introSlides,user_input)
+    gameLoop(gui,gs,phone,desktop,animateImgs,fx,introSlides,user_input)
 
 
     # Flip the display

@@ -1,3 +1,5 @@
+from _draw import *
+
 class gameState():
 	def __init__(self,state,tempState=None,functionState=None):
 		self.state 			= state
@@ -5,6 +7,8 @@ class gameState():
 		self.functionState  = functionState
 		self.running        = True
 
+
+		self.date           = ['Mon', '22', 'Aug', '22:57']
 		self.userName       = "Dobber"
 		self.money          = 5.27
 		self.hp             = 33
@@ -12,7 +16,6 @@ class gameState():
 		self.hunger         = 0.5
 
 		self.items          = [('cigs',4),('old condom',1),('rusty spanner',1),('cough medicine',1)]
-
 
 
 

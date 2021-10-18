@@ -1,9 +1,12 @@
 
-def gameLoop(gui,gs,animateImgs,fx,introSlides,user_input):
+def gameLoop(gui,gs,phone,desktop,animateImgs,fx,introSlides,user_input):
 	if(gs.state == 'main'):
 	    #init
-	    gui.drawPhone('off')
+	    phone.drawPhone('off',gui)
+	    desktop.drawClock(gui,gs)
 	    gui.semiBorder()
+
 	    # phone 
-	    ext = gui.exitButton.display(gui)
+	    gui.exitButton.textColour, gui.themeColour = (0,128,0),(0,128,0)
+	    ext = gui.exitButton.displayCircle(gui)
 	    if(ext and gui.clicked): gs.running = False

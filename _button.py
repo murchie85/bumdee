@@ -40,3 +40,17 @@ class button():
         pygame.draw.rect(gui.screen,borderColour,[self.x -0.2*self.width ,self.y,self.width + 0.2*self.width,self.height], self.thickness)
         
         return(hovered)
+
+    def displayCircle(self,gui,noBorder=False):
+        textColour   = self.textColour
+        borderColour = gui.themeColour
+        hovered = self.isOver((gui.mx,gui.my))
+        
+        if(hovered): borderColour = (160,20,20)
+
+
+        # Draw box
+        if(noBorder): return(hovered)
+        pygame.draw.circle(gui.screen, borderColour, (self.x,self.y+10), 10, 0)
+        
+        return(hovered)

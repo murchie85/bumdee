@@ -3,6 +3,7 @@ from pygame.locals import *
 def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,limitWidth=None):
     hovered = None 
     textsurface = myfont.render(text, True, colour)
+    tw = textsurface.get_rect().width
     
     # ========LIMIT TEXT LENGTH TO FIT
     if(limitWidth):
@@ -10,6 +11,7 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
             maxLen = round(limitWidth/textsurface.get_rect().width * len(text))
             printText = text[0:maxLen-6] + '...'  
             textsurface = myfont.render(printText, True, colour)
+            tw = textsurface.get_rect().width
 
 
 
@@ -25,7 +27,7 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
                 hovered = text
 
     SCREEN.blit(textsurface,(x,y))
-    return(hovered)
+    return(hovered,tw)
 
 
 def approachColour(baseColour,targetColour,inc=2):
