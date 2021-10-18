@@ -84,10 +84,7 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input):
         if(ext and gui.clicked): gs.running = False
         s = scrollingResponse((' '),("Starting Game...."),gs,gui,user_input,setCounterTime=40, sPos=(0.4*gui.width, 0.4*gui.height),delay=4)
         if(s):
-            gs.state,gs.tempState = 'starts','sgs'
-
-
-
+            gs.state,gs.tempState = 'main',''
 
 
 

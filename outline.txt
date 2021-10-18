@@ -6,8 +6,6 @@ High level
 
 Start with simple gui, number drop downs...then improve
 
-
-
 	- Date time
 	- Player Stats box
 	- Items box

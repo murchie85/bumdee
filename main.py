@@ -17,6 +17,7 @@ from _gameState  import *
 from _startMenu  import *
 from _button     import *
 from _music      import *
+from _game       import *
 
 
 # -----------VARIABLES & FLAGS
@@ -28,7 +29,7 @@ FPS            = 60
 width, height  = 1500 ,850
 themeColour    = (128,0,0)
 time = 0
-gs = gameState('intro')
+gs = gameState('main')
 #gs.tempState='startGame'
 
 # ---------------PYGAME
@@ -37,7 +38,7 @@ pygame.init()
 pygame.display.set_caption("Bumdonian")
 clock          = pygame.time.Clock()
 nextFrame      = pygame.time.get_ticks()
-screen   = pygame.display.set_mode((width,height), pygame.RESIZABLE |pygame.DOUBLEBUF)
+screen   = pygame.display.set_mode((width,height),pygame.DOUBLEBUF)
 
 pygame.time.set_timer(pygame.USEREVENT, 20)
 font        = pygame.font.Font(None, 25)
@@ -95,9 +96,7 @@ while gs.running:
 
     # Manage Start Intro Loop
     manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input)
-
-
-
+    gameLoop(gui,gs,animateImgs,fx,introSlides,user_input)
 
 
     # Flip the display
