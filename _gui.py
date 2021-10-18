@@ -126,7 +126,9 @@ class gui():
         for i in range(0,len(self.logos)):
             img = self.logos[i][0]
             txt = self.logos[i][1]
-
+            print('drawing ' + str(txt))
+            print(imgx,imgy)
+            print('')
             drawImage(self.screen,img,(imgx,imgy))
             imgx+=100
             if(i>1):
