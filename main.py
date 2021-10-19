@@ -18,6 +18,7 @@ from _startMenu  import *
 from _button     import *
 from _music      import *
 from _game       import *
+from _phone      import *
 
 
 # -----------VARIABLES & FLAGS
@@ -45,20 +46,37 @@ font        = pygame.font.Font(None, 25)
 font        = pygame.font.Font(None, 26)
 bigFont     = pygame.font.Font(None, 32)
 
-bigFont     = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/Orbitron/static/Orbitron-Regular.ttf', 32)
-font        = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/Orbitron/static/Orbitron-Regular.ttf', 25)
-smallFont   = pygame.font.Font('/Users/adammcmurchie/amu/amu_0.0.3/assets/font/Orbitron/static/Orbitron-Regular.ttf', 20)
+hugeNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 37)
+smallNokiaFont = pygame.font.Font('fonts/nokiafc22.ttf', 18)
+
+hugeFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 40)
+bigFont        = pygame.font.Font('fonts/Orbitron-Regular.ttf', 32)
+font           = pygame.font.Font('fonts/Orbitron-Regular.ttf', 25)
+smallFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 20)
+nanoFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 14)
 
 # ---------------CLASS OBJECTS
 
-exitButton   = button(0.975*width,20,'x',themeColour,smallFont,textColour=themeColour)
-nextButton   = button(0.475*width,0.8*height,'next',themeColour,smallFont,textColour=themeColour)
+exitButton   = button(0.975*width,30,0,0,'x',themeColour,smallFont,textColour=themeColour)
+nextButton   = button(0.475*width,0.8*height,0,0,'next',themeColour,smallFont,textColour=themeColour)
+
+statusButton    = button(0.15*width,0.05*height,width/17,height/13,'ST',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
+inventoryButton = button(0.15*width,0.05*height,width/17,height/13,'£',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
+noteButton      = button(0.15*width,0.05*height,width/17,height/13,'N',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
+
+
+borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('pics/frame/border2.png'),pygame.image.load('pics/frame/border3.png'),pygame.image.load('pics/frame/border4.png'),pygame.image.load('pics/frame/border5.png'),pygame.image.load('pics/frame/border6.png'),pygame.image.load('pics/frame/border7.png'),pygame.image.load('pics/frame/border8.png')]
 
 dialogue     = dialogue()
+smsDialogue  = smsDialogue()
 sDialogue    = scrollingDialogue()
 music        = music()
 
-gui          = gui(white,screen,width,height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music)
+gui              = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
+gui.statusButton    = statusButton
+gui.inventoryButton = inventoryButton
+gui.noteButton      = noteButton
+
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()
 fx           = sfx(gui)

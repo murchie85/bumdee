@@ -10,13 +10,14 @@ class gameState():
 
 		self.date           = ['Mon', '22', 'Aug', '22:57']
 		self.userName       = "Dobber"
+		self.level          = '1'
 		self.money          = 5.27
 		self.hp             = 33
 		self.happiness      = 0.4
 		self.hunger         = 0.5
 
 		self.items          = [('cigs',4),('old condom',1),('rusty spanner',1),('cough medicine',1)]
-
+		self.messages       = []
 
 
 		self.counter        = None

@@ -2,32 +2,40 @@ import pygame
 from _draw import *
 
 class gui():
-    def __init__(self,white, screen, width, height,font,bigFont,smallFont,themeColour,exitButton,nextButton,dialogue,sDialogue,music,clicked=False):
-        self.white         = white
-        self.screen        = screen
-        self.width         = width
-        self.height        = height
-        self.font          = font
-        self.bigFont       = bigFont
-        self.smallFont     = smallFont
-        self.themeColour   = themeColour
-        self.exitButton    = exitButton
-        self.nextButton    = nextButton
-        self.dialogue      = dialogue
-        self.sDialogue     = sDialogue
-        self.music         = music
-        self.clicked       = clicked
+    def __init__(self,white, screen, width, height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides,clicked=False):
+        self.white           = white
+        self.screen          = screen
+        self.width           = width
+        self.height          = height
+        self.smallNokiaFont  = smallNokiaFont
+        self.hugeNokiaFont   = hugeNokiaFont
+        self.font            = font
+        self.bigFont         = bigFont
+        self.hugeFont        = hugeFont
+        self.smallFont       = smallFont
+        self.nanoFont        = nanoFont
+        self.themeColour     = themeColour
+        self.exitButton      = exitButton
+        self.nextButton      = nextButton
+        self.dialogue        = dialogue
+        self.sDialogue       = sDialogue
+        self.smsDialogue     = smsDialogue
+        self.music           = music
+        self.borderSlides    = borderSlides
+        self.clicked         = clicked
 
-        self.greenA        = (39,65,45)
+        self.greenA        = (36,65,45)
         self.greenB        = (82,128,58)
         self.greenC        = (173,195,63)
         self.greenD        = (215,233,149)
+        self.buttonGreen   = (47,75,45)
         self.screenDefault = (201,221,126)
         self.screenColour  = (201,221,126)
 
         self.greenText     = (29,153,29)
         self.greenBorder   = (127,187,73)
         self.darkGrey      = (44,52,56)
+        self.lightBlack    = (40,41,35)
         self.lightGrey     = (72,77,79)
 
 
@@ -45,15 +53,11 @@ class gui():
         self.bw,self.bh = 0.8*self.width,0.8*self.height
         rect = pygame.draw.rect(self.screen, colour, [self.bx, self.by,self.bw , self.bh],4)
 
-
-    def semiBorder(self):
-        # Bottom Line
-        pygame.draw.line(self.screen,self.greenBorder,(0,self.height-5),(self.width ,self.height-5),7)
-        
-        # right Line
-        pygame.draw.line(self.screen,self.greenBorder,(self.width-4,0.08*self.height),(self.width-4,self.height),9)
-        
-        
+    def mouseCollides(self,mousePos,x,y,w,h):
+        if mousePos[0] > x and mousePos[0] < x + w:
+            if mousePos[1] > y and mousePos[1] < y + h:
+                return(True)
+        return(False)
 
 
 class desktop():
@@ -62,7 +66,13 @@ class desktop():
         self.flicker = 40
         self.flickD  = 40
 
-    def drawClock(self,gui,gs):
+    def drawDesktop(self,gui,gs,animateImgs):
+        #gui.screen.fill(gui.darkGrey)
+        gui.screen.fill(gui.greenA)
+
+        # animate border 
+        animateImgs.animate(gui,gs.state,gui.borderSlides,(0,15,15),(0,0))
+        
         # draw clockbox
         boxx,boxy = 0.7*gui.width,1
         boxw,boxh = 0.3*gui.width,0.07*gui.height
@@ -71,132 +81,70 @@ class desktop():
         
         # draw clock
         day,date,month,time = gs.date[0],gs.date[1],gs.date[2],gs.date[3]
-        textX = boxx + 0.2*boxw
-        h,tw = drawText(gui.screen,gui.smallFont, day,textX,15, gui.greenText)
-        textX = textX + tw + 10
-        h,tw  = drawText(gui.screen,gui.smallFont, date, textX,15, gui.greenText)
-        textX = textX + tw + 10
-        h,tw  = drawText(gui.screen,gui.smallFont, month, textX,15, gui.greenText)
-        textX = textX + tw + 10
+        textX    = boxx + 0.2*boxw
+        h,tw,th  = drawText(gui.screen,gui.smallFont, day,textX,15, gui.greenText)
+        textX    = textX + tw + 10
+        h,tw,th  = drawText(gui.screen,gui.smallFont, date, textX,15, gui.greenText)
+        textX    = textX + tw + 10
+        h,tw,th  = drawText(gui.screen,gui.smallFont, month, textX,15, gui.greenText)
+        textX    = textX + tw + 30
         self.flicker -=1
         if(self.flicker<1): self.flicker = self.flickD
         if(self.flicker>20):
             drawText(gui.screen,gui.smallFont, time, textX,15, gui.greenText)
 
-        drawImage(gui.screen, gui.signal,(boxx + 0.04 *boxw,10))
+        # SIGNAL ICON
+        drawImage(gui.screen, gui.signal,(boxx + 0.04 *boxw,15))
 
-class phone():
-    def __init__(self,screenW,screenH):
+        # -----------NAVIGATION BAR
+        nbx,nby = 15,15
+        nbW,nbH = 0.65*gui.width,0.13*gui.height
+        fColour,bColour = (31,57,37),gui.greenB
+        active = gui.mouseCollides((gui.mx,gui.my),nbx,nby,nbW,nbH)
+        if(active):
+            fColour,bColour = gui.darkGrey,gui.greenBorder
 
-        self.screenW       = screenW
-        self.screenH       = screenH
+        pygame.draw.rect(gui.screen, fColour,[nbx, nby,nbW, nbH],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        pygame.draw.rect(gui.screen, bColour,[nbx, nby,nbW, nbH],8,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
 
-        self.mobilex       = 0
-        self.mobiley       = 0.22*self.screenH
-        self.mobileW       = 0.27*self.screenW
-        self.mobileH       = 0.78*self.screenH
+        bx = nbx + 0.05*nbW
+        by = nby + 0.2*nbH
+        # Nav Buttons 
+        statusButton = gui.statusButton.display(gui,fillColour=gui.buttonGreen,updatePos=(bx,by),hoverBoxCol=(61,111,67),hoverTextCol=gui.greenC)
+        
+        bx = bx + statusButton[1] + 0.25 * statusButton[1]
+        InventoryButton  = gui.inventoryButton.display(gui,fillColour=gui.buttonGreen,updatePos=(bx,by),hoverBoxCol=(61,111,67),hoverTextCol=gui.greenC)
+        
+        bx = bx + InventoryButton[1] + 0.25 * InventoryButton[1]
+        notificationButton = gui.noteButton.display(gui,fillColour=gui.buttonGreen,updatePos=(bx,by),hoverBoxCol=(61,111,67),hoverTextCol=gui.greenC)
+        bh = notificationButton[2]
+        
+        
+        # ------Black Info Box
+        boxColour  = (0,0,0)
+        boxHColour = gui.lightBlack
 
-        #top widget
-        self.mobiletx      = self.mobilex + 0.35*self.mobileW
-        self.mobiletW      = 0.3*self.mobileW
-        self.mobilety      = self.mobiley + 0.025*self.mobileH
-        self.mobiletH      = 0.04*self.mobileH
-        # screen
-        self.mobileSx      = self.mobilex + 0.05*self.mobileW
-        self.mobileSW      = 0.9*self.mobileW
-        self.mobileSy      = self.mobiley + 0.075*self.mobileH
-        self.mobileSH      = 0.8*self.mobileH
+        infboxw  = 0.4*nbW
+        infBoxh  = 1.2*bh
+        infoBoxy = nby + 0.15*nbH
+        bx = bx + notificationButton[1] + 2.2 * notificationButton[1]
+        pygame.draw.rect(gui.screen, boxColour,[bx, infoBoxy,infboxw, infBoxh],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        pygame.draw.rect(gui.screen, (55,95,73),[bx, infoBoxy,infboxw, infBoxh],2,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
 
-
-        self.phoneStrip   = pygame.image.load('pics/phoneLogos/phoneStrip.png')
-
-        self.messageLogo  = pygame.image.load('pics/phoneLogos/logos1.png')
-        self.phoneLogo    = pygame.image.load('pics/phoneLogos/logos2.png')
-        self.musicLogo    = pygame.image.load('pics/phoneLogos/logos3.png')
-        self.clockLogo    = pygame.image.load('pics/phoneLogos/logos4.png')
-        self.photoLogo    = pygame.image.load('pics/phoneLogos/logos5.png')
-        self.mailLogo     = pygame.image.load('pics/phoneLogos/logos6.png')
-        self.logos        = [(self.messageLogo,'message'),(self.phoneLogo,'phone'),(self.musicLogo,'music'),(self.clockLogo,'clock'),(self.photoLogo,'photo'),(self.mailLogo,'mail') ]
-
-
-
-
-
-        self.greenA        = (39,65,45)
-        self.greenB        = (82,128,58)
-        self.greenC        = (173,195,63)
-        self.greenD        = (215,233,149)
-        self.screenDefault = (201,221,126)
-        self.screenColour  = (201,221,126)
-
-        self.greenBorder   = (127,187,73)
-        self.darkGrey      = (44,52,56)
-        self.lightGrey     = (72,77,79)
-
-
-    def mouseCollides(self,mousePos,x,y,w,h):
-        if mousePos[0] > x and mousePos[0] < x + w:
-            if mousePos[1] > y and mousePos[1] < y + h:
-                return(True)
-        return(False)
-
-
-    def drawPhone(self,state,gui):
-        gui.screen.fill((39,65,45))
+        # write balance 
+        moneyX,moneyY = bx + 0.10*infboxw, by + 0.1*infBoxh
+        h,tw,th   = drawText(gui.screen,gui.smallNokiaFont, 'Balance',moneyX,moneyY, (89,207,147))
+        h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, '£ '+str(gs.money),moneyX, moneyY + 0.31*infBoxh, (89,207,147))
         
 
-        # ------phone screen 
+        # write status
+        healthX = moneyX + tw + (0.2*tw)
+        healthY = moneyY
+        h,tw,th = drawText(gui.screen,gui.smallNokiaFont, 'Status',healthX,moneyY, (89,207,147))
+        h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, 'Surviving',healthX, moneyY + 0.31*infBoxh, (89,207,147))
 
-        pos = (gui.mx,gui.my)
-        #Pos is the mouse position or a tuple of (x,y) coordinates
-        collides = self.mouseCollides(pos,self.mobileSx,self.mobileSy,self.mobileSW,self.mobileSH)
-        if(collides): state='on'
-        if(collides==False): state='off'
-        if(state=='on'): self.screenColour = self.screenDefault
-        if(state=='off'): self.screenColour = (78,96,9)
+        # write level
+        lvX = healthX + 2*(tw)
+        lvY = by + 0.12*infBoxh
+        h3,tw3,th = drawText(gui.screen,gui.bigFont, 'Lv ' + str(gs.level),lvX, lvY, (89,207,147))
 
-
-
-
-        # phone
-        pygame.draw.rect(gui.screen, self.darkGrey,    (self.mobilex, self.mobiley,self.mobileW , self.mobileH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, self.greenBorder, (self.mobilex, self.mobiley,self.mobileW , self.mobileH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-
-        # top widget
-        pygame.draw.rect(gui.screen, self.darkGrey,   (self.mobiletx, self.mobilety,self.mobiletW , self.mobiletH),border_radius=1, border_top_left_radius=-1, border_top_right_radius=-1, border_bottom_left_radius=-1, border_bottom_right_radius=-1)
-        pygame.draw.rect(gui.screen, self.greenBorder,    (self.mobiletx, self.mobilety,self.mobiletW , self.mobiletH),4,border_radius=1, border_top_left_radius=-1, border_top_right_radius=-1, border_bottom_left_radius=-1, border_bottom_right_radius=-1)
-
-
-        #screen 
-        pygame.draw.rect(gui.screen, self.screenColour, (self.mobileSx, self.mobileSy,self.mobileSW , self.mobileSH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, self.greenBorder,  (self.mobileSx, self.mobileSy,self.mobileSW , self.mobileSH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-
-        # circle button
-        pygame.draw.circle(gui.screen, self.lightGrey, (self.mobilex + 0.48*self.mobileW, self.mobileSy + self.mobileSH + 35), 25, 0)
-        pygame.draw.circle(gui.screen, self.greenBorder, (self.mobilex + 0.48*self.mobileW, self.mobileSy + self.mobileSH + 35), 25, 3)
-
-
-        if(state=='on'):
-            imgx,imgy = self.mobileSx + 40,self.mobileSy+100
-            drawImage(gui.screen,self.phoneStrip,(self.mobileSx,self.mobileSy))
-            for i in range(0,len(self.logos)):
-                img  = self.logos[i][0]
-                txt  = self.logos[i][1]
-                imgw = img.get_rect().w
-                imgh = img.get_rect().h
-
-
-                pCollides = self.mouseCollides(pos,imgx,imgy,imgw,imgh)
-                if(pCollides):
-                    pygame.draw.rect(gui.screen,self.greenC, (imgx, imgy,imgw , imgh),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-                    drawImage(gui.screen,img,(imgx,imgy))
-                    if(gui.clicked):
-                        print(str(txt) + 'Logo Clicked')
-                else:
-                    drawImage(gui.screen,img,(imgx,imgy))
-                imgx+=100
-                if(i>1):
-                    imgy = self.mobileSy+220
-                if(i==2):
-                    imgx = self.mobileSx + 40
-            

@@ -4,6 +4,7 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
     hovered = None 
     textsurface = myfont.render(text, True, colour)
     tw = textsurface.get_rect().width
+    th = textsurface.get_rect().height
     
     # ========LIMIT TEXT LENGTH TO FIT
     if(limitWidth):
@@ -12,6 +13,7 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
             printText = text[0:maxLen-6] + '...'  
             textsurface = myfont.render(printText, True, colour)
             tw = textsurface.get_rect().width
+            th = textsurface.get_rect().height
 
 
 
@@ -27,7 +29,7 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
                 hovered = text
 
     SCREEN.blit(textsurface,(x,y))
-    return(hovered,tw)
+    return(hovered,tw,th)
 
 
 def approachColour(baseColour,targetColour,inc=2):
@@ -50,12 +52,11 @@ class dialogue():
         self.textArray   = []
         self.taP         = 0
         self.senPos      = 0
-        self.timer       = 5
         self.colour      = (0,0,0)
         self.y           = 0
         self.y2          = 0
 
-    def drawDialogue(self,gui,myfont, text,clicked, colour=(0, 128, 0), inBorder=True,pos=(-1,-1),fade=True,skip=False):
+    def drawDialogue(self,gui,myfont, text,maxWidth,maxHeight,clicked, colour=(0, 128, 0), inBorder=True,pos=(-1,-1),fade=True,skip=False):
         #(0, 128, 126)
         if(pos==(-1,-1)):
             sx,sy      = gui.bx + 100,gui.by+70
@@ -63,8 +64,6 @@ class dialogue():
             sx,sy = pos[0],pos[1]
         
         x,y        = sx,sy
-        maxWidth   = gui.bw - 200
-        maxHeight  = sy + gui.bh - 200
         tRemaining = ""
         complete   = False
 

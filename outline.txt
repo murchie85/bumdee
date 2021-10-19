@@ -1,44 +1,41 @@
 High level
 
-- Daily Dashboard
-1. Central notifications
-2. Address them in the retrospective box
 
-Start with simple gui, number drop downs...then improve
 
-	- Date time
-	- Player Stats box
-	- Items box
-	- Notifications/email/letters box
+Stats and Settings
 	- Job Center (look for a job)
 	- Drug Dealing Box
 	- Box template (gamble, invest(paperclip), myJob)
+	- crypto
 
 
 
-- Name player
-- gameObject class
-	- contains everything so game can be loaded
-- shenzhen i/0 magnus opum
-- Player needs indexes
-	- Money
-	- Mental Health
-	- Hunger
-	- Happiness
-	- hp
-- Dobber
+DESKTOP FEATURES TO ADD : 
+
+- MakeMoney Tab
+	medical test
+	Minigames to make money, lock picking..
+- Phone SMS
+- Daily News 
+	- Pop up option (investigate/take/call)
+- Job Center
+- Notifications and Outstanding items
+- TODO TAB
+	- If you don't do, keeps ticking donw
+
+GAME FEATURES TO ADD: 
+
+- Next Day Function
+- Start Day Force Action Function
+
+
 
 Features
 
-DONE Do Screen fade effect
-- Player Object
-- User Input
+
 - Create forced Prompt dialogue 
-- Create red hurt effect
-- Create drug fog effect
-- Varying background Good background(shenzhen i/0)
+- 
 - Scripted events list (win scatch card...), store in gameobject
-- TODO box, if you don't do, keeps ticking down
 SCenes
 (Pic on top, black below)
 - Police 'penis inspection' - agree = mental health -10, run, talk your way out
@@ -49,14 +46,34 @@ SCenes
 - get fags for kids
 - steal beer
 - tran  - what am I?
+
+- indian scam call center 
+	- hi this is shish kebab, would you like to join our..
+	- bitcoin scam
 - 'sorry i don't speak retard' - then run from em black dots, or give money
 - 'Open up cunt' dialogue choice to save your bacon
 - 'take advantage of the blind girl' Stacey..turns out she is undercover cop
 - "Your dealer, 'Big Malky', just put your door in and stole your stash AND your cash.  Now he is texting twice a day saying you better pay for your tick.  What's you next move?"
 
-- MakeMoney Tab
-	medical test
-	Minigames to make money, lock picking..
 - make it through the wellgate game...
 
 - later AI takeover...
+
+GUI Feature: 
+
+- Vary background based on date
+
+
+
+# Redundant 
+
+- Create red hurt effect
+- Create drug fog effect
+
+# Done 
+	- Done: Date time
+	- Done: Player Stats button
+	- Done: Items button
+	- Done; Notifications Button
+DONE Do Screen fade effect
+Done: Phone
