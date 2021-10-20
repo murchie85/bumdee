@@ -39,7 +39,8 @@ pygame.init()
 pygame.display.set_caption("Bumdonian")
 clock          = pygame.time.Clock()
 nextFrame      = pygame.time.get_ticks()
-screen   = pygame.display.set_mode((width,height),pygame.DOUBLEBUF)
+screen         = pygame.display.set_mode((width,height),pygame.DOUBLEBUF)
+#phoneScreen    = pygame.display.set_mode((405,544),pygame.DOUBLEBUF)
 
 pygame.time.set_timer(pygame.USEREVENT, 20)
 font        = pygame.font.Font(None, 25)
@@ -47,12 +48,16 @@ font        = pygame.font.Font(None, 26)
 bigFont     = pygame.font.Font(None, 32)
 
 hugeNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 37)
+nokiaFont      = pygame.font.Font('fonts/nokiafc22.ttf', 25)
 smallNokiaFont = pygame.font.Font('fonts/nokiafc22.ttf', 18)
 
 hugeFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 40)
+jumboFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 50)
 bigFont        = pygame.font.Font('fonts/Orbitron-Regular.ttf', 32)
 font           = pygame.font.Font('fonts/Orbitron-Regular.ttf', 25)
+smsFont        = pygame.font.Font('fonts/Orbitron-Regular.ttf', 22)
 smallFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 20)
+musicFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 18)
 nanoFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 14)
 
 # ---------------CLASS OBJECTS
@@ -72,10 +77,15 @@ smsDialogue  = smsDialogue()
 sDialogue    = scrollingDialogue()
 music        = music()
 
-gui              = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
+gui                 = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
 gui.statusButton    = statusButton
 gui.inventoryButton = inventoryButton
 gui.noteButton      = noteButton
+gui.nokiaFont       = nokiaFont
+gui.smsFont         = smsFont
+gui.musicFont       = musicFont
+gui.jumboFont       = jumboFont
+
 
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()
@@ -86,11 +96,17 @@ user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
 
+# Adding to Gui
+gui.userInput       = user_input
 
 
+# set up music
 
-
-
+from os import listdir
+from os.path import isfile, join
+musicPath = 'music/'
+musicFiles = [f for f in listdir(musicPath) if isfile(join(musicPath, f))]
+gs.music = [[x,musicFiles[x],str(musicPath) + './' +str(musicFiles[x]) ] for x in range(0,len(musicFiles)) ]
 
 
 # ---------------setup finished

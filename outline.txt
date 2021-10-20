@@ -47,6 +47,11 @@ SCenes
 - steal beer
 - tran  - what am I?
 
+- Dialogues:
+	- Brenda: dont call me again creep
+	- Carl: hey you fancy joining a sausage party on Monday?
+
+
 - indian scam call center 
 	- hi this is shish kebab, would you like to join our..
 	- bitcoin scam

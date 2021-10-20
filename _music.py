@@ -7,6 +7,10 @@ class music():
 
 	def play(self,tune,pos=None):
 		self.tune = tune
+		print('playing ' + str(tune))
+		if(self.state=='playing'):
+			self.stop()
+			return()
 		if(self.state=='stopped'):
 			pygame.mixer.init()
 			pygame.mixer.music.load(tune)

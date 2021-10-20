@@ -4,7 +4,7 @@ def gameLoop(gui,gs,phone,desktop,animateImgs,fx,introSlides,user_input):
 	    #init
 	    
 	    desktop.drawDesktop(gui,gs,animateImgs)
-	    phone.drawPhone('off',gui)
+	    phone.drawPhone('off',gui,gs)
 	    
 
 

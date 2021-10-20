@@ -239,8 +239,29 @@ class imageAnimate():
         gui.screen.blit(introSlides[self.p],blitPos)
 
 
-def drawImage(screen,image,pos):
-	screen.blit(image,pos)
+def drawImage(screen,image,pos,trim=False):
+    if(trim!=False):
+        screen.blit(image,pos,trim)
+    else:
+        screen.blit(image,pos)
+
+def drawSelectableImage(image,image2,pos,gui,trim=False):
+    displayImage = image
+
+    hover = gui.mouseCollides((gui.mx,gui.my),pos[0],pos[1],image.get_rect().w,image.get_rect().h)
+    if(hover): displayImage = image2
+
+    if(trim!=False):
+        gui.screen.blit(displayImage,pos,trim)
+    else:
+        gui.screen.blit(displayImage,pos)
+
+    if(hover and gui.clicked):
+        return(True)
+
+    return(False)
+
+
 
 def drawVerticleList(choices,selectedFont,x,y,gui,colour=(0, 0, 0) , spacing=2):
     
