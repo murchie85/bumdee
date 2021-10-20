@@ -1,0 +1,1 @@
+([('main', '/Users/adammcmurchie/2021/Bumdonian/dist/main', 'EXECUTABLE')],)

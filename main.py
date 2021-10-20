@@ -5,8 +5,6 @@ import math
 import random
 import json
 import os
-import pandas as pd
-import statistics
 import os, sys
 
 from _input      import *
