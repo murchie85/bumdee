@@ -7,16 +7,17 @@ import json
 import os
 import os, sys
 
-from _input      import *
-from _draw       import *
-from _effects    import *
-from _gui        import *
-from _gameState  import *
-from _startMenu  import *
-from _button     import *
-from _music      import *
-from _game       import *
-from _phone      import *
+from _input                 import *
+from _draw                  import *
+from _effects               import *
+from _gui                   import *
+from _gameState             import *
+from _startMenu             import *
+from _button                import *
+from _music                 import *
+from _mainLoop              import *
+from _phone                 import *
+from _desktopFunctions      import *
 
 
 # -----------VARIABLES & FLAGS
@@ -48,6 +49,7 @@ bigFont     = pygame.font.Font(None, 32)
 hugeNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 37)
 nokiaFont      = pygame.font.Font('fonts/nokiafc22.ttf', 25)
 smallNokiaFont = pygame.font.Font('fonts/nokiafc22.ttf', 18)
+nanoNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 14)
 
 hugeFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 40)
 jumboFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 50)
@@ -70,20 +72,21 @@ noteButton      = button(0.15*width,0.05*height,width/17,height/13,'N',(0,128,0)
 
 borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('pics/frame/border2.png'),pygame.image.load('pics/frame/border3.png'),pygame.image.load('pics/frame/border4.png'),pygame.image.load('pics/frame/border5.png'),pygame.image.load('pics/frame/border6.png'),pygame.image.load('pics/frame/border7.png'),pygame.image.load('pics/frame/border8.png')]
 
-dialogue     = dialogue()
-smsDialogue  = smsDialogue()
-sDialogue    = scrollingDialogue()
-music        = music()
+dialogue          = dialogue()
+smsDialogue       = smsDialogue()
+sDialogue         = scrollingDialogue()
+music             = music()
 
 gui                 = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
 gui.statusButton    = statusButton
 gui.inventoryButton = inventoryButton
 gui.noteButton      = noteButton
 gui.nokiaFont       = nokiaFont
+gui.nanoNokiaFont   = nanoNokiaFont
 gui.smsFont         = smsFont
 gui.musicFont       = musicFont
 gui.jumboFont       = jumboFont
-
+gui.gameTime        = 0
 
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()
@@ -136,8 +139,9 @@ while gs.running:
     # Flip the display
     pygame.display.flip()
     # Tick
-    clock.tick(FPS)
-    clock.tick_busy_loop(120)
+    gs.dt = clock.tick(FPS)
+    gs.gameElapsed += gs.dt/1000
+    #clock.tickck_busy_loop(120)
     continue
 
 # Done! Time to quit.

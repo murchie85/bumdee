@@ -1,32 +1,162 @@
 High level
 
+---------------------
+CORE IDEA RULES
+--------------------- 
+
+**Ethics**
+
+	- Pop up prompt, notification (short)
+	- You can do things easy way/hard way
+		- say that unethical is easy
+		- suggest first run is easy
+	- lower or higher hte ethics ratings the more opportunities
+
+**Day**
+
+	- Each day has 10 minutes (amend in settings)
+
+**companion**
+
+	- Narrates you through
+	- 'are you still collecting bottle caps'
+
+**popup notification**
+
+**replying to decisions**
+- sometimes the consequence comes the next day
 
 
-Stats and Settings
-	- Job Center (look for a job)
-	- Drug Dealing Box
-	- Box template (gamble, invest(paperclip), myJob)
-	- crypto
+- Undertale style side games
+
+---------------------
+Beginner Notes
+--------------------- 
+
+'Hey, you can't do everything in one day, click next day'
 
 
+---------------------
+Juice Can Tabs
+--------------------- 
 
-DESKTOP FEATURES TO ADD : 
 
-- MakeMoney Tab
+click 100 - that's your daily rate 
+Bank - Adds money
+next day - your rate has been extended to 200
+Bottle Caps - 100
+cans
+bottles
+
+
+- Dynamic
+- Ticks, minimises to small tick obj
+
+- Rules
+	- click up and stuff ticks down
+	- aim to last 50 to 100 days
+	- LV throttle
+	- Ethical route 
+
+
+- flow
+	- caps first
+	- manual bank
+	- bottle caps
+	- train a magpie
+	- ****cut scene*** 
+	- Ethical decision 
+		- take money
+			- also draw pic cutscene
+
+
+---------------------
+Core Features
+--------------------- 
+
+- 'Go to work'
+	- Time skips forward 50%
+	- You might have to check in 
+	- can skip
+
+- Crypto Clicker
+- Job Center
+- Gamble
+
+- Drug Dealing box
+	- ethical rat out ppl
+
+- Walking home
+	- + 50 pts
+	- Harder each time
+
+- Hacking 
+	- to make money
+	- like exapunks...
+
+	- Enter ras token over phone
+
+- creating fake identity
+	- fail an eye test
+		- 'are you sure?'
+		- I dont believe you
+		- whats your name/address
+		- keypad entry
+- MakeMoney (sideJob) Tab
+	New job/hunts appear after text notification
 	medical test
 	Minigames to make money, lock picking..
-- Phone SMS
+
+- Your council tax is overdue..
+	- Negotiate
+	- Change name
+
+- insurance fraud 
+	- 
+
+- pick locks
+ - different levels
+
+
+- betray friends (sell them out to police in good mode)
+	- cops keep trying to approach you
+- steal from embassy
 - Daily News 
 	- Pop up option (investigate/take/call)
-- Job Center
-- Notifications and Outstanding items
+
+
 - TODO TAB
 	- If you don't do, keeps ticking donw
+
+
+---------------------
+Next day 
+--------------------- 
+money made...
+
+
+---------------------
+GUI FEATURES TO ADD :
+--------------------- 
+
 
 GAME FEATURES TO ADD: 
 
 - Next Day Function
 - Start Day Force Action Function
+- swag shop
+- buy phone skins
+- buy access to games
+- unlock music..
+
+
+00000000000000000000
+Non Rush 
+00000000000000000000
+
+- Stats and Settings Menu
+
+
 
 
 
@@ -51,6 +181,7 @@ SCenes
 	- Brenda: dont call me again creep
 	- Carl: hey you fancy joining a sausage party on Monday?
 
+- use phone buttons to be in a phone box, dial the right numbers as told to you
 
 - indian scam call center 
 	- hi this is shish kebab, would you like to join our..
@@ -70,12 +201,16 @@ GUI Feature:
 
 
 
-# Redundant 
-
+======================
+		redundant
+======================
 - Create red hurt effect
 - Create drug fog effect
 
-# Done 
+======================
+		 Done 
+======================
+
 	- Done: Date time
 	- Done: Player Stats button
 	- Done: Items button

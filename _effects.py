@@ -12,7 +12,7 @@ class sfx():
 		self.fiInit       = False
 		self.gameState    = None
 
-	def fadeOut(self,gameState,inc=5):
+	def fadeOut(self,gameState,inc=5,alpha=254):
 		""" increments an index related to alpha"""
 		
 
@@ -30,8 +30,8 @@ class sfx():
 		self.surf.fill((0,0,0))
 		self.gui.screen.blit(self.surf,(0,0))
 		self.alphaI +=inc
-		if(self.alphaI>254):self.alphaI = 255
-		if(self.alphaI>254): complete = True
+		if(self.alphaI>alpha):self.alphaI = alpha
+		if(self.alphaI>=alpha): complete = True
 
 		return(complete)
 

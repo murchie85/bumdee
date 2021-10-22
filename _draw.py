@@ -1,6 +1,7 @@
 from pygame.locals import *
 
 def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,limitWidth=None):
+    """ Center means giving the far x point """
     hovered = None 
     textsurface = myfont.render(text, True, colour)
     tw = textsurface.get_rect().width

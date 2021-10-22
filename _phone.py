@@ -10,6 +10,8 @@ class phone():
         self.screenW          = screenW
         self.screenH          = screenH
         self.menuState        = menuState
+        self.alert            = False
+        self.alertMessage     = None
         self.screenOn         = 'off'
         self.navState         = None
         self.scrollerState    = 0
@@ -121,7 +123,7 @@ class phone():
 
     # --------MISC MENU
 
-    def miscMenu(self,state,gui,gs):
+    def miscMenu(self,gui,gs):
         if(self.screenOn=='off'): return()
 
         drawImage(gui.screen,self.phoneStrip,(self.mobileScreenx,self.mobileScreeny))
@@ -130,30 +132,20 @@ class phone():
 
 
 
+    def messageAlert(self,gui,gs):
+        self.displayAlertMessage(gui,gs,gs.alertMessage)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # ------------MESSAGES
+    def messageUpdate(self,message,gui,gs,alert=False):
+        """ call only once"""
+        if(alert): self.alert=True
+        gs.messages.append(message)
+        gs.alertMessage = message
+            
+    def displayAlertMessage(self,gui,gs,message):
+        if(self.screenOn=='off'): return()
+        self.drawSelectedMessage(gui,message,scrolling=True)
+        #self.navStrip(gui,previousState='messageAlert')           
+        
 
 
 
@@ -198,11 +190,12 @@ class phone():
         drawImage(gui.screen,self.messageBox,(x,y),trim=trim)
         
         stxt = drawText(gui.screen,gui.smallNokiaFont, messageSender,x+10,y+10, gui.greenA)
+        
         gui.smsDialogue.drawDialogue(gui,gui.nanoFont, messageText,(x+10,y+10 + 1.2*stxt[2]),w-30,200,gui.clicked, gui.greenA)
 
         return(selected,(y+h))
 
-    def drawSelectedMessage(self,gui,message,yset=None):
+    def drawSelectedMessage(self,gui,message,yset=None,scrolling=False):
 
         messageSender = message[1]
         messageText   = message[2]
@@ -256,8 +249,10 @@ class phone():
         
         drawImage(gui.screen,messageAvatar,(imageX,imageY))
         #----draw text
-
-        gui.smsDialogue.drawDialogue(gui,gui.smsFont, messageText,(x+20,imageY + 1.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
+        if(scrolling):
+            gui.smsDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,(x+20,imageY + 1.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
+        else:
+            gui.smsDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,(x+20,imageY + 1.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
 
         return(selected,(y+h))
 
@@ -265,7 +260,7 @@ class phone():
 
 
 
-    def messageMenu(self,state,gui,gs):
+    def messageMenu(self,gui,gs):
         if(self.screenOn=='off'): return()
         #----------get message dimensions
 
@@ -313,7 +308,7 @@ class phone():
 
 
 
-    def drawClock(self,state,gui,gs):
+    def drawClock(self,gui,gs):
         if(self.screenOn=='off'): return()
         #----------get message dimensions
 
@@ -324,7 +319,7 @@ class phone():
 
         x = self.mobileScreenx
         y = self.mobileScreeny + 0.35* self.mobileSH
-        hovered,tw,th = drawText(gui.screen,gui.jumboFont, str(gs.date[-1]),x,y, gui.greenB,center=0.85 * self.mobileSW)
+        hovered,tw,th = drawText(gui.screen,gui.jumboFont, str(gs.displayDate[-1]),x,y, gui.greenB,center=0.85 * self.mobileSW)
         y = y+1.2*th
         hovered,tw,th = drawText(gui.screen,gui.font, 'Real Time',x,y, gui.greenB,center=0.85 * self.mobileSW)
         y = y+1.2*th
@@ -349,7 +344,7 @@ class phone():
     # ------------PHONE CONTACTS
 
 
-    def phoneContactMenu(self,state,gui,gs):
+    def phoneContactMenu(self,gui,gs):
         if(self.screenOn=='off'): return()
         #----------get message dimensions
 
@@ -476,7 +471,7 @@ class phone():
 
     # ------------MUSIC
 
-    def musicMenu(self,state,gui,gs):
+    def musicMenu(self,gui,gs):
         if(self.screenOn=='off'): return()
         #----------get message dimensions
 
@@ -596,7 +591,7 @@ class phone():
 
         return(selected,(y+h))
 
-    def playMusic(self,state,gui,gs,musicArray):
+    def playMusic(self,gui,gs,musicArray):
         tune = musicArray[2]
         gui.music.play(tune)
         self.menuState = 'music'
@@ -605,27 +600,12 @@ class phone():
 
 
 
+    def drawPhone(self,gui):
 
-
-
-    # ------------PHONE
-
-    def drawPhone(self,state,gui,gs):
-
-        # -------Update navs
-
-        if(self.navState == 'home'): self.menuState = 'main'
-        if(self.navState == 'message'): self.menuState = 'message'
-
-        self.navState = None
-
-        # ------phone screen On/Off 
-        
-        self.screenOn = state
+        # ------Draw Phone
         pos = (gui.mx,gui.my)
         collides = self.mouseCollides(pos,self.mobileScreenx,self.mobileScreeny,self.mobileSW,self.mobileSH)
         if(collides): self.screenOn='on'
-        if(collides==False): self.screenOn='off'
         if(self.screenOn=='on'): self.screenColour = self.screenDefault
         if(self.screenOn=='off'): self.screenColour = (78,96,9)
 
@@ -649,28 +629,59 @@ class phone():
 
 
 
+
+    # ------------PHONE
+
+    def phoneMenu(self,gui,gs):
+
+        # ----- default always off
+
+        self.screenOn = 'off' 
+       
+        # ------message alert
+
+        if(self.alert): 
+            self.screenOn='on'
+            self.menuState = 'messageAlert'
+            self.messageAlert(gui,gs)
+
+        # -------Update navs
+
+        if(self.navState == 'home'): self.menuState = 'main'
+        if(self.navState == 'message'): self.menuState = 'message'
+
+        self.navState = None
+
+        # -----------Draw Phone
+
+        self.drawPhone(gui)
+
+
         # ----------Navigate states
 
         if(self.menuState == 'message'): 
-            self.messageMenu(state,gui,gs)
+            self.messageMenu(gui,gs)
         elif(self.menuState== 'displayMessage'):
             self.displayMessage(gui,gs,self.messageCache)
         elif(self.menuState== 'music'):
-            self.musicMenu(state,gui,gs)
+            self.musicMenu(gui,gs)
         elif(self.menuState== 'phone'):
-            self.phoneContactMenu(state,gui,gs)
+            self.phoneContactMenu(gui,gs)
         elif(self.menuState=='playMusic'):
-            self.playMusic(state,gui,gs,self.musicCache)
+            self.playMusic(gui,gs,self.musicCache)
         elif(self.menuState=='clock'):
-            self.drawClock(state,gui,gs)
+            self.drawClock(gui,gs)
+        elif(self.menuState=='messageAlert'):
+            self.messageAlert(gui,gs)
         else:
-            self.miscMenu(state,gui,gs)
+            self.miscMenu(gui,gs)
 
         
 
 
 
-        # ---------home screen 
+        # ---------home screen
+        pos = (gui.mx,gui.my) 
         if(self.screenOn=='on' and self.menuState == 'main'):
 
             imgx,imgy = self.mobileScreenx + 40,self.mobileScreeny+0.14*self.mobileSH
@@ -724,12 +735,14 @@ class phone():
         circleX,circleW = (self.mobileScreenx + 0.42*imageWidth),0.07*imageWidth
         squareX,squareW = (self.mobileScreenx + 0.655*imageWidth),0.07*imageWidth
 
+        # Back Arrow
         if(self.mouseCollides((gui.mx,gui.my),leftArrowX,navY,leftArrowW,navH ) ):
             drawImage(gui.screen,self.btmStrips[1],(self.mobileScreenx,self.mobileScreeny+self.mobileSH-41))
             if(gui.clicked):
                 self.navState = previousState
                 return()
-                
+        
+        # Home button
         elif(self.mouseCollides((gui.mx,gui.my),circleX,navY,circleW,navH ) ):
             drawImage(gui.screen,self.btmStrips[2],(self.mobileScreenx,self.mobileScreeny+self.mobileSH-41))
             if(gui.clicked): 
@@ -758,16 +771,18 @@ class smsDialogue():
         self.origText    = ''
         self.textArray   = []
         self.taP         = 0
-        self.senPos      = 0
         self.colour      = (0,0,0)
         self.y           = 0
         self.y2          = 0
+        
+        self.timer       = 10
+        self.senPos      = 0
+        self.arrPos      = 0
 
     def drawDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False):
         sx,sy = pos[0],pos[1]
         x,y        = sx,sy
         tRemaining = ""
-        complete   = False
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
 
 
@@ -780,6 +795,7 @@ class smsDialogue():
         if(self.initialised== False):
             # format paragraph into array of fitted sentences
             self.origText    = text
+            self.senPos      = 0
             dAr,para = [], ""
             for word in text.split(' '):
                 pre   = para
@@ -793,6 +809,8 @@ class smsDialogue():
 
             self.textArray = dAr
             self.initialised = True
+        
+
 
         hTotal = 0
         for sentence in range(0,len(self.textArray)):
@@ -801,24 +819,84 @@ class smsDialogue():
             gui.screen.blit(textsurface,(x,y))
             y = y + verticalSep*h
             hTotal = hTotal + verticalSep*h
+            tRemaining = self.textArray[sentence+1:]
 
-
-            # if display capped 
+            # Condition: If lines exceed specified MAX LINES, break here
             if((sentence>=maxVerticleLines-1)): break
-            # If height capped
-            if(hTotal >= maxHeight):
-                tRemaining = self.textArray[sentence+1:]
-                if(displayNextButton): nextP = gui.nextButton.display(gui,noBorder=False)
-                
-                if(clicked and hovered and (len(tRemaining)>0)):
-                    self.textArray = tRemaining
-                break
 
-            complete  = True
-            
+            # Condition: If lines exceed specified HEIGHT
+            if(hTotal >= maxHeight): break
+
+            #if(displayNextButton): nextP = gui.nextButton.display(gui,noBorder=False)
+
+        # Condition: If lines remaining and clicked, go next page
+        if(clicked and hovered and (len(tRemaining)>0)):
+            self.textArray = tRemaining
 
 
-        return(complete)
+    def drawScrollingDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False):
+        sx,sy = pos[0],pos[1]
+        x,y        = sx,sy
+        tRemaining = ""
+        hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
 
 
-            
+
+        # reset if called by new function
+        if(self.origText!= text): 
+            self.initialised=False
+            self.origText = text
+
+        if(self.initialised== False):
+            # format paragraph into array of fitted sentences
+            self.origText    = text
+            self.senPos      = 0
+            dAr,para = [], ""
+            for word in text.split(' '):
+                pre   = para
+                para += word + " "
+                textsurface = myfont.render(para, True, colour)
+                w = textsurface.get_rect().width
+                if(w>= maxWidth):
+                    dAr.append(pre)
+                    para = word + " "
+            dAr.append(para)
+
+            self.textArray = dAr
+            self.baseArray = dAr
+            self.initialised = True
+
+        self.timer-=1
+        if(self.timer<1):
+            splitArrayElem      = self.baseArray[self.arrPos].split(' ')
+            self.textArray = [' '.join(splitArrayElem[:self.senPos])]
+            self.timer=10
+            self.senPos +=1
+            if(self.senPos>len(splitArrayElem)):
+                self.arrPos +=1
+                self.senPos = 0
+        
+
+
+        hTotal = 0
+        for sentence in range(0,len(self.textArray)):
+            textsurface = myfont.render(self.textArray[sentence], True, colour)
+            h = textsurface.get_rect().height
+            gui.screen.blit(textsurface,(x,y))
+            y = y + verticalSep*h
+            hTotal = hTotal + verticalSep*h
+            tRemaining = self.textArray[sentence+1:]
+
+            # Condition: If lines exceed specified MAX LINES, break here
+            if((sentence>=maxVerticleLines-1)): break
+
+            # Condition: If lines exceed specified HEIGHT
+            if(hTotal >= maxHeight): break
+
+            #if(displayNextButton): nextP = gui.nextButton.display(gui,noBorder=False)
+
+        # Condition: If lines remaining and clicked, go next page
+        if(clicked and hovered and (len(tRemaining)>0)):
+            self.textArray = tRemaining
+
+
