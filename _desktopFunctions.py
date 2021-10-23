@@ -182,7 +182,7 @@ def pullTab(gui,phone,gs,fx,desktop):
             bank(gs,desktop)
 
             # update message and set alert
-            message = [11,'Unknown', 'What are you doing?','pics/characters/unknown.png']
+            message = [11,'Unknown', 'What are you doing? Dont you know collecting can tabs is a waste of time, there is no way anything could come of it.','pics/characters/unknown.png']
             phone.messageUpdate(message,gui,gs,alert=True)
             
             

@@ -74,6 +74,7 @@ borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('p
 
 dialogue          = dialogue()
 smsDialogue       = smsDialogue()
+smsScrollDialogue = smsScrollDialogue()
 sDialogue         = scrollingDialogue()
 music             = music()
 
@@ -87,6 +88,7 @@ gui.smsFont         = smsFont
 gui.musicFont       = musicFont
 gui.jumboFont       = jumboFont
 gui.gameTime        = 0
+gui.smsScrollDialogue = smsScrollDialogue
 
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()

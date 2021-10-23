@@ -116,7 +116,19 @@ class phone():
         
 
 
+    def drawAvatar(self,x,y,messageAvatar,textObj,gui,thick=4):
+        imageW,imageH   = messageAvatar.get_rect().w,messageAvatar.get_rect().h
+        halfWidth       = 0.5*(0.9*self.mobileSW - imageW)
+        imageX,imageY   = x+halfWidth, y+10 + 1.2*textObj[2]
+        imageBottom     = imageY + imageH
+        
+        pygame.draw.rect(gui.screen, self.greenC, (imageX, imageY,imageW , imageH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        
+        pygame.draw.rect(gui.screen, self.greenA, (imageX-thick, imageY-thick,imageW+(2*thick) , imageH+(2*thick)),4,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        
+        drawImage(gui.screen,messageAvatar,(imageX,imageY))
 
+        return(imageBottom,imageH)
 
 
 
@@ -124,6 +136,7 @@ class phone():
     # --------MISC MENU
 
     def miscMenu(self,gui,gs):
+        """ undefined menus"""
         if(self.screenOn=='off'): return()
 
         drawImage(gui.screen,self.phoneStrip,(self.mobileScreenx,self.mobileScreeny))
@@ -133,6 +146,9 @@ class phone():
 
 
     def messageAlert(self,gui,gs):
+        """ To update an alert message run:
+        phone.messageUpdate(message,gui,gs,alert=True)
+        """
         self.displayAlertMessage(gui,gs,gs.alertMessage)
 
     def messageUpdate(self,message,gui,gs,alert=False):
@@ -143,7 +159,35 @@ class phone():
             
     def displayAlertMessage(self,gui,gs,message):
         if(self.screenOn=='off'): return()
-        self.drawSelectedMessage(gui,message,scrolling=True)
+        self.drawSelectedMessage(gui,message)
+        messageSender = message[1]
+        messageText   = message[2]
+        
+        if(len(message)==4):
+            messageAvatar = pygame.image.load(message[3])
+        else:
+            messageAvatar = self.sampleAvatar
+
+        selected = False
+
+        # ---- set x y width height
+
+        x = self.mobileScreenx + 0.05 * self.mobileSW
+        y = self.mobileScreeny + 0.05 * self.mobileSH
+        w,h = self.messageBox.get_rect().w ,self.messageBox.get_rect().h
+        # ----if message selected
+
+        chosen = self.mouseCollides((gui.mx,gui.my),x,y,w,h)
+
+        #----draw title
+
+        textObj = drawText(gui.screen,gui.nokiaFont, messageSender,x+10,y+10, gui.greenA,center=0.85 * self.mobileSW)
+        
+        #----draw avatar
+        imageBottom,imageH = self.drawAvatar(x,y,messageAvatar,textObj,gui,thick=4)
+
+        #----draw text
+        gui.smsScrollDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,0.8*self.mobileSW,200, colour=(0, 0, 0),delay=10,pos=(x+20,imageBottom + 0.2* imageH),skip=False)
         #self.navStrip(gui,previousState='messageAlert')           
         
 
@@ -195,8 +239,7 @@ class phone():
 
         return(selected,(y+h))
 
-    def drawSelectedMessage(self,gui,message,yset=None,scrolling=False):
-
+    def drawSelectedMessage(self,gui,message,yset=None):
         messageSender = message[1]
         messageText   = message[2]
         if(len(message)==4):
@@ -235,25 +278,13 @@ class phone():
         
         #----draw title
 
-        stxt = drawText(gui.screen,gui.nokiaFont, messageSender,x+10,y+10, gui.greenA,center=0.85 * self.mobileSW)
+        textObj = drawText(gui.screen,gui.nokiaFont, messageSender,x+10,y+10, gui.greenA,center=0.85 * self.mobileSW)
         
         #----draw avatar
-        imageW,imageH   = messageAvatar.get_rect().w,messageAvatar.get_rect().h
-        halfWidth       = 0.5*(0.9*self.mobileSW - imageW)
-        imageX,imageY   = x+halfWidth, y+10 + 1.2*stxt[2]
-        
-        
-        pygame.draw.rect(gui.screen, self.greenC, (imageX, imageY,imageW , imageH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        thick=4
-        pygame.draw.rect(gui.screen, self.greenA, (imageX-thick, imageY-thick,imageW+(2*thick) , imageH+(2*thick)),4,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        
-        drawImage(gui.screen,messageAvatar,(imageX,imageY))
-        #----draw text
-        if(scrolling):
-            gui.smsDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,(x+20,imageY + 1.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
-        else:
-            gui.smsDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,(x+20,imageY + 1.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
+        imageBottom,imageH = self.drawAvatar(x,y,messageAvatar,textObj,gui,thick=4)
 
+        #----draw text
+        gui.smsDialogue.drawDialogue(gui,gui.smsFont, messageText,(x+20,imageBottom + 0.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
         return(selected,(y+h))
 
 
@@ -768,16 +799,17 @@ class phone():
 class smsDialogue():
     def __init__(self):
         self.initialised = False
+        self.scrollInit  = False
         self.origText    = ''
         self.textArray   = []
-        self.taP         = 0
         self.colour      = (0,0,0)
         self.y           = 0
         self.y2          = 0
         
-        self.timer       = 10
+        self.timer       = 5
         self.senPos      = 0
         self.arrPos      = 0
+        self.arrIndex    = 0
 
     def drawDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False):
         sx,sy = pos[0],pos[1]
@@ -834,23 +866,50 @@ class smsDialogue():
             self.textArray = tRemaining
 
 
-    def drawScrollingDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False):
+class smsScrollDialogue():
+
+    def __init__(self):
+        self.initialised = False
+        self.scrollInit  = False
+        self.origText    = ''
+        self.textArray   = []
+        self.colour      = (0,0,0)
+        self.y           = 0
+        self.y2          = 0
+        
+        self.timer       = 15
+        self.senPos      = 0
+        self.arrPos      = 0
+        self.arrIndex    = 0
+
+    def drawScrollingDialogue(self,gui,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),delay=10,pos=(-1,-1),skip=False,vertInc=1.2,maxLines=5):
+
         sx,sy = pos[0],pos[1]
         x,y        = sx,sy
         tRemaining = ""
+        clicked    = gui.clicked
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
+        self.finished = False
 
-
-
-        # reset if called by new function
+        # if the text changes, reset.
         if(self.origText!= text): 
-            self.initialised=False
+            self.scrollInit=False
             self.origText = text
 
-        if(self.initialised== False):
+
+        if(self.scrollInit== False):
+
+            self.__init__()
+            self.origText   = text
             # format paragraph into array of fitted sentences
-            self.origText    = text
-            self.senPos      = 0
+            self.textArray  = []
+            self.baseArray  = []
+            self.y          = sy
+            self.senPos     = 0
+            self.arrPos     = 0
+            self.arrIndex   = 0
+
+
             dAr,para = [], ""
             for word in text.split(' '):
                 pre   = para
@@ -862,41 +921,67 @@ class smsDialogue():
                     para = word + " "
             dAr.append(para)
 
-            self.textArray = dAr
+            
             self.baseArray = dAr
-            self.initialised = True
+            self.textArray = dAr
+            self.arrIndex  = 5
+            if(len(self.textArray)>maxLines): self.textArray = self.baseArray[0:self.arrIndex]
+            self.scrollInit = True
 
-        self.timer-=1
-        if(self.timer<1):
-            splitArrayElem      = self.baseArray[self.arrPos].split(' ')
-            self.textArray = [' '.join(splitArrayElem[:self.senPos])]
-            self.timer=10
-            self.senPos +=1
-            if(self.senPos>len(splitArrayElem)):
-                self.arrPos +=1
-                self.senPos = 0
+
+
+
+
+
+        # ----move to next page
+        if(hovered and clicked): 
+            if(self.arrIndex<len(self.baseArray)):
+                self.textArray = self.baseArray[self.arrIndex:(self.arrIndex+maxLines)]
+                self.arrIndex  = self.arrIndex + maxLines
+                self.arrPos     = 0
+                self.senPos     = 0
+                self.y          = sy
+
+
         
 
+        # --------Print all previous
+        
+        self.y2 = sy
+        for row in range(0,self.arrPos):
+            currentSentence = self.textArray[row]
+            ts = myfont.render(currentSentence, True, colour)
+            h = ts.get_rect().height
+            gui.screen.blit(ts,(x,self.y2))
+            self.y2=self.y2+ vertInc*h
 
-        hTotal = 0
-        for sentence in range(0,len(self.textArray)):
-            textsurface = myfont.render(self.textArray[sentence], True, colour)
-            h = textsurface.get_rect().height
-            gui.screen.blit(textsurface,(x,y))
-            y = y + verticalSep*h
-            hTotal = hTotal + verticalSep*h
-            tRemaining = self.textArray[sentence+1:]
 
-            # Condition: If lines exceed specified MAX LINES, break here
-            if((sentence>=maxVerticleLines-1)): break
+        # ------------scroll current line
 
-            # Condition: If lines exceed specified HEIGHT
-            if(hTotal >= maxHeight): break
+        currentSentence = self.textArray[self.arrPos]
+        for word in (range(0,len(currentSentence[self.senPos]) )):
+            printSentence = currentSentence[:self.senPos]
+            ts = myfont.render(printSentence, True, colour)
+            h = ts.get_rect().height
+        gui.screen.blit(ts,(x,self.y))
+        x=sx
 
-            #if(displayNextButton): nextP = gui.nextButton.display(gui,noBorder=False)
 
-        # Condition: If lines remaining and clicked, go next page
-        if(clicked and hovered and (len(tRemaining)>0)):
-            self.textArray = tRemaining
+        #--------------increment sen/array
+        self.timer-=1
+        if(self.timer<1):
+            self.timer=delay
+            if(len(currentSentence)-2 >=self.senPos):
+                self.senPos+=1
+            else:
+                if(len(self.textArray)-2>=self.arrPos):
+                    self.arrPos +=1
+                    self.y=self.y+vertInc*h
+                    self.senPos=0
+                else:
+                    self.finished    = True
+
+        return(self.finished)
+
 
 

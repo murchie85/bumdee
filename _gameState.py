@@ -29,7 +29,7 @@ class gameState():
 		self.hunger         = 0.5
 
 		self.items          = [('cigs',4),('old condom',1),('rusty spanner',1),('cough medicine',1)]
-		self.messages       = [[1,'Cheryl','Welcome to Bumdonian, have a look around and talk to Adam McMurchie if you get stuck. This game is a work in progress and not yet complete, it takes inpsiration from Drug wars, Undertale, Shenzhen IO and other classics. ','pics/characters/Phoebe.png'],
+		self.messages       = [[1,'Cheryl','Welcome to Bumdonian, have a look around and talk to Adam McMurchie if you get stuck. This game is a work in progress and not yet complete, it takes inpsiration from Drug wars, Undertale, Shenzhen IO and other classics. Please send any feedback my way.','pics/characters/Phoebe.png'],
 							   [2,'Adam','Hello you prick, did you forget already?','pics/characters/Chester.png'],
 							   [3,'Boris','Hi, please support my next election campaign and I promise to prevent mandatory organ donations'],
 							   [4,'Cynthia', 'Dont text me again you creep','pics/characters/Jane.png'],
