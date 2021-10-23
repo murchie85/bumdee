@@ -114,8 +114,9 @@ gs.music = [[x,musicFiles[x],str(musicPath) + './' +str(musicFiles[x]) ] for x i
 
 # ---------------setup finished
 
-
+gs.itercount = 0
 while gs.running:
+    gs.itercount+=1
 
     screen.fill((0, 0, 0))
     gui.clicked = False

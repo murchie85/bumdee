@@ -159,7 +159,7 @@ class phone():
             
     def displayAlertMessage(self,gui,gs,message):
         if(self.screenOn=='off'): return()
-        self.drawSelectedMessage(gui,message)
+        swState       = False
         messageSender = message[1]
         messageText   = message[2]
         
@@ -187,9 +187,12 @@ class phone():
         imageBottom,imageH = self.drawAvatar(x,y,messageAvatar,textObj,gui,thick=4)
 
         #----draw text
-        gui.smsScrollDialogue.drawScrollingDialogue(gui,gui.smsFont, messageText,0.8*self.mobileSW,200, colour=(0, 0, 0),delay=10,pos=(x+20,imageBottom + 0.2* imageH),skip=False)
-        #self.navStrip(gui,previousState='messageAlert')           
-        
+        finished = gui.smsScrollDialogue.drawScrollingDialogue(gui,gs,gui.smsFont, messageText,0.8*self.mobileSW,200, colour=(0, 0, 0),scrollSpeed=2,pos=(x+20,imageBottom + 0.2* imageH))
+        if(finished==True): 
+            self.navState = 'home'
+            self.alert    = False
+            #self.navStrip(gui,previousState='messageAlert')           
+    
 
 
 
@@ -674,7 +677,6 @@ class phone():
         if(self.alert): 
             self.screenOn='on'
             self.menuState = 'messageAlert'
-            self.messageAlert(gui,gs)
 
         # -------Update navs
 
@@ -882,14 +884,16 @@ class smsScrollDialogue():
         self.arrPos      = 0
         self.arrIndex    = 0
 
-    def drawScrollingDialogue(self,gui,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),delay=10,pos=(-1,-1),skip=False,vertInc=1.2,maxLines=5):
-
+    def drawScrollingDialogue(self,gui,gs,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),scrollSpeed=10,pos=(-1,-1),vertInc=1.2,maxLines=5,cutOutWaitTime=5):
+        """
+        function to scroll text, top/bottom with paging.
+        """
         sx,sy = pos[0],pos[1]
         x,y        = sx,sy
         tRemaining = ""
         clicked    = gui.clicked
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
-        self.finished = False
+        
 
         # if the text changes, reset.
         if(self.origText!= text): 
@@ -908,6 +912,7 @@ class smsScrollDialogue():
             self.senPos     = 0
             self.arrPos     = 0
             self.arrIndex   = 0
+            self.finished   = False
 
 
             dAr,para = [], ""
@@ -941,6 +946,7 @@ class smsScrollDialogue():
                 self.arrPos     = 0
                 self.senPos     = 0
                 self.y          = sy
+                self.finished   = False
 
 
         
@@ -970,16 +976,28 @@ class smsScrollDialogue():
         #--------------increment sen/array
         self.timer-=1
         if(self.timer<1):
-            self.timer=delay
+            self.timer=scrollSpeed
+
+            # Increment sentence print position
             if(len(currentSentence)-2 >=self.senPos):
                 self.senPos+=1
             else:
+                # Increment array Position
                 if(len(self.textArray)-2>=self.arrPos):
                     self.arrPos +=1
                     self.y=self.y+vertInc*h
                     self.senPos=0
                 else:
-                    self.finished    = True
+                    # If at end of array, end of elem and true end
+                    if(self.arrIndex>=len(self.baseArray)):
+                        self.finished    = 'End of Text'
+        
+
+        # Add any Delay before closing down 
+        if(self.finished=='End of Text'):
+            swComplete = gs.stopWatch(cutOutWaitTime,'displayAlert',text)
+            if(swComplete): 
+                self.finished = True
 
         return(self.finished)
 

@@ -63,6 +63,9 @@ class gameState():
 		self.gameTime		= gameTime
 		self.gameElapsed    = 0
 
+		self.stopWatchInit  = False
+		self.stopWatchState = None
+
 
 
 
@@ -77,6 +80,30 @@ class gameState():
 
 		# -----------widget states 
 		self.activeWidget   = None 
+
+	def stopWatch(self,countValue,source,trackedObject):
+		complete = False
+		# Re-Initialise automatically
+		if(self.stopWatchInit):
+			if(self.stopWatchState['source']!= source or self.stopWatchState['endCount']!= countValue or self.stopWatchState['trackedObject']!= trackedObject):
+				print('***initialising counter**** by' + str(source))
+				self.stopWatchInit=False
+
+		if(self.stopWatchInit==False):
+			self.stopWatchState = {'elapsed': 0,'endCount':countValue,'source':source,'trackedObject':trackedObject}
+			self.stopWatchInit=True
+
+		if(self.stopWatchInit):
+			self.stopWatchState['elapsed'] += self.dt/1000
+			#print('Iter: ' + str(self.itercount) + '  elapsed: ' + str(self.stopWatchState['elapsed']))
+			if(self.stopWatchState['elapsed']>self.stopWatchState['endCount']):
+				complete=True
+
+
+		return(complete)
+
+
+
 
 	def countDown(self,count):
 		if(self.counter==None): self.counter = count
