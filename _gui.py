@@ -22,6 +22,7 @@ class gui():
         smsDialogue,
         music,
         borderSlides,
+        debugSwitch = True,
         clicked=False):
 
         self.white              = white
@@ -44,11 +45,13 @@ class gui():
         self.music              = music
         self.borderSlides       = borderSlides
         self.clicked            = clicked
+        self.debugSwitch        = debugSwitch
 
         self.greenA        = (36,65,45)
         self.greenB        = (82,128,58)
         self.greenC        = (173,195,63)
         self.greenD        = (215,233,149)
+        self.darkGreen     = (5,37,23)
         self.buttonGreen   = (47,75,45)
         self.screenDefault = (201,221,126)
         self.screenColour  = (201,221,126)
@@ -60,15 +63,28 @@ class gui():
         self.lightGrey     = (72,77,79)
 
 
-        
+        # ---------------Images 
+
+
+        # Intro 
+
+        self.titleScreenImgs    = [pygame.image.load('pics/intro/intro1.png'),pygame.image.load('pics/intro/intro2.png')]
+
+
+
+
         self.signal             = pygame.image.load('pics/phoneLogos/signal.png')
         self.bottomNav          = pygame.image.load('pics/assets/mocks/navBottom.png')
+        self.bottomNav          = pygame.image.load('pics/assets/nav/navBottom.png')
+        self.nextDayBtn         = [pygame.image.load('pics/assets/nav/nextDay1.png'),pygame.image.load('pics/assets/nav/nextDay2.png')]
         self.tileBackground     = pygame.image.load('pics/assets/backgrounds/tile.png')
 
-        self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png')] 
-        self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png')] 
+        self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png'),pygame.image.load('pics/assets/widgetNode/widgetNode3.png')] 
         self.smallActiveWidget  = pygame.image.load('pics/assets/widgetNode/smallActiveWidget.png')
+        
         self.medActiveWidget    = pygame.image.load('pics/assets/widgetNode/medActiveWidget.png')
+        self.medActiveWidgetLab = pygame.image.load('pics/assets/widgetNode/widgetMedLabel.png')
+        
         self.bigActiveWidget    = pygame.image.load('pics/assets/widgetNode/bigActiveWidget.png')
         
         self.extendableBox      = [pygame.image.load('pics/assets/textBox/extendableDarkGreen1.png'),pygame.image.load('pics/assets/textBox/extendableDarkGreen2.png')]
@@ -85,6 +101,7 @@ class gui():
 
 
         self.menuBG = None
+        self.hideExitButton    = False
 
     def border(self,colour=(128,0,0)):
         self.bx,self.by = 0.1*self.width,0.1*self.height
@@ -98,25 +115,12 @@ class gui():
         return(False)
 
 
-    def showWidgNode(self,widgetNodeX,widgetNodeY,headerText="Widget",bodyText="Widget textX",selectable=True):
-        selected = False
-        selected = drawSelectableImage(self.widgetNode[0],self.widgetNode[1],(widgetNodeX,widgetNodeY),self,trim=False)
-        widgetNodeW = self.widgetNode[0].get_rect().w
 
-        
-
-        hovered,tw,th= drawText(self.screen,self.nanoNokiaFont, headerText, widgetNodeX,widgetNodeY+8, self.greenD,center=widgetNodeW)
-        drawText(self.screen,self.nanoNokiaFont, bodyText, widgetNodeX,widgetNodeY+37, self.greenD,center=widgetNodeW)
-        
-        if(selectable==False): return(False)
-        
-        return(selected)
-
-    def incrementableWidget(self,x,y,text,value,inc=1):
+    def incrementableWidget(self,x,y,text,value,inc=1,cap=100):
 
         displayText = text + ' ' + str(value)
         selected = drawSelectableImage(self.minis[4],self.minis[5],(x,y),self,trim=False)
-        if(selected):
+        if(selected and inc<=cap):
             value = value + inc
         textx, texty = x+60,y+10
         hov, tw,ty = drawText(self.screen,self.nanoNokiaFont, displayText,textx ,texty, self.greenD)
@@ -124,6 +128,15 @@ class gui():
         xEnd,yEnd = textx + tw, y + self.minis[5].get_rect().h
 
         return(value,xEnd,yEnd)
+
+
+    def debug(self,debugMessage):
+        if(self.debugSwitch):
+            print(debugMessage)
+
+    def debugDetailed(self,debugMessage):
+        if(self.debugSwitch=='detailed'):
+            print(debugMessage)
 
 
 

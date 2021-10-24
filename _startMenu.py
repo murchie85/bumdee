@@ -1,17 +1,16 @@
 from _draw           import *
-from _effects        import *
-from _scriptTools    import *
+from _fx             import *
 
 
 
-def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input):
+def manageStartMenu(gui,gs,animateImgs,fx,user_input):
     """runs function based on gamestate"""
 
     #---------------Title Screen
 
     if(gs.state == 'intro'):
         
-        animateImgs.animate(gui,gs.state,introSlides,(0,10,10),(0,0))
+        animateImgs.animate(gui,gs.state,gui.titleScreenImgs,(0,10,10),(0,0))
 
         if(user_input.returnedKey == 'return'):
             user_input.returnedKey = ""
@@ -30,15 +29,15 @@ def manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input):
         hovered = drawVerticleList(choices,gui.font,0.45*gui.width,0.35*gui.height,gui,(255, 255, 255))
 
         if(hovered and gui.clicked):
-            if(hovered=='Start Game'): gs.tempState = 'startGame'
+            if(hovered=='Start Game'): gs.menuState = 'startGame'
             if(hovered=='Exit'): gs.running = False
             if(hovered=='debug'): gs.state = 'debug'
         
-        if(gs.tempState=='startGame'):
+        if(gs.menuState=='startGame'):
             c = fx.fadeOut(gui)
             if(c): 
                 gs.state     = 'begin'
-                gs.tempState ='name'
+                gs.menuState ='name'
                 user_input.enteredString = gs.userName
                 user_input.inputLimit = 10
 

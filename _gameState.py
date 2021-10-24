@@ -4,20 +4,24 @@ class gameState():
 	def __init__(
 		self,
 		state,
-		tempState=None,
-		functionState=None,
+		menuState=None,
 		initCounter=0,
 		counter=None,
 		dt=0,
 		tickTimePassed=0,
-		gameTime = {'day':6,'date':30,'month':8,'hour':23,'minute':59,'seconds':59},
+		gameTime = {'day':6,'date':30,'month':8,'hour':23,'minute':57,'seconds':59},
 		gameElapsed = 0):
 
+		#---------------------------------------------
 
-		self.state 			= state
-		self.tempState      = tempState
-		self.functionState  = functionState
 		self.running        = True
+
+
+
+		self.state 			= state            # Used by flow and process event
+		self.stage          = 'day1-intro'     # Used by gameflow to track substates
+		self.eventState     = None
+		self.menuState      = menuState        # Only used by menu
 
 
 		self.displayDate    = ['Mon', '22', 'Aug', '02:57']
@@ -31,11 +35,15 @@ class gameState():
 		self.items          = [('cigs',4),('old condom',1),('rusty spanner',1),('cough medicine',1)]
 		self.messages       = [[1,'Cheryl','Welcome to Bumdonian, have a look around and talk to Adam McMurchie if you get stuck. This game is a work in progress and not yet complete, it takes inpsiration from Drug wars, Undertale, Shenzhen IO and other classics. Please send any feedback my way.','pics/characters/Phoebe.png'],
 							   [2,'Adam','Hello you prick, did you forget already?','pics/characters/Chester.png'],
-							   [3,'Boris','Hi, please support my next election campaign and I promise to prevent mandatory organ donations'],
+							   [3,'Boris','Hi, please support my next election campaign and I promise to prevent mandatory organ donations.'],
 							   [4,'Cynthia', 'Dont text me again you creep','pics/characters/Jane.png'],
 							   [5,'Python','Traceback (most recent call last): ...why bother you cant code anyway.'],
 							   [8,'Dominic', 'Got any jobs going mate?','pics/characters/Gregg.png'],
-							   [7,'Morphius','How did you get this number?']]
+							   [7,'Morphius','How did you get this number?'],
+							   [12,'Eva','Pfft, you are lucky they let you go, next time it might be you that becomes the tribute to the gods.','pics/characters/eva.png'],
+
+
+							   ]
 
 		self.music          = [[1,'solitude','music/solitude.mp3'],
 							   [3,'Unknown Track 1','music/trackx.mp3'],
@@ -73,6 +81,8 @@ class gameState():
 		#--------------cantabs 
 		self.cantabs			= 0
 		self.exchangeRate       = 0.10
+		self.totalCantabs       = 0
+		self.cantabLimit        = 5
 
 
 
@@ -80,6 +90,13 @@ class gameState():
 
 		# -----------widget states 
 		self.activeWidget   = None 
+
+	def nextDay(self):
+		#gameTime = {'day':6,'date':30,'month':8,'hour':23,'minute':59,'seconds':59}
+		self.gameTime['date'] +=1
+		self.gameTime['hour'] = 8
+		self.gameTime['minute'] = 53
+
 
 	def stopWatch(self,countValue,source,trackedObject):
 		complete = False
@@ -145,6 +162,10 @@ class gameState():
 
 		if(self.gameTime['date']>30):
 			self.gameTime['date'] = 1
+			self.gameTime['month'] += 1
+
+		if(self.gameTime['month']>11):
+			self.gameTime['month'] = 0
 
 		# Print Day
 		if(self.gameTime['day'] > 6):

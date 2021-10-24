@@ -12,6 +12,12 @@ class sfx():
 		self.fiInit       = False
 		self.gameState    = None
 
+
+		self.boxOutState  = None
+		self.boxInit	  = False
+		self.boxFill	  = 0
+		self.boxComplete  = False
+
 	def fadeOut(self,gameState,inc=5,alpha=254):
 		""" increments an index related to alpha"""
 		
@@ -57,10 +63,35 @@ class sfx():
 		self.alphaI -=inc
 		if(self.alphaI<1):self.alphaI = 0
 		if(self.alphaI<1): complete = True
-
 		if(skip): self.alphaI = 0
 
 		return(complete)
+
+
+	def boxOut(self,gui,gameState,inc=10):
+		""" increments an index related to alpha"""
+		
+
+		#--------capture state change and init
+		if(self.boxOutState!=gameState):self.boxInit=False
+		
+
+		#--------Init
+		if(self.boxInit==False):
+			self.boxOutState = gameState
+			self.boxComplete = False
+			self.boxInit     = True
+			self.boxFill     = 0
+
+		#------increment boxes inwards
+		if(self.boxComplete==False):
+			rect = pygame.draw.rect(gui.screen, (0,0,0), [0,0, 1500,850],self.boxFill)
+			self.boxFill += inc
+			if(self.boxFill>gui.height):
+				self.boxComplete = True
+				self.boxInit     = False
+		
+		return(self.boxComplete)
 
 
 

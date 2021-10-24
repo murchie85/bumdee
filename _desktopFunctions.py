@@ -2,51 +2,17 @@ import pygame
 from _draw import *
 
 
-def blackInfoBox(desktop,gui,gs,bx,by,bh,nby,nbW,nbH,notificationButton,overrideMessage,notificationDisplayTime=1):
 
-        # ------dimensions
-        boxColour  = (0,0,0)
-        boxHColour = gui.lightBlack
-        infboxw  = 0.4*nbW
-        infBoxh  = 1.2*bh
-        infoBoxy = nby + 0.15*nbH
-        bx = bx + notificationButton[1] + 2.2 * notificationButton[1]
+class meshFx():
+    def __init__(self):
+        self.horizontalLine = 'line'
 
 
-        # -------draw box
-
-        pygame.draw.rect(gui.screen, boxColour,[bx, infoBoxy,infboxw, infBoxh],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, (55,95,73),[bx, infoBoxy,infboxw, infBoxh],2,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-
-        # ------ override message
-        if(overrideMessage!=None):
-            desktop.notificationTimer += gs.dt/1000
-            if(desktop.notificationTimer > notificationDisplayTime):
-                desktop.notificationTimer  = 0
-                desktop.overrideMessage    = None
-            
-            nx,ny = bx , by + 0.2*infBoxh
-            drawText(gui.screen,gui.smallNokiaFont, overrideMessage,nx,ny, (89,207,147),center=infboxw)
-            return()
-
-
-        # write balance 
-        moneyX,moneyY = bx + 0.10*infboxw, by + 0.1*infBoxh
-        h,tw,th   = drawText(gui.screen,gui.smallNokiaFont, 'Balance',moneyX,moneyY, (89,207,147))
-        h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, '£ '+str(gs.money),moneyX, moneyY + 0.31*infBoxh, (89,207,147))
-        
-
-        # write status
-        healthX = moneyX + tw + (0.2*tw)
-        healthY = moneyY
-        h,tw,th = drawText(gui.screen,gui.smallNokiaFont, 'Status',healthX,moneyY, (89,207,147))
-        h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, 'Surviving',healthX, moneyY + 0.31*infBoxh, (89,207,147))
-
-        # write level
-        lvX = healthX + 2*(tw)
-        lvY = by + 0.12*infBoxh
-        h3,tw3,th = drawText(gui.screen,gui.bigFont, 'Lv ' + str(gs.level),lvX, lvY, (89,207,147))
-
+    def drawLine(self,gui):
+        x,y    = gui.width/2, 0
+        x2,y2  = gui.width/2, gui.height
+        pygame.draw.line(gui.screen, (255,255,255), (x, y), (x2, y2), 3)
+ 
 
 class desktop():
     def __init__(self):
@@ -55,9 +21,59 @@ class desktop():
         self.flickD            = 40
         self.overrideMessage   = None
         self.notificationTimer = 0
+        self.infoboxVars       = [0,0,0,0,0,0,[0,0,0]]
+        self.meshfx            = meshFx()
+
+
+    def blackInfoBox(self,gui,gs,overrideMessage,notificationDisplayTime=2):
+
+            bx,by,bh,nby,nbW,nbH,notificationButton = self.infoboxVars[0],self.infoboxVars[1],self.infoboxVars[2],self.infoboxVars[3],self.infoboxVars[4],self.infoboxVars[5],self.infoboxVars[6]
+
+            # ------dimensions
+            boxColour  = (0,0,0)
+            boxHColour = gui.lightBlack
+            infboxw  = 0.4*nbW
+            infBoxh  = 1.2*bh
+            infoBoxy = nby + 0.15*nbH
+            bx = bx + notificationButton[1] + 2.2 * notificationButton[1]
+
+
+            # -------draw box
+
+            pygame.draw.rect(gui.screen, boxColour,[bx, infoBoxy,infboxw, infBoxh],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+            pygame.draw.rect(gui.screen, (55,95,73),[bx, infoBoxy,infboxw, infBoxh],2,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+
+            # ------ override message
+            if(overrideMessage!=None):
+                self.notificationTimer += gs.dt/1000
+                if(self.notificationTimer > notificationDisplayTime):
+                    self.notificationTimer  = 0
+                    self.overrideMessage    = None
+                
+                nx,ny = bx , by + 0.2*infBoxh
+                drawText(gui.screen,gui.smallNokiaFont, overrideMessage,nx,ny, (89,207,147),center=infboxw)
+                return()
+
+
+            # write balance 
+            moneyX,moneyY = bx + 0.10*infboxw, by + 0.1*infBoxh
+            h,tw,th   = drawText(gui.screen,gui.smallNokiaFont, 'Balance',moneyX,moneyY, (89,207,147))
+            h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, '£ '+str(gs.money),moneyX, moneyY + 0.31*infBoxh, (89,207,147))
+            
+
+            # write status
+            healthX = moneyX + tw + (0.2*tw)
+            healthY = moneyY
+            h,tw,th = drawText(gui.screen,gui.smallNokiaFont, 'Status',healthX,moneyY, (89,207,147))
+            h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, 'Surviving',healthX, moneyY + 0.31*infBoxh, (89,207,147))
+
+            # write level
+            lvX = healthX + 2*(tw)
+            lvY = by + 0.12*infBoxh
+            h3,tw3,th = drawText(gui.screen,gui.bigFont, 'Lv ' + str(gs.level),lvX, lvY, (89,207,147))
+
 
     def drawDesktop(self,gui,gs,animateImgs,phone):
-        #gui.screen.fill(gui.darkGrey)
         gui.screen.fill(gui.greenA)
         #drawImage(gui.screen, gui.tileBackground,(0,0))
 
@@ -113,12 +129,25 @@ class desktop():
         
         
         # ------Bottom Nav
-        bNavH = gui.bottomNav.get_rect().h
-        drawImage(gui.screen, gui.bottomNav,(0.4* gui.width,gui.height - bNavH - 10))
+        bNavW,bNavH = gui.bottomNav.get_rect().w,gui.bottomNav.get_rect().h
+        
+        # ---- bottomnav
+        navx, navy = 0.4* gui.width,gui.height - bNavH - 10
+        drawImage(gui.screen, gui.bottomNav,(navx,navy))
+        # ---- nextday
+        navButtonW = gui.nextDayBtn[1].get_rect().w
+        nextday = drawSelectableImage(gui.nextDayBtn[0],gui.nextDayBtn[1],(navx + bNavW - 1.5*navButtonW,navy + 0.2*bNavH),gui)
+        if(nextday):
+            if(gs.eventState==None):
+                gui.debug('setting next day')
+                gs.eventState = 'nextDay'
+        
+
+
+        self.infoboxVars = [bx,by,bh,nby,nbW,nbH,notificationButton]
 
         # ------Black Info Box
-
-        blackInfoBox(self,gui,gs,bx,by,bh,nby,nbW,nbH,notificationButton,overrideMessage=self.overrideMessage)
+        self.blackInfoBox(gui,gs,overrideMessage=self.overrideMessage)
         
 
 
@@ -126,75 +155,4 @@ class desktop():
 
 
 
-def bank(gs,desktop):
-    moneyEarned = gs.cantabs * gs.exchangeRate
-    
-    gs.money   += moneyEarned
-    gs.cantabs = 0
-    gs.money   = round(gs.money,2)
-
-    me =  "{:.2f}".format(moneyEarned)
-    desktop.overrideMessage = "Banked £ " + str(me)
-
-    # TOdo display popup
-
-
-
-
-def pullTab(gui,phone,gs,fx,desktop):
-
-    selected   = False 
-    selectable = True
-
-    # ----------Draw Pull Tab Widget 
-
-    freeHorizontalWidth = gui.width - phone.mobileW - 100
-    
-    widgetNodeW = gui.widgetNode[0].get_rect().w
-    widgetNodeX = phone.mobilex + phone.mobileW + 0.5* widgetNodeW
-    widgetNodeY = phone.mobiley + 50
-    
-    # If a widget is active disable all others
-    if(gs.activeWidget!=None): selectable = False 
-    
-    selected = gui.showWidgNode(widgetNodeX,widgetNodeY,headerText="Pull Tab",bodyText="Tabs Collected: " + str(gs.cantabs),selectable=selectable)
-
-    if(selected): gs.activeWidget = 'pullTab'
-
-    if(gs.activeWidget=='pullTab'):
-        c = fx.fadeOut(gui,inc=40,alpha=100)
-        # draw screen window
-        drawImage(gui.screen, gui.medActiveWidget,(widgetNodeX,widgetNodeY))
-
-
-
-        #-----------PICK UP TAB 
-        incWidx, incWidy = widgetNodeX+50,1.7*widgetNodeY
-        gs.cantabs, endX, endY =  gui.incrementableWidget(incWidx,incWidy,'Picked up', gs.cantabs)
-
-        #-----------BANK
-        
-        gui.bank[0]
-        bankX,bankY = incWidx,endY + 1 * gui.bank[0].get_rect().h
-
-        bankSelected = drawSelectableImage(gui.bank[0],gui.bank[1],(bankX,bankY),gui,trim=False)
-        if(bankSelected):
-            bank(gs,desktop)
-
-            # update message and set alert
-            message = [11,'Unknown', 'What are you doing?. You are wasting your time, dont you know that nothing will come of collecting caps?  You are wasting your time, dont you know that nothing will come of collecting caps? ','pics/characters/unknown.png']
-            phone.messageUpdate(message,gui,gs,alert=True)
-            
-            
-
-
-
-
-
-        # exit box
-        exitX = widgetNodeX + gui.medActiveWidget.get_rect().w - 1.5*gui.minis[8].get_rect().w
-        exitY = 1.4*widgetNodeY + gui.minis[8].get_rect().y
-        selected = drawSelectableImage(gui.minis[8],gui.minis[9],(exitX,exitY),gui,trim=False)
-        if(selected):
-            gs.activeWidget = None
 

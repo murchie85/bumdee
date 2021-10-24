@@ -9,15 +9,17 @@ import os, sys
 
 from _input                 import *
 from _draw                  import *
-from _effects               import *
+from _fx                    import *
 from _gui                   import *
 from _gameState             import *
 from _startMenu             import *
 from _button                import *
 from _music                 import *
-from _mainLoop              import *
 from _phone                 import *
 from _desktopFunctions      import *
+from _storyFlow             import *
+from _widgets               import * 
+from _gameEvents            import * 
 
 
 # -----------VARIABLES & FLAGS
@@ -29,7 +31,8 @@ FPS            = 60
 width, height  = 1500 ,850
 themeColour    = (128,0,0)
 time = 0
-gs = gameState('main')
+gs        = gameState('main')
+gameFlow  = gameFlow()
 #gs.tempState='startGame'
 
 # ---------------PYGAME
@@ -77,31 +80,40 @@ smsDialogue       = smsDialogue()
 smsScrollDialogue = smsScrollDialogue()
 sDialogue         = scrollingDialogue()
 music             = music()
+gEvent            = processGameEvent()
 
-gui                 = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
-gui.statusButton    = statusButton
-gui.inventoryButton = inventoryButton
-gui.noteButton      = noteButton
-gui.nokiaFont       = nokiaFont
-gui.nanoNokiaFont   = nanoNokiaFont
-gui.smsFont         = smsFont
-gui.musicFont       = musicFont
-gui.jumboFont       = jumboFont
-gui.gameTime        = 0
+gui                   = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
+gui.statusButton      = statusButton
+gui.inventoryButton   = inventoryButton
+gui.noteButton        = noteButton
+gui.nokiaFont         = nokiaFont
+gui.nanoNokiaFont     = nanoNokiaFont
+gui.smsFont           = smsFont
+gui.musicFont         = musicFont
+gui.jumboFont         = jumboFont
+gui.gameTime          = 0
 gui.smsScrollDialogue = smsScrollDialogue
+
+
 
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()
 fx           = sfx(gui)
-introSlides  = [pygame.image.load('pics/intro/intro1.png'),pygame.image.load('pics/intro/intro2.png')]
 gui.menuBG   = pygame.image.load('pics/intro/intro3.png')
 user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
+widgetAnim   = imageAnimate(0,10,10,name='WidgetAnimation')
+
 
 # Adding to Gui
 gui.userInput       = user_input
+gui.fx              = fx
+gui.animateImgs     = animateImgs
+gui.widgetAnim      = widgetAnim
 
+junkCollection       = junkCollection()
+gs.junk              = junkCollection
 
 # set up music
 
@@ -111,6 +123,10 @@ musicPath = 'music/'
 musicFiles = [f for f in listdir(musicPath) if isfile(join(musicPath, f))]
 gs.music = [[x,musicFiles[x],str(musicPath) + './' +str(musicFiles[x]) ] for x in range(0,len(musicFiles)) ]
 
+
+
+# ****TurnDebug on/off***
+gui.debugSwitch = False 
 
 # ---------------setup finished
 
@@ -135,8 +151,58 @@ while gs.running:
 
 
     # Manage Start Intro Loop
-    manageStartMenu(gui,gs,animateImgs,fx,introSlides,user_input)
-    gameLoop(gui,gs,phone,desktop,animateImgs,fx,introSlides,user_input)
+    #manageStartMenu(gui,gs,animateImgs,fx,user_input)
+
+
+
+    # Archived Main Game Loops
+    #gameLoop(gui,gs,gameFlow,phone,desktop,animateImgs,fx,user_input)
+
+    if(gs.state == 'main'):
+        
+
+        #-----core functions
+
+        commands = gameFlow.checkDecisionFlow(gs,gui,phone)
+
+        for command in commands[0]: 
+            if(command == 'desktop'):
+                desktop.drawDesktop(gui,gs,animateImgs,phone)
+           
+            # --------pull tab widget
+            if(command == 'pulltab'):
+                gs.junk.pullTab(gui,phone,gs,fx,desktop,commands[1])
+            
+            if(command == 'phone'):
+                phone.phoneMenu(gui,gs)
+
+            if(command == 'afterCommand'):
+                gameFlow.checkDecisionFlow(gs,gui,phone,True)
+
+        gEvent.processEvent(gs,gui)
+
+
+
+
+        gs.tickTime()
+        
+
+
+
+        # ---------Desktop buttons
+        if(gui.hideExitButton!=True):
+            gui.exitButton.textColour, gui.themeColour = (0,128,0),(0,128,0)
+            ext = gui.exitButton.displayCircle(gui)
+            if(ext and gui.clicked): gs.running = False
+
+
+
+
+
+
+
+
+
 
 
     # Flip the display

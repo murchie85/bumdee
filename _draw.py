@@ -1,4 +1,5 @@
 from pygame.locals import *
+import pygame
 
 def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,limitWidth=None):
     """ Center means giving the far x point """
@@ -31,6 +32,55 @@ def drawText(SCREEN,myfont, text,x,y, colour=(0, 128, 0),center='no',pos=None,li
 
     SCREEN.blit(textsurface,(x,y))
     return(hovered,tw,th)
+
+
+def drawTextandBox(SCREEN,myfont, x,y,label, value, textColour=(215, 233, 149),boxColour=(15,56,15),lineColour=(139,172,15),pos=None,minBoxWidth=3):
+    """ 
+        Text + box i.e. myvalue [009] 
+        
+        for more functionality make new function
+    """
+    hovered = None 
+    labelsurface        = myfont.render(label, True, textColour)
+    tw = labelsurface.get_rect().width
+    th = labelsurface.get_rect().height
+
+
+    # TextBox Values
+    smallestSurface = myfont.render('S', True, textColour)
+    x2           = x + tw + smallestSurface.get_rect().height
+    y2           = y
+    if(len(value)<minBoxWidth): value = str(''.join(['0' for x in range(minBoxWidth-len(value))]) )  +str(value)
+    valuesurface = myfont.render(value, True, textColour)
+    tw2          = valuesurface.get_rect().width
+    th2          = valuesurface.get_rect().height
+
+    bw = tw2 + 1.5*smallestSurface.get_rect().width
+    bh = th2 + smallestSurface.get_rect().height
+    bx = x2 - 0.75*smallestSurface.get_rect().width
+    by = y2 - 0.5*smallestSurface.get_rect().height
+
+
+    # If curser over label lightup
+    if(pos!=None):
+        labelRect = Rect(x,y, x+labelsurface.get_rect().width,y+labelsurface.get_rect().height)
+        if pos[0] > labelRect.x and pos[0] < labelRect.width:
+            if pos[1] > labelRect.y and pos[1] < labelRect.height:
+                labelsurface = myfont.render(label, True, (128,0,0))
+                hovered = label
+
+    SCREEN.blit(labelsurface,(x,y))
+
+    # draw box and shading
+    pygame.draw.rect(SCREEN, (boxColour), [bx, by,bw ,bh])
+    pygame.draw.line(SCREEN,(lineColour), (bx,by+bh),(bx+bw,by+bh),3)
+    pygame.draw.line(SCREEN,(lineColour), (bx+bw,by),(bx+bw,by+bh),3)
+    
+    SCREEN.blit(valuesurface,(x2,y2))
+
+    return(hovered,tw,th)
+
+
 
 
 def approachColour(baseColour,targetColour,inc=2):
@@ -142,8 +192,6 @@ class scrollingDialogue():
         self.finished = False
 
         if(self.initialised== False):
-            print('initialising for ')
-            print(text)
             # format paragraph into array of fitted sentences
             self.textArray  = []
             self.y          = sy
@@ -210,17 +258,19 @@ class scrollingDialogue():
 
 
 class imageAnimate():
-    def __init__(self,p,f,s):
+    def __init__(self,p,f,s,name=None):
         self.p           = 0
         self.f           = 0
         self.s           = 0 
         self.initialised = False
         self.state       = None
+        self.name        = None
     
     def animate(self,gui,gamestate,introSlides,pfs,blitPos):
+        """p = page f = count s = reset count
+        """
         
         # ------Initialise
-
         if(self.state!=gamestate): self.initialised=False
         if(self.initialised==False):
             self.p           = pfs[0]

@@ -151,14 +151,16 @@ class phone():
         """
         self.displayAlertMessage(gui,gs,gs.alertMessage)
 
-    def messageUpdate(self,message,gui,gs,alert=False):
-        """ call only once"""
+    def messageUpdate(self,message,gui,gs,alert=False,scrollOverride=None):
+        """ call only once
+            scrollOverride sets the text scrolling speed/delay
+        """
         if(alert): self.alert=True
+        if(scrollOverride!=None): gui.smsScrollDialogue.scrollOverride = scrollOverride
         gs.messages.append(message)
         gs.alertMessage = message
             
     def displayAlertMessage(self,gui,gs,message):
-        if(self.screenOn=='off'): return()
         swState       = False
         messageSender = message[1]
         messageText   = message[2]
@@ -187,7 +189,7 @@ class phone():
         imageBottom,imageH = self.drawAvatar(x,y,messageAvatar,textObj,gui,thick=4)
 
         #----draw text
-        finished = gui.smsScrollDialogue.drawScrollingDialogue(gui,gs,gui.smsFont, messageText,0.8*self.mobileSW,200, colour=(0, 0, 0),scrollSpeed=2,pos=(x+20,imageBottom + 0.2* imageH))
+        finished = gui.smsScrollDialogue.drawScrollingDialogue(gui,gs,gui.smsFont, messageText,0.8*self.mobileSW,200, colour=gui.greenA,scrollSpeed=3,pos=(x+20,imageBottom + 0.2* imageH))
         if(finished==True): 
             self.navState = 'home'
             self.alert    = False
@@ -238,7 +240,7 @@ class phone():
         
         stxt = drawText(gui.screen,gui.smallNokiaFont, messageSender,x+10,y+10, gui.greenA)
         
-        gui.smsDialogue.drawDialogue(gui,gui.nanoFont, messageText,(x+10,y+10 + 1.2*stxt[2]),w-30,200,gui.clicked, gui.greenA)
+        gui.smsDialogue.drawDialogue(gui,gui.nanoFont, messageText,(x+10,y+10 + 1.2*stxt[2]),w-30,200,gui.clicked, gui.greenA, source='drawMessageBox')
 
         return(selected,(y+h))
 
@@ -287,7 +289,7 @@ class phone():
         imageBottom,imageH = self.drawAvatar(x,y,messageAvatar,textObj,gui,thick=4)
 
         #----draw text
-        gui.smsDialogue.drawDialogue(gui,gui.smsFont, messageText,(x+20,imageBottom + 0.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenB,maxVerticleLines=5,verticalSep=1.3)
+        gui.smsDialogue.drawDialogue(gui,gui.smsFont, messageText,(x+20,imageBottom + 0.2* imageH),0.8*self.mobileSW,200,gui.clicked, gui.greenA,maxVerticleLines=5,verticalSep=1.3,source='selectedMessage')
         return(selected,(y+h))
 
 
@@ -551,7 +553,7 @@ class phone():
         imgw,imgh = self.musicStripOff[0].get_rect().w,self.musicStripOff[0].get_rect().h
         
         # ---- draw current track
-        gui.smsDialogue.drawDialogue(gui,gui.nanoFont, self.musicCache[1],(controlBoxX+20,controlCenterY+(1.1*imgh) ),0.9*controlBoxW,200,gui.clicked, gui.greenB,maxVerticleLines=1)
+        gui.smsDialogue.drawDialogue(gui,gui.nanoFont, self.musicCache[1],(controlBoxX+20,controlCenterY+(1.1*imgh) ),0.9*controlBoxW,200,gui.clicked, gui.greenB,maxVerticleLines=1,source='musicMenu')
 
         #------- manage music buttons
 
@@ -621,7 +623,7 @@ class phone():
         
         pygame.draw.line(gui.screen, gui.greenB,(x,y),(0.7*self.mobileSW,y),3)
         
-        gui.smsDialogue.drawDialogue(gui,gui.musicFont, track,(x+10,y+20),w-30,200,gui.clicked, gui.greenB)
+        gui.smsDialogue.drawDialogue(gui,gui.musicFont, track,(x+10,y+20),w-30,200,gui.clicked, gui.greenB,source='drawmusicbox')
 
         return(selected,(y+h))
 
@@ -634,11 +636,15 @@ class phone():
 
 
 
-    def drawPhone(self,gui):
+    def drawPhone(self,gui,silent=False):
 
         # ------Draw Phone
         pos = (gui.mx,gui.my)
         collides = self.mouseCollides(pos,self.mobileScreenx,self.mobileScreeny,self.mobileSW,self.mobileSH)
+        if(silent): 
+            collides = False
+            gui.debug('silent mode')
+
         if(collides): self.screenOn='on'
         if(self.screenOn=='on'): self.screenColour = self.screenDefault
         if(self.screenOn=='off'): self.screenColour = (78,96,9)
@@ -671,6 +677,10 @@ class phone():
         # ----- default always off
 
         self.screenOn = 'off' 
+
+        # -----silent mode off
+
+        silent        = False
        
         # ------message alert
 
@@ -685,9 +695,21 @@ class phone():
 
         self.navState = None
 
+        # -----------update message order 
+        gs.messages.sort(key=lambda a: a[0], reverse=True)
+
+
+        if(gs.eventState=='cutScene' and self.alert==False): 
+            gui.debugDetailed('PhoneMenu disabling screen collide prior to alert')
+            silent=True
+
         # -----------Draw Phone
 
-        self.drawPhone(gui)
+        self.drawPhone(gui,silent=silent)
+
+        # -----------cutscene
+        
+
 
 
         # ----------Navigate states
@@ -803,6 +825,7 @@ class smsDialogue():
         self.initialised = False
         self.scrollInit  = False
         self.origText    = ''
+        self.origSource  = ''
         self.textArray   = []
         self.colour      = (0,0,0)
         self.y           = 0
@@ -813,22 +836,26 @@ class smsDialogue():
         self.arrPos      = 0
         self.arrIndex    = 0
 
-    def drawDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False):
+    def drawDialogue(self,gui,myfont, text,pos,maxWidth,maxHeight,clicked, colour=(0, 0, 0),skip=False,verticalSep=1.1,maxVerticleLines=2,displayNextButton=False,source=None):
         sx,sy = pos[0],pos[1]
         x,y        = sx,sy
         tRemaining = ""
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
+        print(source)
+        print(text)
+        print('')
 
 
 
         # reset if called by new function
-        if(self.origText!= text): 
+        if(self.origText!= text or self.origSource!= source):
             self.initialised=False
             self.origText = text
 
         if(self.initialised== False):
             # format paragraph into array of fitted sentences
             self.origText    = text
+            self.origSource  = source
             self.senPos      = 0
             dAr,para = [], ""
             for word in text.split(' '):
@@ -871,18 +898,19 @@ class smsDialogue():
 class smsScrollDialogue():
 
     def __init__(self):
-        self.initialised = False
-        self.scrollInit  = False
-        self.origText    = ''
-        self.textArray   = []
-        self.colour      = (0,0,0)
-        self.y           = 0
-        self.y2          = 0
+        self.scrollInit     = False
+        self.origText       = ''
+        self.textArray      = []
+        self.colour         = (0,0,0)
+        self.y              = 0
+        self.y2             = 0
         
-        self.timer       = 15
-        self.senPos      = 0
-        self.arrPos      = 0
-        self.arrIndex    = 0
+        self.timer          = 15
+        self.senPos         = 0
+        self.arrPos         = 0
+        self.arrIndex       = 0
+        self.scrollOverride = None
+        self.finished       = False
 
     def drawScrollingDialogue(self,gui,gs,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),scrollSpeed=10,pos=(-1,-1),vertInc=1.2,maxLines=5,cutOutWaitTime=5):
         """
@@ -895,6 +923,8 @@ class smsScrollDialogue():
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
         
 
+
+
         # if the text changes, reset.
         if(self.origText!= text): 
             self.scrollInit=False
@@ -902,17 +932,19 @@ class smsScrollDialogue():
 
 
         if(self.scrollInit== False):
+            self.colour      = (0,0,0)
+            self.timer       = 15
 
-            self.__init__()
             self.origText   = text
             # format paragraph into array of fitted sentences
-            self.textArray  = []
-            self.baseArray  = []
-            self.y          = sy
-            self.senPos     = 0
-            self.arrPos     = 0
-            self.arrIndex   = 0
-            self.finished   = False
+            self.textArray   = []
+            self.baseArray   = []
+            self.y           = sy
+            self.senPos      = 0
+            self.arrPos      = 0
+            self.arrIndex    = 0
+            self.finished    = False
+            
 
 
             dAr,para = [], ""
@@ -936,10 +968,21 @@ class smsScrollDialogue():
 
 
 
+        # ---------override speed externally
+        if(self.scrollOverride=='fast'):
+            scrollSpeed    = 0
+            cutOutWaitTime = 0
+        if(self.scrollOverride=='normal'):
+            scrollSpeed    = 2
+            cutOutWaitTime = 3
+        if(self.scrollOverride=='slow'):
+            scrollSpeed    = 3
+            cutOutWaitTime = 4
+
 
 
         # ----move to next page
-        if(hovered and clicked): 
+        if((hovered and clicked) or gui.userInput.returnedKey=='return'): 
             if(self.arrIndex<len(self.baseArray)):
                 self.textArray = self.baseArray[self.arrIndex:(self.arrIndex+maxLines)]
                 self.arrIndex  = self.arrIndex + maxLines
@@ -996,9 +1039,9 @@ class smsScrollDialogue():
         # Add any Delay before closing down 
         if(self.finished=='End of Text'):
             swComplete = gs.stopWatch(cutOutWaitTime,'displayAlert',text)
-            if(swComplete): 
-                self.finished = True
-
+            if(swComplete):
+                self.scrollOverride = None
+                self.finished    = True
         return(self.finished)
 
 
