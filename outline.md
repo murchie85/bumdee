@@ -5,18 +5,39 @@
 CORE IDEA RULES
 --------------------- 
 ```
-0. Speed Driven. should be lots of clickable places, not just widgets
-	(click top left to replenish, update, stop overflow etc... so its dynamic and engaging)
-	shortcut keys
-1. Try not to deviate away too much from main theme
-2. Messages come in as you solve problems
-3. Plot, you can't always be living in the 90s...COBOL assembler it (use all your cool packages..)
+```
+[speed driven] [consistent] [cobol]  [realtime message updates]
+````
 
 ---Game Core Mechanics-- 
-
 ```
-[ COLLECT ]   [ CONSUME ] [ UPGRADE] [ BUY/SELL] [RESOURCE MANAGE] [ALARM/SURPRESS REACT]
+[BUILD] [ COLLECT ]   [ CONSUME ] [ UPGRADE] [ BUY/SELL] [RESOURCE MANAGE] [ALARM/SURPRESS REACT] [RESEARCH] [BONUS CARD SELECTION]
 ``` 
+
+
+
+
+#### ideas 
+
+
+- Bash buttons to collect 
+	- bash button in sequence
+- tap to collect (flies up to bank box)
+- link up laser nodes
+- hit bells in right sequence
+- some sort of generator that needs toping up
+- x mined per second
+
+
+
+
+
+
+
+
+
+
+
 
 **Ethics**
 
@@ -26,9 +47,6 @@ CORE IDEA RULES
 		- suggest first run is easy
 	- lower or higher hte ethics ratings the more opportunities
 
-**Day**
-
-	- Each day has 10 minutes (amend in settings)
 
 **companion**
 
@@ -95,6 +113,19 @@ Juice Can Tabs
 --------------------- 
 ```
 
+
+- flow
+	- caps first
+		- buy magnet increase inc rate
+	- manual bank
+	- bottle caps
+	- train a magpie
+	- ****cut scene*** 
+	- Ethical decision 
+		- take money
+			- also draw pic cutscene
+
+
 - click 100 - that's your daily rate 
 - Bank - Adds money
 Boxes flash up as new functionality becomes available
@@ -118,15 +149,6 @@ Done: Ticks, minimises to small tick obj
 	- Ethical route 
 
 
-- flow
-	- caps first
-	- manual bank
-	- bottle caps
-	- train a magpie
-	- ****cut scene*** 
-	- Ethical decision 
-		- take money
-			- also draw pic cutscene
 
 ```
 ---------------------
@@ -135,11 +157,11 @@ ALL FEATURES
 ```
 
 
-
+- replace button with selectable image
 **next day summary** money made...
 - Add a different popup box, one for coding in 
 **Undertale mechanics** for dodging in side games
-
+- Later make widget selectable and placable
 
 ### call me option
 
@@ -164,6 +186,15 @@ ALL FEATURES
 - Job Center
 - Gamble
 
+## send out leaflets
+	- try to get people to sign up
+	- then automate for your benefit
+
+##  bitcoin scam / opportunity
+
+	- peer bot 51% attack
+	- vip scam idiots
+
 ### sudo code game
 
 - 'compiling'
@@ -176,6 +207,10 @@ ALL FEATURES
 
 #### Drug Dealing box
 - ethical rat out ppl
+
+### speed up / slow down time
+	- feature for later once you have lots automated
+	
 
 #### Rat games
 
@@ -260,7 +295,7 @@ ALL FEATURES
 
 ### utils
 
-- Start Day Force Action Function
+- Start Day Forcing Action Function
 - swag shop
 - buy phone skins
 - buy access to games
@@ -322,8 +357,22 @@ steal from embassy
 
 - later AI takeover...
 
+======================
+		Stretcg
+======================
 
+- social media 
 
+======================
+		notes
+======================
+
+0. Speed Driven. should be lots of clickable places, not just widgets
+	(click top left to replenish, update, stop overflow etc... so its dynamic and engaging)
+	shortcut keys
+1. Try not to deviate away too much from main theme
+2. Messages come in as you solve problems
+3. Plot, you can't always be living in the 90s...COBOL assembler it (use all your cool packages..)
 
 
 ======================

@@ -72,6 +72,20 @@ class desktop():
             lvY = by + 0.12*infBoxh
             h3,tw3,th = drawText(gui.screen,gui.bigFont, 'Lv ' + str(gs.level),lvX, lvY, (89,207,147))
 
+    def blackBoardOverride(self,conditionsArray,gui,gs):
+        
+        for condition in conditionsArray:
+
+            conditionOne  = condition[0]
+            conditionTwo  = condition[1]
+            updateMessage = condition[2]
+            
+            if(conditionOne and conditionTwo):
+                self.overrideMessage = updateMessage
+                self.blackInfoBox(gui,gs,self.overrideMessage,notificationDisplayTime=5)
+
+
+
 
     def drawDesktop(self,gui,gs,animateImgs,phone):
         gui.screen.fill(gui.greenA)
@@ -134,6 +148,7 @@ class desktop():
         # ---- bottomnav
         navx, navy = 0.4* gui.width,gui.height - bNavH - 10
         drawImage(gui.screen, gui.bottomNav,(navx,navy))
+        
         # ---- nextday
         navButtonW = gui.nextDayBtn[1].get_rect().w
         nextday = drawSelectableImage(gui.nextDayBtn[0],gui.nextDayBtn[1],(navx + bNavW - 1.5*navButtonW,navy + 0.2*bNavH),gui)
@@ -141,6 +156,10 @@ class desktop():
             if(gs.eventState==None):
                 gui.debug('setting next day')
                 gs.eventState = 'nextDay'
+
+
+        #---- uncomment for showcase
+        drawImage(gui.screen, gui.bottomNavMock,(navx,navy))
         
 
 

@@ -78,7 +78,80 @@ def drawTextandBox(SCREEN,myfont, x,y,label, value, textColour=(215, 233, 149),b
     
     SCREEN.blit(valuesurface,(x2,y2))
 
-    return(hovered,tw,th)
+    txe2 = bx + bw
+    the2 = by + bh
+    return(txe2,the2)
+
+
+def drawTextandBoxGrid(SCREEN,myfont, x,y,pairArray, textColour=(215, 233, 149),boxColour=(15,56,15),lineColour=(139,172,15),pos=None,minBoxWidth=3):
+    """ 
+        Text + box i.e. myvalue [009] 
+        
+        for more functionality make new function
+    """
+    widthArray = []
+    rhsArray   = []
+    for i in pairArray: widthArray.append(myfont.render(i[0], True, textColour).get_rect().width)
+    tw = max(widthArray)
+
+    for j in pairArray:
+        label, value = j[0],j[1]
+        hovered = None 
+        labelsurface        = myfont.render(label, True, textColour)
+        th = labelsurface.get_rect().height
+
+
+        # TextBox Values
+        smallestSurface = myfont.render('S', True, textColour)
+        x2           = x + tw + smallestSurface.get_rect().height
+        y2           = y
+        if(len(value)<minBoxWidth): value = str(''.join(['0' for x in range(minBoxWidth-len(value))]) )  +str(value)
+        valuesurface = myfont.render(value, True, textColour)
+        tw2          = valuesurface.get_rect().width
+        th2          = valuesurface.get_rect().height
+
+        bw = tw2 + 1.5*smallestSurface.get_rect().width
+        bh = th2 + smallestSurface.get_rect().height
+        bx = x2 - 0.75*smallestSurface.get_rect().width
+        by = y2 - 0.5*smallestSurface.get_rect().height
+
+
+        # If curser over label lightup
+        if(pos!=None):
+            labelRect = Rect(x,y, x+labelsurface.get_rect().width,y+labelsurface.get_rect().height)
+            if pos[0] > labelRect.x and pos[0] < labelRect.width:
+                if pos[1] > labelRect.y and pos[1] < labelRect.height:
+                    labelsurface = myfont.render(label, True, (128,0,0))
+                    hovered = label
+
+        SCREEN.blit(labelsurface,(x,y))
+
+        # draw box and shading
+        pygame.draw.rect(SCREEN, (boxColour), [bx, by,bw ,bh])
+        pygame.draw.line(SCREEN,(lineColour), (bx,by+bh),(bx+bw,by+bh),3)
+        pygame.draw.line(SCREEN,(lineColour), (bx+bw,by),(bx+bw,by+bh),3)
+        
+        SCREEN.blit(valuesurface,(x2,y2))
+
+        y = y +bh + (0.3*bh)
+
+        #append the right side, so it can be 
+        # worked out what is longest
+        rhsArray.append((bx + bw))
+
+
+    # return xend,yend
+    txe2 = max(rhsArray)
+    the2 = by + bh
+
+    return(txe2,the2)
+
+
+
+
+
+
+
 
 
 
@@ -306,6 +379,32 @@ def drawSelectableImage(image,image2,pos,gui,trim=False):
         gui.screen.blit(displayImage,pos,trim)
     else:
         gui.screen.blit(displayImage,pos)
+
+    if(hover and gui.clicked):
+        return(True)
+
+    return(False)
+
+def drawTxtBtn(image,image2,pos,gui,text,font=None,txtColour=(215,233,149)):
+    
+    # ------draw image
+
+    displayImage = image
+    hover = gui.mouseCollides((gui.mx,gui.my),pos[0],pos[1],image.get_rect().w,image.get_rect().h)
+    if(hover): displayImage = image2
+    gui.screen.blit(displayImage,pos)
+
+
+    #-------draw text
+    if(font==None): font = gui.smallFont
+    textsurface = font.render(text, True, txtColour)
+    tw = textsurface.get_rect().width
+    th = textsurface.get_rect().height
+    x  = pos[0]+(0.5*(image.get_rect().w - tw))
+    y  = pos[1]+(0.3*(image.get_rect().h - th))
+    gui.screen.blit(textsurface,(x,y))
+
+
 
     if(hover and gui.clicked):
         return(True)

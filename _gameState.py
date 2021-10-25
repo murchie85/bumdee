@@ -9,7 +9,7 @@ class gameState():
 		counter=None,
 		dt=0,
 		tickTimePassed=0,
-		gameTime = {'day':6,'date':30,'month':8,'hour':23,'minute':57,'seconds':59},
+		gameTime = {'day':6,'date':30,'month':11,'year':1999,'hour':23,'minute':57,'seconds':59,'daysPassed':0},
 		gameElapsed = 0):
 
 		#---------------------------------------------
@@ -22,6 +22,11 @@ class gameState():
 		self.stage          = 'day1-intro'     # Used by gameflow to track substates
 		self.eventState     = None
 		self.menuState      = menuState        # Only used by menu
+		self.halt           = False
+
+		self.notify         = False
+		self.notifyMessage  = None
+		self.notifyChoice   = None
 
 
 		self.displayDate    = ['Mon', '22', 'Aug', '02:57']
@@ -40,7 +45,8 @@ class gameState():
 							   [5,'Python','Traceback (most recent call last): ...why bother you cant code anyway.'],
 							   [8,'Dominic', 'Got any jobs going mate?','pics/characters/Gregg.png'],
 							   [7,'Morphius','How did you get this number?'],
-							   [12,'Eva','Pfft, you are lucky they let you go, next time it might be you that becomes the tribute to the gods.','pics/characters/eva.png'],
+							   [13,'Eva','Pfft, you are lucky they let you go, next time it might be you that becomes the tribute to the gods.','pics/characters/eva.png'],
+							   [12,'Spike',"Yeah bro, it's all good, just leave it to me - I got this.",'pics/characters/spike.png'],
 
 
 							   ]
@@ -80,9 +86,12 @@ class gameState():
 
 		#--------------cantabs 
 		self.cantabs			= 0
-		self.exchangeRate       = 0.10
+		self.exchangeRate       = 0.05
 		self.totalCantabs       = 0
 		self.cantabLimit        = 5
+		self.recycleLevel       = 1
+		self.restrictionReached = None
+		self.limits             = [5,10,20,50,100,200,300]
 
 
 
@@ -96,6 +105,7 @@ class gameState():
 		self.gameTime['date'] +=1
 		self.gameTime['hour'] = 8
 		self.gameTime['minute'] = 53
+		self.gameTime['daysPassed'] +=1
 
 
 	def stopWatch(self,countValue,source,trackedObject):
@@ -162,10 +172,12 @@ class gameState():
 
 		if(self.gameTime['date']>30):
 			self.gameTime['date'] = 1
+			self.gameTime['daysPassed'] +=1
 			self.gameTime['month'] += 1
 
 		if(self.gameTime['month']>11):
 			self.gameTime['month'] = 0
+			self.gameTime['year'] +=1
 
 		# Print Day
 		if(self.gameTime['day'] > 6):
@@ -181,6 +193,7 @@ class gameState():
 		day     = dayFmt[self.gameTime['day']]
 		date    = self.gameTime['date']
 		month   = monthFmt[self.gameTime['month']]
+		year    = self.gameTime['year']
 		hour    = self.gameTime['hour']
 		minute  = self.gameTime['minute']
 		seconds = self.gameTime['seconds']

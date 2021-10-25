@@ -973,7 +973,7 @@ class smsScrollDialogue():
             scrollSpeed    = 0
             cutOutWaitTime = 0
         if(self.scrollOverride=='normal'):
-            scrollSpeed    = 2
+            scrollSpeed    = 1
             cutOutWaitTime = 3
         if(self.scrollOverride=='slow'):
             scrollSpeed    = 3

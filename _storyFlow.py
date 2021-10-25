@@ -15,7 +15,9 @@ class gameFlow():
 		"""
 		args = None
 		command = ['desktop','pulltab','phone','afterCommand']
-		
+		if(gs.halt == True):
+			gui.debug('Halting at story flow')
+			return(command,args)
 
 		# [1]--------begin sequence
 		if(gs.stage=='day1-intro'):
@@ -99,8 +101,6 @@ class gameFlow():
 				if(otfCount):
 					self.substate = 'introcomplete'
 					gui.debug('end of message ' + str('Oh, one other thing,'))
-			
-
 
 			if(self.substate == 'introcomplete'):
 				gs.eventState = None

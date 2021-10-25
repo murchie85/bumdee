@@ -75,14 +75,15 @@ noteButton      = button(0.15*width,0.05*height,width/17,height/13,'N',(0,128,0)
 
 borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('pics/frame/border2.png'),pygame.image.load('pics/frame/border3.png'),pygame.image.load('pics/frame/border4.png'),pygame.image.load('pics/frame/border5.png'),pygame.image.load('pics/frame/border6.png'),pygame.image.load('pics/frame/border7.png'),pygame.image.load('pics/frame/border8.png')]
 
-dialogue          = dialogue()
-smsDialogue       = smsDialogue()
-smsScrollDialogue = smsScrollDialogue()
-sDialogue         = scrollingDialogue()
-music             = music()
-gEvent            = processGameEvent()
+dialogue             = dialogue()
+smsDialogue          = smsDialogue()
+smsScrollDialogue    = smsScrollDialogue()
+sDialogue            = scrollingDialogue()
+music                = music()
+gEvent               = processGameEvent()
+notificationDialogue = notificationDialogue()
 
-gui                   = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides)
+gui                   = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides,notificationDialogue)
 gui.statusButton      = statusButton
 gui.inventoryButton   = inventoryButton
 gui.noteButton        = noteButton
@@ -126,7 +127,7 @@ gs.music = [[x,musicFiles[x],str(musicPath) + './' +str(musicFiles[x]) ] for x i
 
 
 # ****TurnDebug on/off***
-gui.debugSwitch = False 
+gui.debugSwitch = True 
 
 # ---------------setup finished
 
@@ -146,7 +147,8 @@ while gs.running:
         if event.type == pygame.MOUSEBUTTONDOWN: gui.clicked  = True
         user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
-        
+    
+    gui.debug('gs.eventState : ' + str(gs.eventState ) + ' gs.state: ' + str(gs.state) + ' gs.halt' + str(gs.halt))
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 
