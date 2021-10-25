@@ -148,7 +148,7 @@ while gs.running:
         user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
     
-    gui.debug('gs.eventState : ' + str(gs.eventState ) + ' gs.state: ' + str(gs.state) + ' gs.halt' + str(gs.halt))
+    gui.debug('gs.state: ' + str(gs.state) + ' gs.stage: ' + str(gs.stage) + ' gs.eventState : ' + str(gs.eventState ) +  ' gs.halt' + str(gs.halt))
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 

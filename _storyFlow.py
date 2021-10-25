@@ -15,9 +15,13 @@ class gameFlow():
 		"""
 		args = None
 		command = ['desktop','pulltab','phone','afterCommand']
+		
 		if(gs.halt == True):
 			gui.debug('Halting at story flow')
 			return(command,args)
+
+
+
 
 		# [1]--------begin sequence
 		if(gs.stage=='day1-intro'):
@@ -103,11 +107,13 @@ class gameFlow():
 					gui.debug('end of message ' + str('Oh, one other thing,'))
 
 			if(self.substate == 'introcomplete'):
-				gs.eventState = None
+				gs.eventState  = None
+				gs.stage       = 'day1-guest'
+				self.substate  = None
 
 
 
-			if(gs.stage=='day1-guest'):
+		if(gs.stage=='day1-guest'):
 				print('introducing new person')
 				# Add another person into the mix before next step of 'you hit your limit'
 					
