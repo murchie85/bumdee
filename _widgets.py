@@ -1,5 +1,6 @@
 import pygame
 from _draw import *
+from _utils import *
 
 
 
@@ -45,6 +46,7 @@ class junkCollection():
         self.sold                  = False
         self.limitMessage            = False 
         self.notificationDisplayTime = 2
+        self.stopTimer               =  stopTimer()
 
     def pullTab(self,gui,phone,gs,fx,desktop,adargs=None):
 
@@ -143,7 +145,7 @@ class junkCollection():
 
 
             # ----- if Cantab Limit Reached 
-            if(gs.totalCantabs>=gs.cantabLimit):
+            if(gs.totalCantabs>=gs.cantabLimit): 
                 # -----------limit reached
 
                 if(self.limitMessage==False):
@@ -172,6 +174,8 @@ class junkCollection():
                     if(gs.cantabLimit<gs.limits[-1]):
                         gs.cantabLimit = gs.limits[gs.limits.index(gs.cantabLimit)+1]
                     self.limitMessage = False
+                    gs.recycleLevel +=1
+                    print('upping recycleLevel')
 
             # Unlock once accepted
             if(gs.notifyChoice=='accepted'): gs.notify = False
@@ -191,7 +195,7 @@ class junkCollection():
                 desktop.blackBoardOverride(conditionsArray,gui,gs)
 
                 # ----------Alert notifications
-                sellCount = gs.stopWatch(1,'sold',desktop.overrideMessage)
+                sellCount = self.stopTimer.stopWatch(1,'sold',desktop.overrideMessage,gs)
                 
                 if(sellCount):
                     self.sold = False

@@ -13,7 +13,6 @@ class processGameEvent():
 		if(gs.eventState == 'nextDay'):
 			gs.hault = True
 			gui.debug('Going to Next Day')
-			gs.nextDay()
 			gs.eventState = 'animateNextDay'
 		if(gs.eventState=='animateNextDay'):
 			c = gui.fx.boxOut(gui,'gs.stage',inc=15)
@@ -22,6 +21,7 @@ class processGameEvent():
 				gs.eventState = None
 				gui.debug('Day complete')
 				gui.hideExitButton = False
+				gs.nextDay()
 				gs.halt = False
 
 

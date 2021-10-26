@@ -1,6 +1,7 @@
 import pygame
 from _draw import *
 from datetime import datetime
+from _utils import *
 
 
 
@@ -699,7 +700,7 @@ class phone():
         gs.messages.sort(key=lambda a: a[0], reverse=True)
 
 
-        if(gs.eventState=='cutScene' and self.alert==False): 
+        if(gs.cutScene==True and self.alert==False): 
             gui.debugDetailed('PhoneMenu disabling screen collide prior to alert')
             silent=True
 
@@ -911,6 +912,7 @@ class smsScrollDialogue():
         self.arrIndex       = 0
         self.scrollOverride = None
         self.finished       = False
+        self.stopTimer      = stopTimer()
 
     def drawScrollingDialogue(self,gui,gs,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),scrollSpeed=10,pos=(-1,-1),vertInc=1.2,maxLines=5,cutOutWaitTime=5):
         """
@@ -926,7 +928,8 @@ class smsScrollDialogue():
 
 
         # if the text changes, reset.
-        if(self.origText!= text): 
+        if(self.origText!= text):
+
             self.scrollInit=False
             self.origText = text
 
@@ -1038,10 +1041,13 @@ class smsScrollDialogue():
 
         # Add any Delay before closing down 
         if(self.finished=='End of Text'):
-            swComplete = gs.stopWatch(cutOutWaitTime,'displayAlert',text)
+            swComplete = self.stopTimer.stopWatch(cutOutWaitTime,'displayAlert',text,gs)
             if(swComplete):
                 self.scrollOverride = None
                 self.finished    = True
+
+
+
         return(self.finished)
 
 

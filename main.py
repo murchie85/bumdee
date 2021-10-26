@@ -19,7 +19,7 @@ from _phone                 import *
 from _desktopFunctions      import *
 from _storyFlow             import *
 from _widgets               import * 
-from _gameEvents            import * 
+from _events                import * 
 
 
 # -----------VARIABLES & FLAGS
@@ -27,7 +27,7 @@ from _gameEvents            import *
 white          = (255,255,255)
 green          = (0,255,0)
 blue           = (176,224,230)
-FPS            = 60
+FPS            = 90
 width, height  = 1500 ,850
 themeColour    = (128,0,0)
 time = 0
@@ -127,7 +127,7 @@ gs.music = [[x,musicFiles[x],str(musicPath) + './' +str(musicFiles[x]) ] for x i
 
 
 # ****TurnDebug on/off***
-gui.debugSwitch = True 
+gui.debugSwitch = False 
 
 # ---------------setup finished
 
@@ -148,7 +148,7 @@ while gs.running:
         user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
     
-    gui.debug('gs.state: ' + str(gs.state) + ' gs.stage: ' + str(gs.stage) + ' gs.eventState : ' + str(gs.eventState ) +  ' gs.halt' + str(gs.halt))
+    gui.debug('gs.state: ' + str(gs.state) + ' gs.stage: ' + str(gs.stage) + ' gs.eventState : ' + str(gs.eventState ) + ' substate' + str(gameFlow.substate) +   ' gs.halt' + str(gs.halt))
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 

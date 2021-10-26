@@ -20,6 +20,7 @@ CORE IDEA RULES
 #### ideas 
 
 
+- 4 boxes - change often, pick the one to keep it going up
 - Bash buttons to collect 
 	- bash button in sequence
 - tap to collect (flies up to bank box)
@@ -118,6 +119,7 @@ Juice Can Tabs
 	- caps first
 		- buy magnet increase inc rate
 	- manual bank
+	- magnet
 	- bottle caps
 	- train a magpie
 	- ****cut scene*** 

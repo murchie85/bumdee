@@ -1,4 +1,5 @@
-from _draw import *
+from _draw  import *
+from _utils import *
 
 class gameState():
 	def __init__(
@@ -23,6 +24,7 @@ class gameState():
 		self.eventState     = None
 		self.menuState      = menuState        # Only used by menu
 		self.halt           = False
+		self.cutScene       = False
 
 		self.notify         = False
 		self.notifyMessage  = None
@@ -76,9 +78,7 @@ class gameState():
 		self.tickTimePassed = tickTimePassed
 		self.gameTime		= gameTime
 		self.gameElapsed    = 0
-
-		self.stopWatchInit  = False
-		self.stopWatchState = None
+		self.stopTimer      = stopTimer()
 
 
 
@@ -106,29 +106,6 @@ class gameState():
 		self.gameTime['hour'] = 8
 		self.gameTime['minute'] = 53
 		self.gameTime['daysPassed'] +=1
-
-
-	def stopWatch(self,countValue,source,trackedObject):
-		complete = False
-		# Re-Initialise automatically
-		if(self.stopWatchInit):
-			if(self.stopWatchState['source']!= source or self.stopWatchState['endCount']!= countValue or self.stopWatchState['trackedObject']!= trackedObject):
-				print('***initialising counter**** by' + str(source))
-				self.stopWatchInit=False
-
-		if(self.stopWatchInit==False):
-			self.stopWatchState = {'elapsed': 0,'endCount':countValue,'source':source,'trackedObject':trackedObject}
-			self.stopWatchInit=True
-
-		if(self.stopWatchInit):
-			self.stopWatchState['elapsed'] += self.dt/1000
-			#print('Iter: ' + str(self.itercount) + '  elapsed: ' + str(self.stopWatchState['elapsed']))
-			if(self.stopWatchState['elapsed']>self.stopWatchState['endCount']):
-				complete=True
-
-
-		return(complete)
-
 
 
 

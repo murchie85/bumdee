@@ -1,7 +1,38 @@
 class gameFlow():
 	def __init__(self):
-		self.substate = None
-		print('Initialised')
+		self.substate  = None
+		self.waitDone  = False
+	def phoneSequence(self,phase,message,returnState, phone,gui,gs,wait=1,alert=True,scrollOverride='normal'):
+		waitIntro = gs.stopTimer.stopWatch(wait,phase,message,gs)
+
+		# set cut scene while talking
+		if(alert): gs.cutScene = True
+
+
+		if(waitIntro):
+			phone.messageUpdate(message,gui,gs,alert=alert,scrollOverride=scrollOverride)
+			self.substate = returnState
+	
+	def phoneSequenceF(self,phase,message,returnState, phone,gui,gs,wait=1,alert=True,scrollOverride='normal'):
+
+		waitIntro = gs.stopTimer.stopWatch(wait,phase,message,gs)
+
+		# set cut scene while talking
+		if(alert): gs.cutScene = True
+
+
+		# Wait to start talking
+		if(waitIntro and self.waitDone==False):
+			phone.messageUpdate(message,gui,gs,alert=alert,scrollOverride=scrollOverride)
+			self.waitDone = True
+
+		# wait until finished talking then change state
+		if(self.waitDone and gui.smsScrollDialogue.finished==True):
+			self.substate = returnState
+			self.waitDone = False
+			gui.smsScrollDialogue.finished=False # needs further investigation 
+
+	#----------main flow
 
 
 	def checkDecisionFlow(self,gs,gui,phone,afterCommand=False):
@@ -13,6 +44,7 @@ class gameFlow():
 
 		State tracked in GS for simplicity and easy load
 		"""
+		speed='fast'
 		args = None
 		command = ['desktop','pulltab','phone','afterCommand']
 		
@@ -25,8 +57,6 @@ class gameFlow():
 
 		# [1]--------begin sequence
 		if(gs.stage=='day1-intro'):
-			gs.eventState = 'cutScene'
-			
 
 
 			# allowed commands 
@@ -44,43 +74,29 @@ class gameFlow():
 
 			if(self.substate == 'intro'):
 				message = [99,'Cheryl','Hi welcome to Dundee, I dont have time to fuck about so will get straight to the point. Times are tough and I dont have any jobs for you, but I put in a good word with some recycle centers - maybe you can help them out?','pics/characters/Phoebe.png']
-				waitIntro = gs.stopWatch(1,'gameStartIntro',message)
-				if(waitIntro):
-					phone.messageUpdate(message,gui,gs,alert=True,scrollOverride='normal')
-					self.substate = 'wait'
-			
-			# CONVO FINISHED
-			if(self.substate == 'wait' and gui.smsScrollDialogue.finished==True):
-					self.substate = 'flashingWidget'
+				self.phoneSequenceF('gameStartIntro',message,'flashingWidget',      phone,gui,gs,scrollOverride=speed)
+
+
+
 
 
 			# ==============TALKING Introduce the widget and a job
 
 			if(self.substate == 'flashingWidget'):
 				command = ['desktop','pulltab','phone']
-
 				# trigger the demo alert in pulltab widget
 				args = 'demoWidgetAlert'
 				message = [99,'Cheryl','You see that widget flashing? Start here, its not much and certainly tedious but it MIGHT help keep you a float. Ok, get a move on. I will check in with you later - ciao.','pics/characters/Phoebe.png']
-				waitToTalk = gs.stopWatch(2,'gameStartIntro',message)
-				
-				# once flashign is finished, jump to message 
-				if(waitToTalk):
-					
-					self.substate = 'flashOutro'
-					phone.messageUpdate(message,gui,gs,alert=True,scrollOverride='normal')
-			
-
+				self.phoneSequenceF('flashingWidget',message,'flashOutro',      phone,gui,gs,wait=2,scrollOverride=speed)
 			# keep widget going
-			if(self.substate == 'flashOutro' and (gui.smsScrollDialogue.finished==False) ):
-				args = 'demoWidgetAlert'
-
+			#if(self.substate == 'flashOutro' and (gui.smsScrollDialogue.finished==False) ): args = 'demoWidgetAlert'
 			# CONVO FINISHED
-			if(self.substate == 'flashOutro' and (gui.smsScrollDialogue.finished==True)):
-				flashCount = gs.stopWatch(0.1,'flashOutro','demoalert')
-				if(flashCount):
-					self.substate = 'oneFinalThing'
+			if(self.substate == 'flashOutro'):
+				if(gs.stopTimer.stopWatch(1,'flashOutro','demoalert',gs)): self.substate = 'oneFinalThing'
 				
+
+
+
 
 			# ==============TALKING ONE FINAL THING
 
@@ -91,36 +107,26 @@ class gameFlow():
 				message = [99,'Cheryl',
 				"Oh, one other thing, dont worry if you miss something, just check your phone messages. Surely you aren't too far gone that you cant even use a phone?" ,
 				'pics/characters/Phoebe.png']
-				
-				waitToTalk = gs.stopWatch(2,'oneFinalThing',message)
-				# once flashign is finished, jump to message 
-				if(waitToTalk):
-
-					self.substate = 'oneFinalThingOutro'
-					phone.messageUpdate(message,gui,gs,alert=True,scrollOverride='normal')
-
-			# CONVO FINISHED
-			if(self.substate == 'oneFinalThingOutro' and (gui.smsScrollDialogue.finished==True)):
-				otfCount = gs.stopWatch(2,'end-onefinalthing','demoalert')
-				if(otfCount):
-					self.substate = 'introcomplete'
-					gui.debug('end of message ' + str('Oh, one other thing,'))
+				self.phoneSequenceF('oneFinalThing',message,'introcomplete',      phone,gui,gs,scrollOverride=speed)
 
 			if(self.substate == 'introcomplete'):
-				gs.eventState  = None
-				gs.stage       = 'day1-guest'
-				self.substate  = None
+				self.substate  = 'collectTabs'
+				gs.cutScene = None # disabling cutscene
 
 
+			if(self.substate == 'collectTabs'):
+				if(gs.recycleLevel==2):
+					print('setting dialogue')
+					message = [14,'Cheryl','That was fasst! Ok, I think you get the idea, just keep spamming the tabs (you can press the enter key) - im sure if you keep doing it something good will happen...','pics/characters/Phoebe.png']
+					self.phoneSequenceF('tabsdone',message,'tabsComplete',      phone,gui,gs)
 
-		if(gs.stage=='day1-guest'):
-				print('introducing new person')
-				# Add another person into the mix before next step of 'you hit your limit'
-					
-		    
+			if(self.substate == 'tabsComplete' and (gui.smsScrollDialogue.finished==True)):
+				print('Tabs done')
+				gs.eventState = None
 
-
+			# Add another person into the mix before next step of 'you hit your limit'
 			return(command,args)
+				
 
 
 
