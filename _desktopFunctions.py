@@ -88,8 +88,16 @@ class desktop():
 
 
     def drawDesktop(self,gui,gs,animateImgs,phone):
+
+        ######################################################
+        #
+        #                   DRAW SECTION
+        #
+        ######################################################
+
+
         gui.screen.fill(gui.greenA)
-        #drawImage(gui.screen, gui.tileBackground,(0,0))
+        #drawImage(gui.screen, gui.cubeBackground,(0,0))
 
         # animate border 
         animateImgs.animate(gui,gs.state,gui.borderSlides,(0,15,15),(0,0))
@@ -121,16 +129,16 @@ class desktop():
         
         nbx,nby = 15,15
         nbW,nbH = 0.65*gui.width,0.13*gui.height
-        fColour,bColour = (31,57,37),gui.greenB
+        fColour,bColour = gui.darkGrey,gui.greenBorder
         active = gui.mouseCollides((gui.mx,gui.my),nbx,nby,nbW,nbH)
-        if(active):
-            fColour,bColour = gui.darkGrey,gui.greenBorder
-
+        
+        if(active): fColour,bColour = (31,57,37),gui.greenB
         pygame.draw.rect(gui.screen, fColour,[nbx, nby,nbW, nbH],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
         pygame.draw.rect(gui.screen, bColour,[nbx, nby,nbW, nbH],8,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
 
         bx = nbx + 0.05*nbW
         by = nby + 0.2*nbH
+        
         # Nav Buttons 
         statusButton = gui.statusButton.display(gui,fillColour=gui.buttonGreen,updatePos=(bx,by),hoverBoxCol=(61,111,67),hoverTextCol=gui.greenC)
         
@@ -152,21 +160,36 @@ class desktop():
         # ---- nextday
         navButtonW = gui.nextDayBtn[1].get_rect().w
         nextday = drawSelectableImage(gui.nextDayBtn[0],gui.nextDayBtn[1],(navx + bNavW - 1.5*navButtonW,navy + 0.2*bNavH),gui)
-        if(nextday):
-            if(gs.eventState==None):
-                gui.debug('setting next day')
-                gs.eventState = 'nextDay'
-
-
-        #---- uncomment for showcase
-        drawImage(gui.screen, gui.bottomNavMock,(navx,navy))
         
-
+        #---- uncomment for showcase
+        #drawImage(gui.screen, gui.bottomNavMock,(navx,navy))
 
         self.infoboxVars = [bx,by,bh,nby,nbW,nbH,notificationButton]
 
         # ------Black Info Box
         self.blackInfoBox(gui,gs,overrideMessage=self.overrideMessage)
+
+
+        ######################################################
+        #
+        #                   LOGIC SECTION
+        #
+        ######################################################
+
+
+        if((gs.halt)!=True and (gs.cutScene) != True and gs.notifyState =='inactive'):
+            if(nextday):
+                gui.debug('attempting to call next day')
+                if(gs.eventState==None):
+                    gui.debug('setting next day')
+                    gs.eventState = 'nextDay'
+
+
+
+        
+
+
+
         
 
 

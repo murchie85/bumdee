@@ -30,6 +30,7 @@ class gameFlow():
 		if(self.waitDone and gui.smsScrollDialogue.finished==True):
 			self.substate = returnState
 			self.waitDone = False
+			gs.cutScene   = False
 			gui.smsScrollDialogue.finished=False # needs further investigation 
 
 	#----------main flow
@@ -46,7 +47,7 @@ class gameFlow():
 		"""
 		speed='fast'
 		args = None
-		command = ['desktop','pulltab','phone','afterCommand']
+		command = ['desktop','recycle','forex','phone','afterCommand']
 		
 		if(gs.halt == True):
 			gui.debug('Halting at story flow')
@@ -56,11 +57,11 @@ class gameFlow():
 
 
 		# [1]--------begin sequence
-		if(gs.stage=='day1-intro'):
+		if(gs.stage=='day1-introd'):
 
 
 			# allowed commands 
-			command = ['desktop','pulltab','phone','afterCommand']
+			command = ['desktop','recycle','phone','afterCommand']
 
 
 			# Fade in (run at the end )
@@ -83,8 +84,8 @@ class gameFlow():
 			# ==============TALKING Introduce the widget and a job
 
 			if(self.substate == 'flashingWidget'):
-				command = ['desktop','pulltab','phone']
-				# trigger the demo alert in pulltab widget
+				command = ['desktop','recycle','phone']
+				# trigger the demo alert in recycle widget
 				args = 'demoWidgetAlert'
 				message = [99,'Cheryl','You see that widget flashing? Start here, its not much and certainly tedious but it MIGHT help keep you a float. Ok, get a move on. I will check in with you later - ciao.','pics/characters/Phoebe.png']
 				self.phoneSequenceF('flashingWidget',message,'flashOutro',      phone,gui,gs,wait=2,scrollOverride=speed)
@@ -101,9 +102,9 @@ class gameFlow():
 			# ==============TALKING ONE FINAL THING
 
 			if(self.substate == 'oneFinalThing'):
-				command = ['desktop','pulltab','phone']
+				command = ['desktop','recycle','phone']
 
-				# trigger the demo alert in pulltab widget
+				# trigger the demo alert in recycle widget
 				message = [99,'Cheryl',
 				"Oh, one other thing, dont worry if you miss something, just check your phone messages. Surely you aren't too far gone that you cant even use a phone?" ,
 				'pics/characters/Phoebe.png']
@@ -111,18 +112,19 @@ class gameFlow():
 
 			if(self.substate == 'introcomplete'):
 				self.substate  = 'collectTabs'
-				gs.cutScene = None # disabling cutscene
+				gs.cutScene = False # disabling cutscene
 
 
 			if(self.substate == 'collectTabs'):
+				print(gs.recycleLevel)
 				if(gs.recycleLevel==2):
 					print('setting dialogue')
-					message = [14,'Cheryl','That was fasst! Ok, I think you get the idea, just keep spamming the tabs (you can press the enter key) - im sure if you keep doing it something good will happen...','pics/characters/Phoebe.png']
+					message = [14,'Cheryl','That was fasst! Ok, I think you get the idea, just keep spamming the tabs (or you can press the c key) - im sure if you keep doing it something good will happen...','pics/characters/Phoebe.png']
 					self.phoneSequenceF('tabsdone',message,'tabsComplete',      phone,gui,gs)
 
-			if(self.substate == 'tabsComplete' and (gui.smsScrollDialogue.finished==True)):
+			if(self.substate == 'tabsComplete'):
 				print('Tabs done')
-				gs.eventState = None
+				
 
 			# Add another person into the mix before next step of 'you hit your limit'
 			return(command,args)

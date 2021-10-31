@@ -65,8 +65,10 @@ class button():
         # text at end
         gui.screen.blit(textsurface,(self.x + 0.5*(self.width-tw),self.y+ 0.5*(self.height-th)))
 
+        selected = False
+        if(hovered and gui.clicked): selected = True
 
-        return(hovered,bw,bh)
+        return(selected,bw,bh)
 
     def displayCircle(self,gui,noBorder=False):
         textColour   = self.textColour

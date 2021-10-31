@@ -90,10 +90,10 @@ class phone():
 
         # ----- scroll up down using keys
 
-        if(gui.userInput.returnedKey=='down'):
+        if(gui.user_input.returnedKey=='down'):
             if(self.scrollerState<9):
                 self.scrollerState+=1
-        if(gui.userInput.returnedKey=='up'):
+        if(gui.user_input.returnedKey=='up'):
             if(self.scrollerState>0):
                 self.scrollerState-=1
 
@@ -152,6 +152,8 @@ class phone():
         """
         self.displayAlertMessage(gui,gs,gs.alertMessage)
 
+    
+    # ****EXTERNALLY CALLED ***
     def messageUpdate(self,message,gui,gs,alert=False,scrollOverride=None):
         """ call only once
             scrollOverride sets the text scrolling speed/delay
@@ -647,13 +649,17 @@ class phone():
             gui.debug('silent mode')
 
         if(collides): self.screenOn='on'
-        if(self.screenOn=='on'): self.screenColour = self.screenDefault
-        if(self.screenOn=='off'): self.screenColour = (78,96,9)
+        if(self.screenOn=='on'): 
+            self.screenColour = self.screenDefault
+            self.ScreenborderColour = self.greenBorder
+        if(self.screenOn=='off'): 
+            self.screenColour = (78,96,9)
+            self.ScreenborderColour = (48,98,48)
 
         # ----------Draw physical phone
         # phone
         pygame.draw.rect(gui.screen, self.darkGrey,    (self.mobilex, self.mobiley,self.mobileW , self.mobileH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, self.greenBorder, (self.mobilex, self.mobiley,self.mobileW , self.mobileH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        pygame.draw.rect(gui.screen, (140,174,91), (self.mobilex, self.mobiley,self.mobileW , self.mobileH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
 
         # top widget
         pygame.draw.rect(gui.screen, self.darkGrey,   (self.mobiletx, self.mobilety,self.mobiletW , self.mobiletH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
@@ -662,7 +668,7 @@ class phone():
 
         #screen 
         pygame.draw.rect(gui.screen, self.screenColour, (self.mobileScreenx, self.mobileScreeny,self.mobileSW , self.mobileSH),border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, self.greenBorder,  (self.mobileScreenx, self.mobileScreeny,self.mobileSW , self.mobileSH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        pygame.draw.rect(gui.screen, self.ScreenborderColour,  (self.mobileScreenx, self.mobileScreeny,self.mobileSW , self.mobileSH),7,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
 
         # circle button
         pygame.draw.circle(gui.screen, self.lightGrey, (self.mobilex + 0.48*self.mobileW, self.mobileScreeny + self.mobileSH + 35), 25, 0)
@@ -685,7 +691,7 @@ class phone():
        
         # ------message alert
 
-        if(self.alert): 
+        if(self.alert): # Set externally on message update
             self.screenOn='on'
             self.menuState = 'messageAlert'
 
@@ -700,9 +706,17 @@ class phone():
         gs.messages.sort(key=lambda a: a[0], reverse=True)
 
 
+        #----------------
+        #  Phone Blocking
+        #----------------
+
+        # Prior to alert message (which doesn't need mouse disabled)
         if(gs.cutScene==True and self.alert==False): 
             gui.debugDetailed('PhoneMenu disabling screen collide prior to alert')
             silent=True
+
+        if(gs.halt):
+            silent = True
 
         # -----------Draw Phone
 
@@ -842,9 +856,6 @@ class smsDialogue():
         x,y        = sx,sy
         tRemaining = ""
         hovered    = gui.mouseCollides((gui.mx,gui.my),x,y,maxWidth,maxHeight)
-        print(source)
-        print(text)
-        print('')
 
 
 
@@ -914,7 +925,7 @@ class smsScrollDialogue():
         self.finished       = False
         self.stopTimer      = stopTimer()
 
-    def drawScrollingDialogue(self,gui,gs,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),scrollSpeed=10,pos=(-1,-1),vertInc=1.2,maxLines=5,cutOutWaitTime=5):
+    def drawScrollingDialogue(self,gui,gs,myfont, text,maxWidth,maxHeight,colour=(0, 128, 0),scrollSpeed=10,pos=(-1,-1),vertInc=1.2,maxLines=5,cutOutWaitTime=5,skip=True):
         """
         function to scroll text, top/bottom with paging.
         """
@@ -946,6 +957,7 @@ class smsScrollDialogue():
             self.senPos      = 0
             self.arrPos      = 0
             self.arrIndex    = 0
+            gui.debug('initialising dialogue, setting finished false')
             self.finished    = False
             
 
@@ -985,14 +997,18 @@ class smsScrollDialogue():
 
 
         # ----move to next page
-        if((hovered and clicked) or gui.userInput.returnedKey=='return'): 
+        if((hovered and clicked) or gui.user_input.returnedKey=='return'): 
+            # array index is the last line of given array slice
             if(self.arrIndex<len(self.baseArray)):
                 self.textArray = self.baseArray[self.arrIndex:(self.arrIndex+maxLines)]
                 self.arrIndex  = self.arrIndex + maxLines
                 self.arrPos     = 0
                 self.senPos     = 0
                 self.y          = sy
-                self.finished   = False
+            else:
+                if(skip):
+                    self.finished       = True
+                    self.scrollOverride = None
 
 
         
@@ -1044,7 +1060,7 @@ class smsScrollDialogue():
             swComplete = self.stopTimer.stopWatch(cutOutWaitTime,'displayAlert',text,gs)
             if(swComplete):
                 self.scrollOverride = None
-                self.finished    = True
+                self.finished       = True
 
 
 

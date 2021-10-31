@@ -5,6 +5,8 @@
 CORE IDEA RULES
 --------------------- 
 ```
+**focus on gameplay/design first** story later *is my gameplay interesting?*
+
 ```
 [speed driven] [consistent] [cobol]  [realtime message updates]
 ````
@@ -14,13 +16,16 @@ CORE IDEA RULES
 [BUILD] [ COLLECT ]   [ CONSUME ] [ UPGRADE] [ BUY/SELL] [RESOURCE MANAGE] [ALARM/SURPRESS REACT] [RESEARCH] [BONUS CARD SELECTION]
 ``` 
 
+**Each Minigame should be addictive in itself**
 
+Sell drugs, rig elections fight skynet save the world
 
 
 #### ideas 
 
-
+- multiple stuff ticking in same box..
 - 4 boxes - change often, pick the one to keep it going up
+- Bonus Speed button - with wave display, bash to get speed up and gain extra bonus in short time
 - Bash buttons to collect 
 	- bash button in sequence
 - tap to collect (flies up to bank box)
@@ -28,6 +33,8 @@ CORE IDEA RULES
 - hit bells in right sequence
 - some sort of generator that needs toping up
 - x mined per second
+- Something with procedural generator
+- 6x6 grid traffic lights you tap in order
 
 
 
@@ -89,6 +96,8 @@ GAME FLOW PLOT
 - Team Assist: 
 			  Pick your team members to help out (right hand side maybe pics?)
 
+- Team holiday
+
 - Start the main Job (turns out to be your main team)
 
 - Cybernet Threat
@@ -106,6 +115,37 @@ GAME FLOW PLOT
 
 
 
+```
+---------------------
+GAMES FLOW
+--------------------- 
+```
+- Recycling center make some money (max is auto collect, auto sell, hoard set %s), stretch - collect scrap
+- Drugs center main pannel, ticker sub pannels (buy, )
+- Crypto Investment, main pannel, ticker sub pannels
+ - chose an investor
+
+- they should all recurse somehow...
+
+
+```
+---------------------
+Drugs
+--------------------- 
+```
+- 
+
+```
+---------------------
+Crypto 
+--------------------- 
+```
+- mine
+	- sell ticks down (upgrades increase speed)
+- trade
+	- bulk trade
+	- bulk invest
+
 
 
 ```
@@ -114,18 +154,40 @@ Juice Can Tabs
 --------------------- 
 ```
 
+**Ultimately becomes your scrap source not your money source**
+push for a few times
+get magnet
+get auto tab [choice kids +200% junkies +50%, magpies ]
+get auto bank
+get more centers to increase limits
+
+
+You shouldn't **sell** 
+they should buy off you automatically. 
+	- so you can upgrade selling stats 
+Rechange flow
+
+
+Tabs
+
+- tabs
+- bottlecaps
+- cans
+- scrap
+
+Upgrades
+
+- Magnets
+- Magpies
+- Junkies/Kids
 
 - flow
-	- caps first
-		- buy magnet increase inc rate
-	- manual bank
-	- magnet
-	- bottle caps
-	- train a magpie
+	- need something to tick price down......maybe hoard
 	- ****cut scene*** 
 	- Ethical decision 
 		- take money
 			- also draw pic cutscene
+	- steel rail
 
 
 - click 100 - that's your daily rate 
@@ -144,13 +206,6 @@ bottles
 Done: Ticks, minimises to small tick obj
 
 
-- Rules
-	- click up and stuff ticks down
-	- aim to last 50 to 100 days
-	- LV throttle
-	- Ethical route 
-
-
 
 ```
 ---------------------
@@ -158,12 +213,28 @@ ALL FEATURES
 --------------------- 
 ```
 
-
+- Debt counter
+	- Increases by x% 
+	- Upgrades can reduce that
+	- Money taken each week
+	- can negotiate...
+- Crypto Clicker
+- ATB Timer: Bash F to gain money
+- Slider - Aggression/somethign
+- Press F to prevent corruption (incoming hacking box .... interrupts gameplay)
+- Hack Box ATB - Press this button, then that button...order. respond fast
 - replace button with selectable image
 **next day summary** money made...
 - Add a different popup box, one for coding in 
 **Undertale mechanics** for dodging in side games
 - Later make widget selectable and placable
+- Human/bot avatar with flashing, % boxes for coding, money making etc...shows your partners working
+- Incoming message from Skynet (overrides not in phone)
+
+- MultiLevel Problem (i.e. random code snippets)
+	- Command layer +1pts
+	- Sudo code + 5 pts
+	- Kobol + 20 pts
 
 ### call me option
 
@@ -179,16 +250,21 @@ ALL FEATURES
 
 	- give them priorities
 
+------------------
+# WORK 
+------------------
+
 #### 'Go to work'
 - Time skips forward 50%
 - You might have to check in 
 - can skip
 
-- Crypto Clicker
+
 - Job Center
 - Gamble
 
 ## send out leaflets
+
 	- try to get people to sign up
 	- then automate for your benefit
 
@@ -375,7 +451,12 @@ steal from embassy
 1. Try not to deviate away too much from main theme
 2. Messages come in as you solve problems
 3. Plot, you can't always be living in the 90s...COBOL assembler it (use all your cool packages..)
+======================
+		Muisc
+======================
 
+- Snare
+- step up
 
 ======================
 		redundant

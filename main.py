@@ -18,8 +18,9 @@ from _music                 import *
 from _phone                 import *
 from _desktopFunctions      import *
 from _storyFlow             import *
+from _events                import *
 from _widgets               import * 
-from _events                import * 
+from _widgetForex           import * 
 
 
 # -----------VARIABLES & FLAGS
@@ -48,29 +49,20 @@ pygame.time.set_timer(pygame.USEREVENT, 20)
 font        = pygame.font.Font(None, 25)
 font        = pygame.font.Font(None, 26)
 bigFont     = pygame.font.Font(None, 32)
-
 hugeNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 37)
-nokiaFont      = pygame.font.Font('fonts/nokiafc22.ttf', 25)
 smallNokiaFont = pygame.font.Font('fonts/nokiafc22.ttf', 18)
-nanoNokiaFont  = pygame.font.Font('fonts/nokiafc22.ttf', 14)
-
 hugeFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 40)
-jumboFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 50)
 bigFont        = pygame.font.Font('fonts/Orbitron-Regular.ttf', 32)
 font           = pygame.font.Font('fonts/Orbitron-Regular.ttf', 25)
-smsFont        = pygame.font.Font('fonts/Orbitron-Regular.ttf', 22)
 smallFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 20)
-musicFont      = pygame.font.Font('fonts/Orbitron-Regular.ttf', 18)
 nanoFont       = pygame.font.Font('fonts/Orbitron-Regular.ttf', 14)
+
 
 # ---------------CLASS OBJECTS
 
 exitButton   = button(0.975*width,30,0,0,'x',themeColour,smallFont,textColour=themeColour)
 nextButton   = button(0.475*width,0.8*height,0,0,'next',themeColour,smallFont,textColour=themeColour)
 
-statusButton    = button(0.15*width,0.05*height,width/17,height/13,'ST',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
-inventoryButton = button(0.15*width,0.05*height,width/17,height/13,'£',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
-noteButton      = button(0.15*width,0.05*height,width/17,height/13,'N',(0,128,0),hugeNokiaFont,textColour=(97,165,93))
 
 
 borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('pics/frame/border2.png'),pygame.image.load('pics/frame/border3.png'),pygame.image.load('pics/frame/border4.png'),pygame.image.load('pics/frame/border5.png'),pygame.image.load('pics/frame/border6.png'),pygame.image.load('pics/frame/border7.png'),pygame.image.load('pics/frame/border8.png')]
@@ -82,18 +74,43 @@ sDialogue            = scrollingDialogue()
 music                = music()
 gEvent               = processGameEvent()
 notificationDialogue = notificationDialogue()
+user_input           = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 
-gui                   = gui(white,screen,width,height,smallNokiaFont,hugeNokiaFont,font,bigFont,hugeFont,smallFont,nanoFont,themeColour,exitButton,nextButton,dialogue,sDialogue,smsDialogue,music,borderSlides,notificationDialogue)
-gui.statusButton      = statusButton
-gui.inventoryButton   = inventoryButton
-gui.noteButton        = noteButton
-gui.nokiaFont         = nokiaFont
-gui.nanoNokiaFont     = nanoNokiaFont
-gui.smsFont           = smsFont
-gui.musicFont         = musicFont
-gui.jumboFont         = jumboFont
-gui.gameTime          = 0
-gui.smsScrollDialogue = smsScrollDialogue
+gui                   = gui(
+                            white,
+                            screen,
+                            width,
+                            height,
+                            smallNokiaFont,
+                            hugeNokiaFont,
+                            font,bigFont,
+                            hugeFont,
+                            smallFont,
+                            nanoFont,
+                            themeColour,
+                            exitButton,
+                            nextButton,
+                            dialogue,
+                            sDialogue,
+                            smsDialogue,
+                            music,
+                            borderSlides,
+                            notificationDialogue,
+                            user_input,
+                            statusButton      = button(0.15*width,0.05*height,width/17,height/13,'ST',(0,128,0),hugeNokiaFont,textColour=(97,165,93)),
+                            inventoryButton   = button(0.15*width,0.05*height,width/17,height/13,'£',(0,128,0),hugeNokiaFont,textColour=(97,165,93)),
+                            noteButton        = button(0.15*width,0.05*height,width/17,height/13,'N',(0,128,0),hugeNokiaFont,textColour=(97,165,93)),
+                            nokiaFont         = pygame.font.Font('fonts/nokiafc22.ttf', 25),
+                            nanoNokiaFont     = pygame.font.Font('fonts/nokiafc22.ttf', 14),
+                            smsFont           = pygame.font.Font('fonts/Orbitron-Regular.ttf', 22),
+                            musicFont         = pygame.font.Font('fonts/Orbitron-Regular.ttf', 18),
+                            jumboFont         = pygame.font.Font('fonts/Orbitron-Regular.ttf', 50),
+                            gameTime          = 0,
+                            smsScrollDialogue = smsScrollDialogue,
+                            squareFont        = pygame.font.Font('fonts/FORCEDSQUARE.ttf', 28),
+                            squareFontH       = pygame.font.Font('fonts/FORCEDSQUARE.ttf', 28),
+                                                        
+                            )
 
 
 
@@ -101,20 +118,21 @@ phone        = phone(gui.width,gui.height)
 desktop      = desktop()
 fx           = sfx(gui)
 gui.menuBG   = pygame.image.load('pics/intro/intro3.png')
-user_input   = userInputObject("","",(0.27,0.65,0.45,0.08), gui)
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
 widgetAnim   = imageAnimate(0,10,10,name='WidgetAnimation')
 
 
 # Adding to Gui
-gui.userInput       = user_input
 gui.fx              = fx
 gui.animateImgs     = animateImgs
 gui.widgetAnim      = widgetAnim
 
 junkCollection       = junkCollection()
+forexWidget          = forex()
+
 gs.junk              = junkCollection
+gs.forex             = forexWidget
 
 # set up music
 
@@ -148,7 +166,7 @@ while gs.running:
         user_input = modifyInput.manageButtons(event,user_input,gs.state)
 
     
-    gui.debug('gs.state: ' + str(gs.state) + ' gs.stage: ' + str(gs.stage) + ' gs.eventState : ' + str(gs.eventState ) + ' substate' + str(gameFlow.substate) +   ' gs.halt' + str(gs.halt))
+    gui.debug('gs.state: ' + str(gs.state) + ' gs.stage: ' + str(gs.stage) + ' gs.eventState : ' + str(gs.eventState ) + ' substate: ' + str(gameFlow.substate) +   ' gs.halt' + str(gs.halt) + ' dialogue state: ' + str(gui.smsScrollDialogue.finished) + ' cutscene: ' + str(gs.cutScene))
     gui.mx, gui.my = pygame.mouse.get_pos()
 
 
@@ -172,8 +190,11 @@ while gs.running:
                 desktop.drawDesktop(gui,gs,animateImgs,phone)
            
             # --------pull tab widget
-            if(command == 'pulltab'):
-                gs.junk.pullTab(gui,phone,gs,fx,desktop,commands[1])
+            if(command == 'recycle'):
+                gs.junk.manageWidget(gui,phone,gs,fx,desktop,commands[1])
+            
+            if(command == 'forex'):
+                gs.forex.manageWidget(gui,phone,gs,fx,desktop,commands[1])
             
             if(command == 'phone'):
                 phone.phoneMenu(gui,gs)

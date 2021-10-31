@@ -23,8 +23,22 @@ class gui():
         music,
         borderSlides,
         notificationDialogue,
+        user_input,
+        statusButton      ,
+        inventoryButton  ,
+        noteButton   ,
+        nokiaFont    ,
+        nanoNokiaFont    ,
+        smsFont  ,
+        musicFont,
+        jumboFont  ,
+        gameTime ,
+        smsScrollDialogue,
+        squareFont,
+        squareFontH,
         debugSwitch = True,
-        clicked=False):
+        clicked=False,
+        ):
 
         self.white                  = white
         self.screen                 = screen
@@ -46,8 +60,24 @@ class gui():
         self.music                  = music
         self.borderSlides           = borderSlides
         self.notificationDialogue   = notificationDialogue
-        self.clicked                = clicked
+        self.user_input             = user_input
+        self.statusButton           = statusButton
+        self.inventoryButton        = inventoryButton
+        self.noteButton             = noteButton   
+        self.nokiaFont              = nokiaFont
+        self.nanoNokiaFont          = nanoNokiaFont    
+        self.smsFont                = smsFont
+        self.musicFont              = musicFont
+        self.jumboFont              = jumboFont 
+        self.gameTime               = gameTime
+        self.smsScrollDialogue      = smsScrollDialogue
+        self.squareFont             = squareFont
+        self.squareFontH            = squareFontH
+
+
         self.debugSwitch            = debugSwitch
+        self.clicked                = clicked
+        
 
         self.greenA        = (36,65,45)
         self.greenB        = (82,128,58)
@@ -82,6 +112,10 @@ class gui():
         self.bottomNav          = pygame.image.load('pics/assets/nav/navBottom.png')
         self.nextDayBtn         = [pygame.image.load('pics/assets/nav/nextDay1.png'),pygame.image.load('pics/assets/nav/nextDay2.png')]
         self.tileBackground     = pygame.image.load('pics/assets/backgrounds/tile.png')
+        self.gradientBackground = pygame.image.load('pics/assets/backgrounds/gradient.png')
+        self.cubeBackground     = pygame.image.load('pics/assets/backgrounds/cube.png')
+
+        self.mechBtnMed         = [pygame.image.load('pics/assets/buttons/mechBtnMed1.png'),pygame.image.load('pics/assets/buttons/mechBtnMed2.png')]
 
         self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png'),pygame.image.load('pics/assets/widgetNode/widgetNode3.png')] 
         self.smallActiveWidget  = pygame.image.load('pics/assets/widgetNode/smallActiveWidget.png')
@@ -91,6 +125,11 @@ class gui():
         
         self.bigActiveWidget    = pygame.image.load('pics/assets/widgetNode/bigActiveWidget.png')
         
+        self.mechBoxGreen       = [pygame.image.load('pics/assets/mechBox/mechBoxGreen1.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen2.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen3.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen4.png')]
+        self.mechBoxMedDark     = [pygame.image.load('pics/assets/mechBox/mechBoxMed1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed4.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed5.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed6.png')]
+        self.mechBoxMed         = [pygame.image.load('pics/assets/mechBox/mechBoxMedLight1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight4.png')]
+
+
         self.extendableBox      = [pygame.image.load('pics/assets/textBox/extendableDarkGreen1.png'),pygame.image.load('pics/assets/textBox/extendableDarkGreen2.png')]
 
         self.notitfyBtnSmall    = [pygame.image.load('pics/assets/buttons/buttonSmall1.png'),pygame.image.load('pics/assets/buttons/buttonSmall2.png')]
@@ -105,6 +144,10 @@ class gui():
 
         #buttons 
         self.sell              = [pygame.image.load('pics/assets/buttons/sell1.png'),pygame.image.load('pics/assets/buttons/sell2.png')]
+        self.bank              = [pygame.image.load('pics/assets/buttons/bank1.png'),pygame.image.load('pics/assets/buttons/bank2.png')]
+        self.auto              = [pygame.image.load('pics/assets/buttons/auto1.png'),pygame.image.load('pics/assets/buttons/auto2.png')]
+        self.increment         = [pygame.image.load('pics/assets/buttons/increment1.png'),pygame.image.load('pics/assets/buttons/increment2.png')]
+        self.decrement         = [pygame.image.load('pics/assets/buttons/decrement1.png'),pygame.image.load('pics/assets/buttons/decrement2.png')]
 
 
         self.menuBG = None
@@ -123,20 +166,60 @@ class gui():
 
 
 
-    def incrementableWidget(self,x,y,text,value,inc=1,cap=100):
+    def incrementableWidget(self,x,y,text,value,inc=1,cap=100,userInput=None,incrementKey=None):
         """+ button and text to increment and return value
         """
 
         displayText = text + ' ' + str(value)
-        selected = drawSelectableImage(self.minis[4],self.minis[5],(x,y),self,trim=False)
-        if(selected and inc<=cap):
-            value = value + inc
+        
+        selected = drawSelectableImage(self.increment[0],self.increment[1],(x,y),self,trim=False)
+        if(userInput.upper() == incrementKey.upper()): selected = True
+        if(selected):
+            if(inc<=cap):
+                value = value + inc
+            else:
+                value = value + cap
+
+        
         textx, texty = x+60,y+10
         hov, tw,ty = drawText(self.screen,self.nanoNokiaFont, displayText,textx ,texty, self.greenD)
         
         xEnd,yEnd = textx + tw, y + self.minis[5].get_rect().h
 
         return(value,xEnd,yEnd)
+
+    def incDecWidgetAbsolute(self,x,y,text,value,inc=1,cap=100,userInput="none",incrementKey="notset"):
+        """+ button and text to increment and return value
+        """
+
+        displayText = text + ' ' + str(value)
+        
+        selected = drawSelectableImage(self.decrement[0],self.decrement[1],(x,y),self,trim=False)
+        if(userInput.upper() == incrementKey.upper()): selected = True
+        if(selected):
+            if((value - inc)>=0):
+                value = value - inc
+            else:
+                value = 0
+
+        x = x + self.decrement[0].get_rect().w 
+        plusSelected = drawSelectableImage(self.increment[0],self.increment[1],(x,y),self,trim=False)
+        if(plusSelected):
+            if((value + inc)<=cap):
+                value = value + inc
+            else:
+                value = cap
+
+        textx, texty = x+60,y+10
+        hov, tw,ty = drawText(self.screen,self.nanoNokiaFont, displayText,textx ,texty, self.greenD)
+        
+        xEnd,yEnd = textx + tw, y + self.minis[5].get_rect().h
+
+
+        return(value,xEnd,yEnd)
+
+
+
 
 
     def debug(self,debugMessage):

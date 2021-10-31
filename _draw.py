@@ -103,7 +103,7 @@ def drawTextandBoxGrid(SCREEN,myfont, x,y,pairArray, textColour=(215, 233, 149),
 
         # TextBox Values
         smallestSurface = myfont.render('S', True, textColour)
-        x2           = x + tw + smallestSurface.get_rect().height
+        x2           = x + tw + 2*smallestSurface.get_rect().height
         y2           = y
         if(len(value)<minBoxWidth): value = str(''.join(['0' for x in range(minBoxWidth-len(value))]) )  +str(value)
         valuesurface = myfont.render(value, True, textColour)
@@ -116,6 +116,13 @@ def drawTextandBoxGrid(SCREEN,myfont, x,y,pairArray, textColour=(215, 233, 149),
         by = y2 - 0.5*smallestSurface.get_rect().height
 
 
+        bw2 = tw + 1.5*smallestSurface.get_rect().width
+        bh2 = th + smallestSurface.get_rect().height
+        bx2 = x - 0.75*smallestSurface.get_rect().width
+        by2 = y - 0.5*smallestSurface.get_rect().height
+
+
+
         # If curser over label lightup
         if(pos!=None):
             labelRect = Rect(x,y, x+labelsurface.get_rect().width,y+labelsurface.get_rect().height)
@@ -124,12 +131,20 @@ def drawTextandBoxGrid(SCREEN,myfont, x,y,pairArray, textColour=(215, 233, 149),
                     labelsurface = myfont.render(label, True, (128,0,0))
                     hovered = label
 
+
+
+
+        # draw box and shading
+        pygame.draw.rect(SCREEN, (boxColour), [bx2, by2,bw2 ,bh2])
+        pygame.draw.line(SCREEN,(lineColour), (bx2,by2+bh2),(bx2+bw2,by2+bh2),4)
+        pygame.draw.line(SCREEN,(lineColour), (bx2+bw2,by2),(bx2+bw2,by2+bh2),4)
+
         SCREEN.blit(labelsurface,(x,y))
 
         # draw box and shading
         pygame.draw.rect(SCREEN, (boxColour), [bx, by,bw ,bh])
-        pygame.draw.line(SCREEN,(lineColour), (bx,by+bh),(bx+bw,by+bh),3)
-        pygame.draw.line(SCREEN,(lineColour), (bx+bw,by),(bx+bw,by+bh),3)
+        pygame.draw.line(SCREEN,(lineColour), (bx,by+bh),(bx+bw,by+bh),4)
+        pygame.draw.line(SCREEN,(lineColour), (bx+bw,by),(bx+bw,by+bh),4)
         
         SCREEN.blit(valuesurface,(x2,y2))
 
@@ -385,7 +400,7 @@ def drawSelectableImage(image,image2,pos,gui,trim=False):
 
     return(False)
 
-def drawTxtBtn(image,image2,pos,gui,text,font=None,txtColour=(215,233,149)):
+def drawTxtBtn(image,image2,pos,gui,text,font=None,txtColour=(215,233,149),yadj=0.3):
     
     # ------draw image
 
@@ -401,7 +416,7 @@ def drawTxtBtn(image,image2,pos,gui,text,font=None,txtColour=(215,233,149)):
     tw = textsurface.get_rect().width
     th = textsurface.get_rect().height
     x  = pos[0]+(0.5*(image.get_rect().w - tw))
-    y  = pos[1]+(0.3*(image.get_rect().h - th))
+    y  = pos[1]+(yadj*(image.get_rect().h - th))
     gui.screen.blit(textsurface,(x,y))
 
 
