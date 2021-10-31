@@ -4,32 +4,14 @@ from _utils import *
 
 
 
-def showWidgNode(gui,widgetNodeX,widgetNodeY,headerText="Widget",bodyText="Widget textX",selectable=True,flashAlert=False):
-    selected = False
-    
-    
-    selected = drawSelectableImage(gui.widgetNode[0],gui.widgetNode[1],(widgetNodeX,widgetNodeY),gui,trim=False)
-    
-    if(flashAlert):
-        gui.widgetAnim.animate(gui,'showWidgNode',[gui.widgetNode[0],gui.widgetNode[2]],(0,10,10),(widgetNodeX,widgetNodeY))
-
-    widgetNodeW = gui.widgetNode[0].get_rect().w
-
-    
-
-    hovered,tw,th= drawText(gui.screen,gui.nanoNokiaFont, headerText, widgetNodeX,widgetNodeY+8, gui.greenD,center=widgetNodeW)
-    drawText(gui.screen,gui.nanoNokiaFont, bodyText, widgetNodeX,widgetNodeY+37, gui.greenD,center=widgetNodeW)
-    
-    if(selectable==False): return(False)
-    
-    return(selected)
-
-
-
-
 
 class junkCollection():
-    def __init__(self):
+    def __init__(self,w,x,y):
+        self.w                      = w
+        self.x                      = x
+        self.y                      = y
+
+
         self.activeSubWidget        = 0
         self.totalSubWidgets        = 3
 
@@ -55,35 +37,6 @@ class junkCollection():
         self.notificationDisplayTime = 2
         self.stopTimer               =  stopTimer()
 
-
-    def manageWidget(self,gui,phone,gs,fx,desktop,adargs=None):
-
-
-        selected   = False 
-        selectable = True
-
-        # ----------Draw Pull Tab Widget 
-
-        freeHorizontalWidth = gui.width - phone.mobileW - 100
-        
-        widgetNodeW = gui.widgetNode[0].get_rect().w
-        widgetNodeX = phone.mobilex + phone.mobileW + 0.5* widgetNodeW
-        widgetNodeY = phone.mobiley + 50
-        
-        #-------------only one widget at a time
-        # ------------If a widget is active disable all others
-        if(gs.ACTIVEWIDGET!=None): selectable = False 
-        
-        selected = showWidgNode(gui,widgetNodeX,widgetNodeY,headerText="Pull Tab",bodyText="Tabs Collected: " + str(gs.totalCantabs),selectable=selectable)
-
-        if(adargs=='demoWidgetAlert'):
-            showWidgNode(gui,widgetNodeX,widgetNodeY,headerText="Pull Tab",bodyText="Tabs Collected: " + str(gs.cantabs),selectable=False,flashAlert=True)
-            return()
-
-
-        if(selected): gs.ACTIVEWIDGET = 'recycleCenter'
-
-        self.recycleCenter(gui,gs,fx,desktop,phone)
 
         
 

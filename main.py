@@ -19,7 +19,8 @@ from _phone                 import *
 from _desktopFunctions      import *
 from _storyFlow             import *
 from _events                import *
-from _widgets               import * 
+from _widgetController      import *
+from _widgetRecycle         import * 
 from _widgetForex           import * 
 
 
@@ -128,8 +129,8 @@ gui.fx              = fx
 gui.animateImgs     = animateImgs
 gui.widgetAnim      = widgetAnim
 
-junkCollection       = junkCollection()
-forexWidget          = forex()
+junkCollection       = junkCollection(gui.widgetNode[0].get_rect().w,phone.mobilex + phone.mobileW + (0.5* gui.widgetNode[0].get_rect().w),phone.mobiley + 50)
+forexWidget          = forex(gui.widgetNode[0].get_rect().w,phone.mobilex + phone.mobileW + (1.7* gui.widgetNode[0].get_rect().w),phone.mobiley + 50)
 
 gs.junk              = junkCollection
 gs.forex             = forexWidget
@@ -189,19 +190,15 @@ while gs.running:
             if(command == 'desktop'):
                 desktop.drawDesktop(gui,gs,animateImgs,phone)
            
-            # --------pull tab widget
-            if(command == 'recycle'):
-                gs.junk.manageWidget(gui,phone,gs,fx,desktop,commands[1])
-            
-            if(command == 'forex'):
-                gs.forex.manageWidget(gui,phone,gs,fx,desktop,commands[1])
-            
             if(command == 'phone'):
                 phone.phoneMenu(gui,gs)
 
             if(command == 'afterCommand'):
                 gameFlow.checkDecisionFlow(gs,gui,phone,True)
 
+        # --------pull tab widget
+        widgetCoordinator(gui,phone,gs,fx,desktop,commands,commands[1])
+        
         gEvent.processEvent(gs,gui)
 
 

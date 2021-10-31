@@ -56,6 +56,7 @@ class desktop():
 
 
             # write balance 
+            gs.money = round(gs.money,2)
             moneyX,moneyY = bx + 0.10*infboxw, by + 0.1*infBoxh
             h,tw,th   = drawText(gui.screen,gui.smallNokiaFont, 'Balance',moneyX,moneyY, (89,207,147))
             h2,tw2,th = drawText(gui.screen,gui.smallNokiaFont, '£ '+str(gs.money),moneyX, moneyY + 0.31*infBoxh, (89,207,147))

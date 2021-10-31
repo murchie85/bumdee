@@ -36,7 +36,7 @@ class gameState():
         # --------------------User stats
         self.userName       = "Dobber"
         self.level          = '1'
-        self.money          = 5.27
+        self.money          = 50.27
         self.hp             = 33
         self.happiness      = 0.4
         self.hunger         = 0.5
@@ -159,6 +159,16 @@ class gameState():
         if(self.counter==None): self.counter = count
 
         self.counter-=1
+        if(self.counter<1):
+            self.counter= None
+            return(True)
+
+        return(False)
+   
+    def countDownReal(self,count):
+        if(self.counter==None): self.counter = count
+
+        self.counter-=self.dt/1000
         if(self.counter<1):
             self.counter= None
             return(True)
