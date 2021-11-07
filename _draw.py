@@ -426,6 +426,71 @@ def drawTxtBtn(image,image2,pos,gui,text,font=None,txtColour=(215,233,149),yadj=
 
     return(False)
 
+def drawTxtBtnAdvanced(image,image2,pos,gui,text,font=None,txtColour=(215,233,149),yadj=0.3):
+    
+    # ------draw image
+
+    displayImage = image
+    hover = gui.mouseCollides((gui.mx,gui.my),pos[0],pos[1],image.get_rect().w,image.get_rect().h)
+    if(hover): displayImage = image2
+    gui.screen.blit(displayImage,pos)
+
+
+    #-------draw text
+    if(font==None): font = gui.smallFont
+    textsurface = font.render(text, True, txtColour)
+    tw = textsurface.get_rect().width
+    th = textsurface.get_rect().height
+    x  = pos[0]+(0.5*(image.get_rect().w - tw))
+    y  = pos[1]+(yadj*(image.get_rect().h - th))
+    gui.screen.blit(textsurface,(x,y))
+
+    xEnd = pos[0] + image.get_rect().w
+    yEnd = pos[1] + image.get_rect().h
+
+
+    if(hover and gui.clicked):
+        return(True,xEnd,yEnd)
+
+    return(False,xEnd,yEnd)
+
+def drawTxtBtnOnOff(image,image2,pos,state,gui,text,font=None,txtColour=(215,233,149),yadj=0.5,xadj=0.5):
+    
+    if(state==True): displayImage  = image
+    if(state==False): displayImage = image2
+    
+
+    # ------draw image
+
+    hover = gui.mouseCollides((gui.mx,gui.my),pos[0],pos[1],image.get_rect().w,image.get_rect().h)
+    if(hover): 
+        if(state==True): 
+            displayImage  = image2
+        if(state==False): 
+            displayImage = image
+    
+
+    gui.screen.blit(displayImage,pos)
+
+
+    #-------draw text
+    if(font==None): font = gui.smallFont
+    textsurface = font.render(text, True, txtColour)
+    tw = textsurface.get_rect().width
+    th = textsurface.get_rect().height
+    x  = pos[0]+(xadj*(image.get_rect().w - tw))
+    y  = pos[1]+(yadj*(image.get_rect().h - th))
+    gui.screen.blit(textsurface,(x,y))
+
+    xEnd = pos[0] + image.get_rect().w
+    yEnd = pos[1] + image.get_rect().h
+
+
+    if(hover and gui.clicked):
+        return(not state,xEnd,yEnd)
+
+    return(state,xEnd,yEnd)
+
 
 
 def drawVerticleList(choices,selectedFont,x,y,gui,colour=(0, 0, 0) , spacing=2):

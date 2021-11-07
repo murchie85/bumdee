@@ -1,5 +1,6 @@
 import pygame
 from _draw              import *
+from _utils import *
 
 class gui():
     def __init__(self,
@@ -21,7 +22,7 @@ class gui():
         sDialogue,
         smsDialogue,
         music,
-        borderSlides,
+        borderSlide,
         notificationDialogue,
         user_input,
         statusButton      ,
@@ -58,7 +59,7 @@ class gui():
         self.sDialogue              = sDialogue
         self.smsDialogue            = smsDialogue
         self.music                  = music
-        self.borderSlides           = borderSlides
+        self.borderSlide            = borderSlide
         self.notificationDialogue   = notificationDialogue
         self.user_input             = user_input
         self.statusButton           = statusButton
@@ -100,11 +101,6 @@ class gui():
         # ---------------Images 
 
 
-        # Intro 
-
-        self.titleScreenImgs    = [pygame.image.load('pics/intro/intro1.png'),pygame.image.load('pics/intro/intro2.png')]
-
-
 
 
         self.signal             = pygame.image.load('pics/phoneLogos/signal.png')
@@ -115,7 +111,7 @@ class gui():
         self.gradientBackground = pygame.image.load('pics/assets/backgrounds/gradient.png')
         self.cubeBackground     = pygame.image.load('pics/assets/backgrounds/cube.png')
 
-        self.mechBtnMed         = [pygame.image.load('pics/assets/buttons/mechBtnMed1.png'),pygame.image.load('pics/assets/buttons/mechBtnMed2.png')]
+        
 
         self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png'),pygame.image.load('pics/assets/widgetNode/widgetNode3.png')] 
         self.smallActiveWidget  = pygame.image.load('pics/assets/widgetNode/smallActiveWidget.png')
@@ -125,10 +121,14 @@ class gui():
         
         self.bigActiveWidget    = pygame.image.load('pics/assets/widgetNode/bigActiveWidget.png')
         
-        self.mechBoxGreen       = [pygame.image.load('pics/assets/mechBox/mechBoxGreen1.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen2.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen3.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen4.png')]
-        self.mechBoxMedDark     = [pygame.image.load('pics/assets/mechBox/mechBoxMed1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed4.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed5.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed6.png')]
-        self.mechBoxMed         = [pygame.image.load('pics/assets/mechBox/mechBoxMedLight1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight4.png')]
 
+        # ----- Mech imgs
+        self.mechBoxMed         = [pygame.image.load('pics/assets/mechBox/mechBoxMed1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed4.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed5.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed6.png')]
+        self.mechBoxBig         = [pygame.image.load('pics/assets/mechBox/mechBoxBig1.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig2.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig3.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig4.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig5.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig6.png')]
+        self.mechBoxGreen       = [pygame.image.load('pics/assets/mechBox/mechBoxGreen1.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen2.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen3.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen4.png')]
+        self.mechBoxMedLight    = [pygame.image.load('pics/assets/mechBox/mechBoxMedLight1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight4.png')]
+        self.mechBtnMed         = [pygame.image.load('pics/assets/buttons/mechBtnMed1.png'),pygame.image.load('pics/assets/buttons/mechBtnMed2.png')]
+        self.mechPlainBtnMed    = [pygame.image.load('pics/assets/buttons/medMechBtn1.png'),pygame.image.load('pics/assets/buttons/medMechBtn2.png')]
 
         self.extendableBox      = [pygame.image.load('pics/assets/textBox/extendableDarkGreen1.png'),pygame.image.load('pics/assets/textBox/extendableDarkGreen2.png')]
 
@@ -143,11 +143,12 @@ class gui():
         self.my     = 0
 
         #buttons 
-        self.sell              = [pygame.image.load('pics/assets/buttons/sell1.png'),pygame.image.load('pics/assets/buttons/sell2.png')]
-        self.bank              = [pygame.image.load('pics/assets/buttons/bank1.png'),pygame.image.load('pics/assets/buttons/bank2.png')]
-        self.auto              = [pygame.image.load('pics/assets/buttons/auto1.png'),pygame.image.load('pics/assets/buttons/auto2.png')]
-        self.increment         = [pygame.image.load('pics/assets/buttons/increment1.png'),pygame.image.load('pics/assets/buttons/increment2.png')]
-        self.decrement         = [pygame.image.load('pics/assets/buttons/decrement1.png'),pygame.image.load('pics/assets/buttons/decrement2.png')]
+        self.sell              = impFilesL('sell1.png',tDir = 'pics/assets/buttons/')
+        self.bank              = impFilesL('bank1.png',tDir = 'pics/assets/buttons/')
+        self.auto              = impFilesL('auto1.png',tDir = 'pics/assets/buttons/')
+        self.selectMe          = impFilesL('selectme1.png',tDir = 'pics/assets/buttons/')
+        self.increment         = impFilesL('increment1.png',tDir = 'pics/assets/buttons/')
+        self.decrement         = impFilesL('decrement1.png',tDir = 'pics/assets/buttons/')
 
 
         self.menuBG = None
@@ -166,14 +167,26 @@ class gui():
 
 
 
-    def incrementableWidget(self,x,y,text,value,inc=1,cap=100,userInput=None,incrementKey=None):
+    def incrementableWidget(self,x,y,text,value,inc=1,cap=100,userInput=None,incrementKey=None,insta=False,instaMessage='Auto On'):
         """+ button and text to increment and return value
         """
+        textx, texty = x+60,y+10
+
+        #---------exit if auto on
+        if(insta):
+            drawSelectableImage(self.increment[0],self.increment[1],(x,y),self,trim=False)
+            hov, tw,ty = drawText(self.screen,self.nanoNokiaFont, instaMessage,textx ,texty, self.greenD)
+            xEnd,yEnd = textx + tw, y + self.minis[5].get_rect().h
+            return(value,xEnd,yEnd)
+
+
+        # --------- display text
 
         displayText = text + ' ' + str(value)
         
         selected = drawSelectableImage(self.increment[0],self.increment[1],(x,y),self,trim=False)
         if(userInput.upper() == incrementKey.upper()): selected = True
+        
         if(selected):
             if(inc<=cap):
                 value = value + inc
@@ -181,11 +194,10 @@ class gui():
                 value = value + cap
 
         
-        textx, texty = x+60,y+10
         hov, tw,ty = drawText(self.screen,self.nanoNokiaFont, displayText,textx ,texty, self.greenD)
         
         xEnd,yEnd = textx + tw, y + self.minis[5].get_rect().h
-
+        
         return(value,xEnd,yEnd)
 
     def incDecWidgetAbsolute(self,x,y,text,value,inc=1,cap=100,userInput="none",incrementKey="notset"):

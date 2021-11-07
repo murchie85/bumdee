@@ -24,6 +24,7 @@ Sell drugs, rig elections fight skynet save the world
 #### ideas 
 
 - multiple stuff ticking in same box..
+- Hold button for bar to load up (farming/collecting)
 - 4 boxes - change often, pick the one to keep it going up
 - Bonus Speed button - with wave display, bash to get speed up and gain extra bonus in short time
 - Bash buttons to collect 
@@ -127,6 +128,12 @@ GAMES FLOW
 
 - they should all recurse somehow...
 
+
+```
+---------------------
+Steal Cars/Phones
+--------------------- 
+```
 
 ```
 ---------------------

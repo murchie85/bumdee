@@ -14,50 +14,37 @@ class forex():
         self.y                      = y
 
         self.activeSubWidget        = 0
-        self.totalSubWidgets        = 3
+        self.totalSubWidgets        = 1
+        self.chosenData             = []
 
         self.notificationDisplayTime = 2
         self.stopTimer               =  stopTimer()
 
 
-        # -------investments 
-        self.invested               = 'init'
-        self.investedDate           = None
-        self.investedDuration       = 0
-        self.investedPair           = None
-        self.initialRate            = None
-        self.investedPercent        = 0
-        self.investedAmount         = 0
-        self.change                 = 0
-        self.returnProfit           = 0
-        
 
-        self.forexObject            = {
-                                       'GBP_USD':{'price':1.37,'base':1.37,'history':[1.37],'name':'GBP_USD'},
-                                       'GBP_EUR':{'price':1.18,'base':1.18,'history':[1.18],'name':'GBP_EUR'}
-                                       }
-    def reset(self):
-        self.invested               = 'no'
-        self.investedDate           = None
-        self.investedDuration       = 0
-        self.investedPair           = None
-        self.initialRate            = None
-        self.investedPercent        = 0
-        self.investedAmount         = 0
-        self.change                 = 0
-        self.returnProfit           = 0
+    def reset(self,gs):
+        gs.invested               = 'no'
+        gs.investedDate           = None
+        gs.investedDuration       = 0
+        gs.investedPair           = None
+        gs.initialRate            = None
+        gs.investedPercent        = 0
+        gs.investedAmount         = 0
+        gs.change                 = 0
+        gs.returnProfit           = 0
   
 
-    def drawWindow(self,gui,phone,gs,tabNo,h1,h2,lPairArray,rPairArray):
-        winX        = phone.mobilex + phone.mobileW + 0.05*gui.width
-        winY        = phone.mobiley 
-        winH,winW   = gui.mechBoxMed[0].get_rect().h,gui.mechBoxMed[0].get_rect().w
-        exitX       = winX + 0.92*winW
+    def drawWindow(self,gui,phone,desktop,gs,tabNo,h1,h2,lPairArray=[],rPairArray=[]):
+        winX        = phone.mobilex + phone.mobileW + 50
+        winY        = 0.17*gui.height
+        winH,winW   = gui.mechBoxBig[0].get_rect().h,gui.mechBoxBig[0].get_rect().w
+        exitX       = winX + 0.96*winW
         exitY       = winY + 0.03*winH
         hedx        = winX + 0.6*winH
         hedy        = winY + 0.02*winH
         cptx        = winX + 0.18*winW
-        cpty        = winY + 0.11*winH
+        cpty        = winY + 0.095*winH
+        
         tbspx       = winX + 0.20*winW
         tbspy       = winY + 0.25*winH
         tbscy       = winY + 0.40*winH
@@ -66,9 +53,44 @@ class forex():
 
         # --------draw gui
 
-        drawSelectableImage(gui.mechBoxMedDark[tabNo],gui.mechBoxMedDark[tabNo],(winX,winY),gui)
+        drawSelectableImage(gui.mechBoxBig[tabNo],gui.mechBoxBig[tabNo],(winX,winY),gui)
 
+        # ----------Heading 
+        drawText(gui.screen,gui.squareFontH, h1,hedx,hedy, colour=(205, 230, 180))
+        drawText(gui.screen,gui.squareFont, h2,cptx,cpty, colour=(205, 230, 180))
+        
 
+        # --------- draw pair butttons
+        GU,x,y = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(winX+0.12*winW,winY+0.65*winH),gui,'GBP_USD',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        GE,x,y = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(x,winY+0.65*winH),gui,'GBP_EUR',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        GJ,x,y = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(x,winY+0.65*winH),gui,'GBP_YEN',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        UG,x1,y2 = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(winX+0.12*winW,y+10),gui,'USD_GBP',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        UE,x2,y2 = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(x1            ,y+10),gui,'USD_EUR',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        UJ,x3,y2 = drawTxtBtnAdvanced(gui.mechPlainBtnMed[0],gui.mechPlainBtnMed[1],(x2            ,y+10),gui,'USD_YEN',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        
+        if(self.chosenData==[]): self.chosenData = gs.forexObject['GBP_USD']['history']
+        for xpair in [[GU,'GBP_USD'],[GE,'GBP_EUR'],[GJ,'GBP_YEN']]:
+            if(xpair[0]):  
+                gs.investedPair = gs.forexObject[xpair[1]]
+                self.chosenData = gs.forexObject[xpair[1]]['history']
+
+        # --------Draw graph
+        stepGraph('Test Data',self.chosenData[-15:],200,winX+0.12*winW, winY+0.4*winH,25,gui.font,gui,points=15,colour=(0,150,0))
+
+        
+        # -------- draw invest button
+        invest,xe,ye = drawTxtBtnAdvanced(gui.mechBtnMed[0],gui.mechBtnMed[1],(x+0.25*winW,winY+0.65*winH),gui,'Invest',font=gui.nanoNokiaFont,txtColour=(215,233,149),yadj=0.5)
+        gs.investedDuration, endX, endY =  gui.incDecWidgetAbsolute(x+0.25*winW,ye+50,'Period:', gs.investedDuration,inc=1,cap=10)
+        if(invest):
+            if(gs.invested=='no' and gs.investedPair!=None):
+                gs.invested='init'
+            elif(gs.invested=='investing'):
+                desktop.overrideMessage = 'Already Investing.'
+            elif(gs.investedPair==None):
+                desktop.overrideMessage = 'Please pick a currency pair.'
+            else:
+                desktop.overrideMessage = 'Cant invest at this time.'
+        
         # ------- Change Widgets
         if(gui.user_input.returnedKey =='down'):
             self.activeSubWidget = self.activeSubWidget + 1
@@ -79,12 +101,10 @@ class forex():
         if(self.activeSubWidget>self.totalSubWidgets-1): self.activeSubWidget=0
         if(self.activeSubWidget<0): self.activeSubWidget=self.totalSubWidgets-1
 
-
-        # ----------Heading 
-        drawText(gui.screen,gui.squareFontH, h1,hedx,hedy, colour=(205, 230, 180))
-        drawText(gui.screen,gui.squareFont, h2,cptx,cpty, colour=(205, 230, 180))
-        xend,yend=drawTextandBoxGrid(gui.screen,gui.nanoNokiaFont,tbspx,tbspy, lPairArray,lineColour=(45,102,66))
-        drawTextandBoxGrid(gui.screen,gui.nanoNokiaFont,xend + 70,tbspy, rPairArray,lineColour=lineColour )
+        
+        # -----------grid
+        #xend,yend=drawTextandBoxGrid(gui.screen,gui.nanoNokiaFont,tbspx,tbspy, lPairArray,lineColour=(45,102,66))
+        #drawTextandBoxGrid(gui.screen,gui.nanoNokiaFont,xend + 70,tbspy, rPairArray,lineColour=lineColour )
           
 
 
@@ -94,7 +114,7 @@ class forex():
 
         # ---------Exit Window
         if(gui.mouseCollides((gui.mx,gui.my),exitX,exitY,40,40)):
-            exitSelected = drawSelectableImage(gui.mechBoxMedDark[-1],gui.mechBoxMedDark[-1],(winX,winY),gui)
+            exitSelected = drawSelectableImage(gui.mechBoxBig[-1],gui.mechBoxBig[-1],(winX,winY),gui)
             if(exitSelected):
                 gs.ACTIVEWIDGET = None
 
@@ -102,38 +122,36 @@ class forex():
 
     
 
-    def invest(self,percent,pair,duration,gs,desktop):
+    def invest(self,percent,pair,gs,desktop):
         # -----------Make investment
-        if(self.invested=='init'):
-            self.investedPair    = self.forexObject[pair]
-            self.initialRate     = self.investedPair['price']
-            self.investedPercent = percent/100
-            self.investedAmount  = self.investedPercent * gs.money
-            self.returnProfit    = self.investedAmount
+        if(gs.invested=='init' and gs.investedPair!=None):
+            gs.initialRate     = gs.investedPair['price']
+            gs.investedPercent = percent/100
+            gs.investedAmount  = gs.investedPercent * gs.money
+            gs.returnProfit    = gs.investedAmount
             
             # -------if too low
-            if(self.investedAmount < 1):
+            if(gs.investedAmount < 1):
                 print('sorry not enough funds')
                 return
 
-            print('investedPair '    + str(self.investedPair['name']))
-            print('initialRate '     + str(self.initialRate))
-            print('investedPercent ' + str(self.investedPercent))
-            print('investedAmount  ' + str(self.investedAmount))
+            print('investedPair '    + str(gs.investedPair['name']))
+            print('initialRate '     + str(gs.initialRate))
+            print('investedPercent ' + str(gs.investedPercent))
+            print('investedAmount  ' + str(gs.investedAmount))
             print(' ')
-            desktop.overrideMessage = 'Invested £ ' + str(round(self.investedAmount,2))
-            gs.money -= self.investedAmount
-            self.investedDate     = gs.gameTime.copy()
-            self.investedDuration = duration
-            self.invested='investing'
+            desktop.overrideMessage = 'Invested £ ' + str(round(gs.investedAmount,2))
+            gs.money -= gs.investedAmount
+            gs.investedDate     = gs.gameTime.copy()
+            gs.invested='investing'
 
     def forexTick(self,gs,desktop):
         """
         Todo appreciate base over time 
         """
 
-        for pair in self.forexObject:
-            currentPair = self.forexObject[pair]
+        for pair in gs.forexObject:
+            currentPair = gs.forexObject[pair]
             inc = (random.randrange(0,20)/100) *currentPair['price']
             choice = random.choice(['add','add','minus','same','same','same'])
             # regress to mean
@@ -146,30 +164,37 @@ class forex():
             currentPair['price'] = round(currentPair['price'],2)
             currentPair['history'].append(currentPair['price'])
             
-            if(self.invested=='investing'):
-                if(self.investedPair['name']==pair):
-                    daysPassed = gs.gameTime['daysPassed'] - self.investedDate['daysPassed']
-                    if(daysPassed>self.investedDuration):
-                        self.change = (currentPair['price'] - self.initialRate)
-                        self.returnProfit = round(((self.change)*self.investedAmount),2)
+            if(gs.invested=='investing'):
+                if(gs.investedPair['name']==pair):
+                    daysPassed = gs.gameTime['daysPassed'] - gs.investedDate['daysPassed']
+                    gs.change = (currentPair['price'] - gs.initialRate)
+                    gs.returnProfit = round(((gs.change)*gs.investedAmount),2)
+                    if(daysPassed>gs.investedDuration):
                         # return investment + profits
-                        desktop.overrideMessage = str('Profit made £ ' + str(round(self.returnProfit,2)))
-                        gs.money += self.investedAmount + self.returnProfit
+                        desktop.overrideMessage = str('Profit made £ ' + str(round(gs.returnProfit,2)))
+                        gs.money += gs.investedAmount + gs.returnProfit
                         print('Current Pair: ' + str(pair))
                         print('Rate ' + str(currentPair['price']))
-                        print('Change ' + str(self.change))
-                        print('Profit ' + str(self.returnProfit))
+                        print('Change ' + str(gs.change))
+                        print('Profit ' + str(gs.returnProfit))
                         print('Hist ' + str(currentPair['history'][-10:]))
                         print('')
-                        self.reset()
+                        self.reset(gs)
 
     
     def forexExchange(self,gui,gs,fx,desktop,phone):
 
-        self.invest(50,'GBP_USD',2,gs,desktop)
+        if(gs.ACTIVEWIDGET=='forexExchange'):
+
+            #lPairArray = [ ("Tabs Price", '£ '+ '{:.2f}'.format(gs.tabExchangeRate)),("Tabs Collected", str(gs.totalCantabs)),('AutoTab', str(gs.autoTab))]
+            #rPairArray = [("Limit", str(gs.cantabLimit)),('Level',str(gs.recycleLevel)),("Magnets",str(gs.magnets)),('scrap',str(gs.scrap)) ]
+            winX,winY,winW,winH = self.drawWindow(gui,phone,desktop,gs,self.activeSubWidget,'Forex Exchange','Forex Control Panel',lPairArray=[],rPairArray=[])
+
+
+        self.invest(50,'GBP_USD',gs,desktop)
         
         # -----------tick stocks
-        countdown = gs.countDownReal(3)
+        countdown = gs.countDownReal(2)
         if(countdown):
             self.forexTick(gs,desktop)
 

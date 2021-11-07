@@ -45,15 +45,18 @@ def manageWidget(x,y,gui,phone,gs,fx,desktop,widgetFunction,headerText,bodyText,
 
 
 def widgetCoordinator(gui,phone,gs,fx,desktop,commands,commandArg=None):
+    """
+    widgets are drawn to board first, then logic so pop up window comes after
+    """
 
     if('recycle' in commands[0]):
     	manageWidget(gs.junk.x,gs.junk.y,gui,phone,gs,fx,desktop,'recycleCenter',"Pull Tab","Tabs Collected: " + str(gs.totalCantabs),adargs=commandArg)
     
     if('forex' in commands[0]):
-    	manageWidget(gs.forex.x,gs.forex.y,gui,phone,gs,fx,desktop,'forexExchange',"Forex Exchange","Profit £3.22",adargs=commandArg)
+    	manageWidget(gs.forex.x,gs.forex.y,gui,phone,gs,fx,desktop,'forexExchange',"Forex Exchange","Profit £" +str(gs.returnProfit),adargs=commandArg)
 
 
-    #if('recycle' in commands[0]): gs.junk.recycleCenter(gui,gs,fx,desktop,phone)
+    if('recycle' in commands[0]): gs.junk.recycleCenter(gui,gs,fx,desktop,phone)
     
     if('forex' in commands[0]): gs.forex.forexExchange(gui,gs,fx,desktop,phone)
     

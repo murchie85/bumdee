@@ -66,7 +66,7 @@ nextButton   = button(0.475*width,0.8*height,0,0,'next',themeColour,smallFont,te
 
 
 
-borderSlides = [pygame.image.load('pics/frame/border1.png'),pygame.image.load('pics/frame/border2.png'),pygame.image.load('pics/frame/border3.png'),pygame.image.load('pics/frame/border4.png'),pygame.image.load('pics/frame/border5.png'),pygame.image.load('pics/frame/border6.png'),pygame.image.load('pics/frame/border7.png'),pygame.image.load('pics/frame/border8.png')]
+borderSlide         = pygame.image.load('pics/assets/backgrounds/border_static.png')
 
 dialogue             = dialogue()
 smsDialogue          = smsDialogue()
@@ -95,7 +95,7 @@ gui                   = gui(
                             sDialogue,
                             smsDialogue,
                             music,
-                            borderSlides,
+                            borderSlide,
                             notificationDialogue,
                             user_input,
                             statusButton      = button(0.15*width,0.05*height,width/17,height/13,'ST',(0,128,0),hugeNokiaFont,textColour=(97,165,93)),
@@ -118,7 +118,6 @@ gui                   = gui(
 phone        = phone(gui.width,gui.height)
 desktop      = desktop()
 fx           = sfx(gui)
-gui.menuBG   = pygame.image.load('pics/intro/intro3.png')
 modifyInput  = manageInput()
 animateImgs  = imageAnimate(0,10,10)
 widgetAnim   = imageAnimate(0,10,10,name='WidgetAnimation')
@@ -129,7 +128,7 @@ gui.fx              = fx
 gui.animateImgs     = animateImgs
 gui.widgetAnim      = widgetAnim
 
-junkCollection       = junkCollection(gui.widgetNode[0].get_rect().w,phone.mobilex + phone.mobileW + (0.5* gui.widgetNode[0].get_rect().w),phone.mobiley + 50)
+junkCollection       = junkCollection(gui.widgetNode[0].get_rect().w,phone.mobilex + phone.mobileW + (0.5* gui.widgetNode[0].get_rect().w),phone.mobiley + 50,phone.mobilex + phone.mobileW + 0.05*gui.width,phone.mobiley,gui.mechBoxMed[0].get_rect().h,gui.mechBoxMed[0].get_rect().w)
 forexWidget          = forex(gui.widgetNode[0].get_rect().w,phone.mobilex + phone.mobileW + (1.7* gui.widgetNode[0].get_rect().w),phone.mobiley + 50)
 
 gs.junk              = junkCollection

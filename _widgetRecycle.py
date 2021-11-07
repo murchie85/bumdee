@@ -6,14 +6,18 @@ from _utils import *
 
 
 class junkCollection():
-    def __init__(self,w,x,y):
+    def __init__(self,w,x,y,winX,winY,winH,winW):
         self.w                      = w
         self.x                      = x
         self.y                      = y
+        self.winX                   = winX
+        self.winY                   = winY
+        self.winH                   = winH
+        self.winW                   = winW
 
 
-        self.activeSubWidget        = 0
-        self.totalSubWidgets        = 3
+        self.activeSubWidget            = 0
+        self.totalSubWidgets            = 2
 
 
         self.tabsSold                   = False
@@ -41,24 +45,21 @@ class junkCollection():
         
 
     def drawWindow(self,gui,phone,gs,tabNo,h1,h2,lPairArray,rPairArray):
-        winX        = phone.mobilex + phone.mobileW + 0.05*gui.width
-        winY        = phone.mobiley 
-        winH,winW   = gui.mechBoxMed[0].get_rect().h,gui.mechBoxMed[0].get_rect().w
-        exitX       = winX + 0.92*winW
-        exitY       = winY + 0.03*winH
-        hedx        = winX + 0.6*winH
-        hedy        = winY + 0.02*winH
-        cptx        = winX + 0.18*winW
-        cpty        = winY + 0.11*winH
-        tbspx       = winX + 0.20*winW
-        tbspy       = winY + 0.25*winH
-        tbscy       = winY + 0.40*winH
+        exitX       = self.winX + 0.92*self.winW
+        exitY       = self.winY + 0.03*self.winH
+        hedx        = self.winX + 0.6*self.winH
+        hedy        = self.winY + 0.02*self.winH
+        cptx        = self.winX + 0.18*self.winW
+        cpty        = self.winY + 0.11*self.winH
+        tbspx       = self.winX + 0.20*self.winW
+        tbspy       = self.winY + 0.25*self.winH
+        tbscy       = self.winY + 0.40*self.winH
         lineColour  = (45,113,70)
-        LeftXMargin = winX+0.2*winW
+        LeftXMargin = self.winX+0.2*self.winW
 
         # --------draw gui
 
-        drawSelectableImage(gui.mechBoxMedDark[tabNo],gui.mechBoxMedDark[tabNo],(winX,winY),gui)
+        drawSelectableImage(gui.mechBoxMed[tabNo],gui.mechBoxMed[tabNo],(self.winX,self.winY),gui)
 
 
         # ------- Change Widgets
@@ -81,17 +82,16 @@ class junkCollection():
 
 
         # --------exit if clicked outside
-        if(((gui.mouseCollides((gui.mx,gui.my),winX,winY,winW,winH)) == False) and gui.clicked):
+        if(((gui.mouseCollides((gui.mx,gui.my),self.winX,self.winY,self.winW,self.winH)) == False) and gui.clicked):
             gs.ACTIVEWIDGET = None
 
         # ---------Exit Window
         if(gui.mouseCollides((gui.mx,gui.my),exitX,exitY,40,40)):
-            exitSelected = drawSelectableImage(gui.mechBoxMedDark[-1],gui.mechBoxMedDark[-1],(winX,winY),gui)
+            exitSelected = drawSelectableImage(gui.mechBoxMed[-1],gui.mechBoxMed[-1],(self.winX,self.winY),gui)
             if(exitSelected):
                 gs.ACTIVEWIDGET = None
 
-        return(winX,winY,winW,winH)
-
+        return(self.winX,self.winY,self.winW,self.winH)
     
 
     def buyMagnets(self,magnetX,magnetY,gs,gui,desktop):
@@ -121,7 +121,7 @@ class junkCollection():
             StopTimer = timer.stopWatch(delay,str(str('autoCollect') + str(value)),value,gs)
             if(StopTimer):
                 if(inc<=cap):
-                    value = value + inc
+                    value = int(value + inc)
 
         return(value)
 
@@ -129,12 +129,12 @@ class junkCollection():
     
     def recycleCenter(self,gui,gs,fx,desktop,phone):
 
-
+        if(gs.ACTIVEWIDGET=='recycleCenter'):
+            c = fx.fadeOut(gui,inc=40,alpha=100)
 
         if(self.activeSubWidget==0):
             # Only Run if widget selected
             if(gs.ACTIVEWIDGET=='recycleCenter'):
-                c = fx.fadeOut(gui,inc=40,alpha=100)
 
                 lPairArray = [ ("Tabs Price", '£ '+ '{:.2f}'.format(gs.tabExchangeRate)),("Tabs Collected", str(gs.totalCantabs)),('AutoTab', str(gs.autoTab))]
                 rPairArray = [("Limit", str(gs.cantabLimit)),('Level',str(gs.recycleLevel)),("Magnets",str(gs.magnets)),('scrap',str(gs.scrap)) ]
@@ -150,11 +150,15 @@ class junkCollection():
                 autoY       = collY + 0.1*winH
                 magnetX     = collX   + 0.4*winW
                 magnetY     = collY
-                scrapX      = collX   + 0.42*winW
-                scrapY      = collY + 0.1*winH
+                abX         = collX   + 0.42*winW
+                abY         = collY + 0.1*winH
 
 
 
+                # ------Auto Buy
+                
+                gs.tabInstaBuy,txEnd,tyEnd = drawTxtBtnOnOff(gui.selectMe[0],gui.selectMe[1],(abX,abY),gs.tabInstaBuy,gui,'AutoBuy',font=gui.nanoNokiaFont,yadj=0.6,xadj=0.6)
+                
                 #-----------INC WIDGET: COLLECT 
 
                 if(gs.totalCantabs<gs.cantabLimit):
@@ -162,16 +166,20 @@ class junkCollection():
                     inc = 1 + gs.magnets
                     
                     #value incremented 
-                    gs.cantabs, endX, endY =  gui.incrementableWidget(collX,collY,'Picked up', gs.cantabs,inc=inc,cap=cap,userInput=gui.user_input.returnedKey,incrementKey='c')
+                    gs.cantabs, endX, endY =  gui.incrementableWidget(collX,collY,'Picked up', gs.cantabs,inc=inc,cap=cap,userInput=gui.user_input.returnedKey,incrementKey='c',insta=gs.tabInstaBuy,instaMessage='AutoBuy on')
+
                     # Sell button
                     self.tabSellSelected   = drawSelectableImage(gui.bank[0],gui.bank[1],(sellX,sellY),gui,trim=False)
 
                 # -----------------buyMagnets
                 self.buyMagnets(magnetX,magnetY,gs,gui,desktop)
                 # -------------scrap %
-                gs.scrapTabSplit, endX, endY =  gui.incDecWidgetAbsolute(scrapX,scrapY,'Scrap %', gs.scrapTabSplit,inc=10,cap=100)
+                gs.scrapTabSplit, endX, endY =  gui.incDecWidgetAbsolute(collX,collY - 60,'Scrap %', gs.scrapTabSplit,inc=10,cap=100)
+
                 # -----------------Auto
-                if(drawSelectableImage(gui.auto[0],gui.auto[1],(autoX,autoY),gui)): gs.autoTabEnabled = True
+                if(drawSelectableImage(gui.auto[0],gui.auto[1],(autoX,autoY),gui)==True):
+                    print('enabling auto')
+                    gs.autoTabEnabled = True
         
 
                 # ----- Continuously call DISABLE SELL
@@ -180,9 +188,6 @@ class junkCollection():
                     drawText(gui.screen,gui.nanoNokiaFont, "Current Limit Reached",collX,collY, colour=(50,50,50))
                 
 
-        # Call Every Round
-
-        if(gs.tabInstaBuy==True): self.tabSellSelected = True
         # ------------------BackgroundJobs
         gs.cantabs = self.autoCollect(gs.cantabs,gs.autoTabEnabled,gs,(gs.cantabLimit - (gs.totalCantabs + gs.cantabs)),self.tabStopTimer,delay=gs.autoTab,inc = (1 + gs.magnets))
 
@@ -217,11 +222,11 @@ class junkCollection():
         #-----------------sell
 
 
-        if(self.tabSellSelected):
+        if(self.tabSellSelected or gs.tabInstaBuy==True):
 
             if(gs.scrapTabSplit!=0):
-                gs.scrap    = (gs.scrapTabSplit/100) * gs.cantabs
-                gs.cantabs  = (((100-gs.scrapTabSplit)/100)) * gs.cantabs
+                gs.scrap    = round(((gs.scrapTabSplit/100) * gs.cantabs),2)
+                gs.cantabs  = int((((100-gs.scrapTabSplit)/100)) * gs.cantabs)
                 
             moneyEarned = gs.cantabs * gs.tabExchangeRate
             
@@ -231,7 +236,7 @@ class junkCollection():
             gs.money         = round(gs.money,2)
 
             me =  "{:.2f}".format(moneyEarned)
-            if(gs.autoTabEnabled==False): desktop.overrideMessage = "Sold £ " + str(me)
+            if(gs.tabInstaBuy==False): desktop.overrideMessage = "Sold £ " + str(me)
 
             # TOdo display popup
             self.tabsSold = True
@@ -277,7 +282,6 @@ class junkCollection():
         if(self.activeSubWidget==1):
             # Only Run if widget selected
             if(gs.ACTIVEWIDGET=='recycleCenter'):
-                c = fx.fadeOut(gui,inc=40,alpha=100)
 
                 lPairArray = [ ("Caps Price", '£ '+ '{:.2f}'.format(gs.capExchangeRate)),("Caps Collected", str(gs.totalCaps)),('AutoCap', str(gs.autoCap))]
                 rPairArray = [("Limit", str(gs.capLimit)),('Level',str(gs.recycleLevel)),("Magnets",str(gs.magnets)),('scrap',str(gs.scrap)) ]
@@ -305,7 +309,7 @@ class junkCollection():
                     inc = 1 + gs.magnets
                     
                     #value incremented 
-                    gs.bottleCaps, endX, endY =  gui.incrementableWidget(collX,collY,'Picked up', gs.bottleCaps,inc=inc,cap=cap,userInput=gui.user_input.returnedKey,incrementKey='c')
+                    gs.bottleCaps, endX, endY =  gui.incrementableWidget(collX,collY,'Picked up', gs.bottleCaps,inc=inc,cap=cap,userInput=gui.user_input.returnedKey,incrementKey='c',insta=gs.capInstaBuy,instaMessage='AutoBuy on')
                     # Sell button
                     self.capSellSelected      = drawSelectableImage(gui.bank[0],gui.bank[1],(sellX,sellY),gui,trim=False)
 
@@ -325,7 +329,6 @@ class junkCollection():
 
         # Call Every Round
         # Instabuy
-        if(gs.capInstaBuy==True): self.capSellSelected = True
         # ------------------BackgroundJobs
         gs.bottleCaps = self.autoCollect(gs.bottleCaps,gs.autoCapEnabled,gs,(gs.capLimit - (gs.totalCaps + gs.bottleCaps)),self.capStopTimer,delay=gs.autoCap,inc = (1 + gs.magnets))
 
@@ -357,7 +360,7 @@ class junkCollection():
         #-----------------sell
 
 
-        if(self.capSellSelected):
+        if(self.capSellSelected or gs.capInstaBuy==True):
 
             if(gs.scrapCapSplit!=0):
                 gs.scrap    = (gs.scrapCapSplit/100) * gs.bottleCaps
@@ -371,7 +374,7 @@ class junkCollection():
             gs.money         = round(gs.money,2)
 
             me =  "{:.2f}".format(moneyEarned)
-            if(gs.autoCapEnabled==False): desktop.overrideMessage = "Sold £ " + str(me)
+            if(gs.capInstaBuy==False): desktop.overrideMessage = "Sold £ " + str(me)
 
             # TOdo display popup
             self.capsSold = True
@@ -399,114 +402,3 @@ class junkCollection():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        if(self.activeSubWidget==2):
-
-            sellSelected = False 
-            
-            lPairArray = [ ("Tabs Price", '£ '+ '{:.2f}'.format(gs.canExchangeRate)),("Tabs Collected", str(gs.totalCans)),('AutoCan', str(gs.autoCan))]
-            rPairArray = [("Limit", str(gs.canLimit)),('Level',str(gs.recycleLevel))]
-            winX,winY,winW,winH = self.drawWindow(gui,phone,gs,self.activeSubWidget,'Recycling Center','Drink Cans',lPairArray,rPairArray)
-
-            # --------DIMENSIONS
-            
-            collX       = winX + 0.20*winW
-            collY       = winY + 0.7*winH
-            sellX       = collX
-            sellY       = collY + 0.1*winH
-            magnetX     = collX   + 0.5*winW
-            magnetY     = collY
-
-
-
-            #-----------INC WIDGET: COLLECT 
-
-            if(gs.totalCans<gs.canLimit):
-                cap = gs.canLimit - (gs.totalCans + gs.cans)
-                
-                #value incremented 
-                gs.cans, endX, endY =  gui.incrementableWidget(collX,collY,'Picked up', gs.cans,cap=cap,userInput=gui.user_input.returnedKey,incrementKey='c')
-                # Sell button
-                sellSelected           = drawSelectableImage(gui.bank[0],gui.bank[1],(sellX,sellY),gui,trim=False)
-            
-
-
-            # ----- SET LIMIT REACHED FLAG ONCE ONLY
-
-            if((gs.totalCans>=gs.canLimit) and (self.canLimitReached==False)):
-                # call once only
-                self.canLimitReached = True
-                desktop.overrideMessage      = 'Limit reached'
-                gs.canRestrictedDate         = gs.gameTime.copy()
-
-
-            # ----- COntinuously call DISABLE SELL
-            if(self.canLimitReached):
-                sellSelected                 = False
-                drawText(gui.screen,gui.nanoNokiaFont, "Current Limit Reached",collX,collY, colour=(50,50,50))
-            
-
-            # ----- RESET ONE DAY LATER
-            if(self.canLimitReached):
-                # time passed 
-                daysPassed = gs.gameTime['daysPassed'] - gs.canRestrictedDate['daysPassed']
-                if(daysPassed>0):
-                    if(gs.canLimit<gs.canLimits[-1]):
-                        gs.canLimit = gs.canLimits[gs.canLimits.index(gs.canLimit)+1]
-                    gs.recycleLevel +=1
-                    self.canLimitReached = False
-                    gui.debug('upping recycleLevel')
-
-
-
-
-            #-----------------sell
-
-            if(sellSelected):
-                moneyEarned = gs.cans * gs.canExchangeRate
-                
-                gs.money        += moneyEarned
-                gs.totalCans += gs.cans
-                gs.cans    = 0
-                gs.money         = round(gs.money,2)
-
-                me =  "{:.2f}".format(moneyEarned)
-                desktop.overrideMessage = "Sold £ " + str(me)
-
-                # TOdo display popup
-                self.cansSold = True
-
-            if(self.cansSold):
-
-                notificationDisplayTime= self.notificationDisplayTime
-                conditionsArray=[[gs.totalCans>19,gs.totalCans<42,'keep it up'],[gs.totalCans>45,gs.totalCans<65,'Half way there '],[gs.totalCans>80,gs.totalCans<100,'Almost done']]
-                #Checks conditions and updates black notification box accordingly
-                desktop.blackBoardOverride(conditionsArray,gui,gs)
-
-                # ----------Alert notifications
-                sellCount = self.stopTimer.stopWatch(1,'Caps sold',desktop.overrideMessage,gs)
-                
-                if(sellCount):
-                    self.cansSold = False

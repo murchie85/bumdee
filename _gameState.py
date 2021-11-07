@@ -141,7 +141,22 @@ class gameState():
 
 
 
+        # -------Forex investments 
+        self.invested               = 'no'
+        self.investedDate           = None
+        self.investedDuration       = 2
+        self.investedPair           = None
+        self.initialRate            = None
+        self.investedPercent        = 0
+        self.investedAmount         = 0
+        self.change                 = 0
+        self.returnProfit           = 0
+        
 
+        self.forexObject            = {
+                                       'GBP_USD':{'price':1.37,'base':1.37,'history':[1.37],'name':'GBP_USD'},
+                                       'GBP_EUR':{'price':1.18,'base':1.18,'history':[1.18],'name':'GBP_EUR'}
+                                       }
 
         # -----------widget states 
         self.ACTIVEWIDGET   = None 

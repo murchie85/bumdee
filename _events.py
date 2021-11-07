@@ -58,7 +58,7 @@ class processGameEvent():
             # Draw Button
             text='Accept'
             accept = drawTxtBtn(gui.notitfyBtnMed[1],gui.notitfyBtnMed[0],(windowX+0.4*winWidth,windowY + 0.8*winHeight),gui,text)
-            if(accept): 
+            if(accept or (gui.user_input.returnedKey.upper() =='RETURN')): 
                 gs.notify           = None  # has to be reset by caller
                 gs.notifyState      = 'inactive'
                 gs.halt             = False

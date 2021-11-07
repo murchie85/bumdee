@@ -101,14 +101,19 @@ class desktop():
         #drawImage(gui.screen, gui.cubeBackground,(0,0))
 
         # animate border 
-        animateImgs.animate(gui,gs.state,gui.borderSlides,(0,15,15),(0,0))
+        #animateImgs.animate(gui,gs.state,gui.borderSlides,(0,15,15),(0,0))
+        
         
         # draw clockbox
         boxx,boxy = 0.7*gui.width,1
         boxw,boxh = 0.3*gui.width,0.07*gui.height
         pygame.draw.rect(gui.screen, (0,0,0),         [boxx, boxy,boxw, boxh],border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
-        pygame.draw.rect(gui.screen, gui.greenBorder, [boxx, boxy,boxw, boxh],5,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
+        #pygame.draw.rect(gui.screen, gui.greenBorder, [boxx, boxy,boxw, boxh],5,border_radius=4, border_top_left_radius=4, border_top_right_radius=4, border_bottom_left_radius=4, border_bottom_right_radius=4)
         
+
+        # Draw border
+        drawImage(gui.screen, gui.borderSlide,(0,0))
+
         # draw clock
         day,date,month,time = gs.displayDate[0],gs.displayDate[1],gs.displayDate[2],gs.displayDate[3]
         textX    = boxx + 0.2*boxw
