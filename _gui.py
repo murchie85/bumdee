@@ -123,9 +123,9 @@ class gui():
         
 
         # ----- Mech imgs
-        self.mechBoxMed         = [pygame.image.load('pics/assets/mechBox/mechBoxMed1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed4.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed5.png'),pygame.image.load('pics/assets/mechBox/mechBoxMed6.png')]
-        self.mechBoxBig         = [pygame.image.load('pics/assets/mechBox/mechBoxBig1.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig2.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig3.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig4.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig5.png'),pygame.image.load('pics/assets/mechBox/mechBoxBig6.png')]
-        self.mechBoxGreen       = [pygame.image.load('pics/assets/mechBox/mechBoxGreen1.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen2.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen3.png'),pygame.image.load('pics/assets/mechBox/mechBoxGreen4.png')]
+        self.mechBoxMed         = impFilesL('mechBoxMed1.png',tDir = 'pics/assets/mechBox/')
+        self.mechBoxBig         = impFilesL('mechBoxBig1.png',tDir = 'pics/assets/mechBox/')
+        self.mechBoxGreen       = impFilesL('mechBoxGreen1.png',tDir = 'pics/assets/mechBox/')
         self.mechBoxMedLight    = [pygame.image.load('pics/assets/mechBox/mechBoxMedLight1.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight2.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight3.png'),pygame.image.load('pics/assets/mechBox/mechBoxMedLight4.png')]
         self.mechBtnMed         = [pygame.image.load('pics/assets/buttons/mechBtnMed1.png'),pygame.image.load('pics/assets/buttons/mechBtnMed2.png')]
         self.mechPlainBtnMed    = [pygame.image.load('pics/assets/buttons/medMechBtn1.png'),pygame.image.load('pics/assets/buttons/medMechBtn2.png')]
