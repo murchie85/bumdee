@@ -9,12 +9,14 @@ class stopTimer():
 
     def stopWatch(self,countValue,source,trackedObject,gs):
         complete = False
+        
         # Re-Initialise automatically
         if(self.stopWatchInit):
             if(self.stopWatchState['source']!= source or self.stopWatchState['endCount']!= countValue or self.stopWatchState['trackedObject']!= trackedObject):
                 print('***initialising counter**** for : ' + str(source))
                 self.stopWatchInit=False
 
+        # Initialise stop watch 
         if(self.stopWatchInit==False):
             self.stopWatchState = {'elapsed': 0,'endCount':countValue,'source':source,'trackedObject':trackedObject}
             self.stopWatchInit=True
@@ -24,7 +26,6 @@ class stopTimer():
             #print('Iter: ' + str(self.itercount) + '  elapsed: ' + str(self.stopWatchState['elapsed']))
             if(self.stopWatchState['elapsed']>self.stopWatchState['endCount']):
                 complete=True
-
 
         return(complete)
 

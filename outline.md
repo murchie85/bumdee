@@ -1,5 +1,10 @@
 # High level
 
+# ToDo
+
+- Narrow phone
+
+
 ```
 ---------------------
 CORE IDEA RULES
@@ -16,9 +21,21 @@ CORE IDEA RULES
 [BUILD] [ COLLECT ]   [ CONSUME ] [ UPGRADE] [ BUY/SELL] [RESOURCE MANAGE] [ALARM/SURPRESS REACT] [RESEARCH] [BONUS CARD SELECTION]
 ``` 
 
+
+# Pacing - switch/modulate between games
+
+# Flow 
+
+# Foreshadow - tease the player, hook them with promises of rewards
+
+# Skilltree long term growth
+
+
 **Each Minigame should be addictive in itself**
 
 Sell drugs, rig elections fight skynet save the world
+
+
 
 
 #### ideas 
@@ -142,6 +159,19 @@ Drugs
 ```
 - 
 
+
+
+```
+---------------------
+Doll money 
+--------------------- 
+```
+- Cheating the doll 
+- When sign off
+- Each week you have to think of a new excuse...
+- doll makes you late for work 
+
+
 ```
 ---------------------
 Crypto 
@@ -152,6 +182,23 @@ Crypto
 - trade
 	- bulk trade
 	- bulk invest
+
+```
+---------------------
+JOBs
+--------------------- 
+```
+- Budget balancing
+- Typing Admin
+- pizza delivery/ do you want to be amazon driver
+	- is he going to tip you
+	- are you going to be late
+	- Do i take tip/no tip or am I going to try and offer this guy drugs
+		- +/- sometimes it works...
+		- you earn pizza wage + drug money 
+		- or you get in trouble...
+			- if you get in trouble 3 times in the week fired
+			- probation..
 
 
 
@@ -459,7 +506,7 @@ steal from embassy
 2. Messages come in as you solve problems
 3. Plot, you can't always be living in the 90s...COBOL assembler it (use all your cool packages..)
 ======================
-		Muisc
+		Music
 ======================
 
 - Snare
@@ -482,3 +529,35 @@ steal from embassy
 	- Done; Notifications Button
 DONE Do Screen fade effect
 Done: Phone
+
+```
+====
+name
+====
+```
+bolt, scam, edge, creep,snavel, lift, skint, broke 
+
+tooled 
+
+lifted
+
+Edge Job
+
+Scam City
+
+Hustle City
+
+Skunk Job
+
+Bumped
+
+lift and bolt
+
+0 Day Shakedown
+
+0 Day loot
+
+tranny basher 
+
+
+

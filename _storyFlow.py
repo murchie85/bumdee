@@ -57,7 +57,7 @@ class gameFlow():
 
 
 		# [1]--------begin sequence
-		if(gs.stage=='day1-introd'):
+		if(gs.stage=='day1-intro'):
 
 
 			# allowed commands 

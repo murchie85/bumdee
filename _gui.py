@@ -100,9 +100,6 @@ class gui():
 
         # ---------------Images 
 
-
-
-
         self.signal             = pygame.image.load('pics/phoneLogos/signal.png')
         self.bottomNavMock      = pygame.image.load('pics/assets/mocks/navBottom.png')
         self.bottomNav          = pygame.image.load('pics/assets/nav/navBottom.png')
@@ -112,6 +109,7 @@ class gui():
         self.cubeBackground     = pygame.image.load('pics/assets/backgrounds/cube.png')
 
         
+        # -------------widget images
 
         self.widgetNode         = [pygame.image.load('pics/assets/widgetNode/widgetNode1.png'),pygame.image.load('pics/assets/widgetNode/widgetNode2.png'),pygame.image.load('pics/assets/widgetNode/widgetNode3.png')] 
         self.smallActiveWidget  = pygame.image.load('pics/assets/widgetNode/smallActiveWidget.png')
@@ -121,6 +119,7 @@ class gui():
         
         self.bigActiveWidget    = pygame.image.load('pics/assets/widgetNode/bigActiveWidget.png')
         
+
 
         # ----- Mech imgs
         self.mechBoxMed         = impFilesL('mechBoxMed1.png',tDir = 'pics/assets/mechBox/')
@@ -139,6 +138,8 @@ class gui():
         self.signal          = pygame.image.load('pics/phoneLogos/signal.png')
         self.minis           = [pygame.image.load('pics/assets/minis/minibuttons1.png'),pygame.image.load('pics/assets/minis/minibuttons2.png'),pygame.image.load('pics/assets/minis/minibuttons3.png'),pygame.image.load('pics/assets/minis/minibuttons4.png'),pygame.image.load('pics/assets/minis/minibuttons5.png'),pygame.image.load('pics/assets/minis/minibuttons6.png'),pygame.image.load('pics/assets/minis/minibuttons7.png'),pygame.image.load('pics/assets/minis/minibuttons8.png'),pygame.image.load('pics/assets/minis/minibuttons9.png'),pygame.image.load('pics/assets/minis/minibuttons10.png')]
 
+        # ------mouse 
+        
         self.mx     = 0
         self.my     = 0
 
